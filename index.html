@@ -24,7 +24,6 @@
     padding: 36px 20px 24px;
   }
 
-  /* الحلقة الزرقاء حول الصورة */
   .avatar-ring {
     width: 98px; height: 98px; border-radius: 50%;
     padding: 3px;
@@ -170,7 +169,7 @@
 </div>
 
 <div class="section">
-  <div class="card" id="infoCard">
+  <div class="card">
     <div class="row">
       <div class="row-icon">🆔</div>
       <div class="row-info">
@@ -215,6 +214,13 @@
         <div class="row-value" id="isPremium">—</div>
       </div>
     </div>
+    <div class="row">
+      <div class="row-icon">📅</div>
+      <div class="row-info">
+        <div class="row-label">تاريخ الإنشاء (تقريبي)</div>
+        <div class="row-value" id="regDate">—</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -240,6 +246,29 @@ const AVATAR_COLORS = [
   "#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"
 ];
 
+function estimateRegDate(userId) {
+  const refs = [
+    { id: 100000000,  date: new Date("2014-01-01") },
+    { id: 500000000,  date: new Date("2017-06-01") },
+    { id: 1000000000, date: new Date("2019-01-01") },
+    { id: 1500000000, date: new Date("2020-06-01") },
+    { id: 2000000000, date: new Date("2021-06-01") },
+    { id: 5000000000, date: new Date("2023-01-01") },
+    { id: 7000000000, date: new Date("2024-01-01") },
+    { id: 9000000000, date: new Date("2025-01-01") },
+  ];
+  for (let i = 1; i < refs.length; i++) {
+    if (userId <= refs[i].id) {
+      const prev  = refs[i - 1];
+      const next  = refs[i];
+      const ratio = (userId - prev.id) / (next.id - prev.id);
+      const ms    = prev.date.getTime() + ratio * (next.date.getTime() - prev.date.getTime());
+      return new Date(ms).toLocaleDateString("ar-EG", { year: "numeric", month: "long" });
+    }
+  }
+  return "2025+";
+}
+
 function init() {
   if (!tg) { showDemo(); return; }
   tg.ready();
@@ -254,13 +283,12 @@ function init() {
 function fillUser(user) {
   if (!user) { showDemo(); return; }
 
-  const first  = user.first_name   || "";
-  const last   = user.last_name    || "";
-  const uname  = user.username     || "";
+  const first  = user.first_name    || "";
+  const last   = user.last_name     || "";
+  const uname  = user.username      || "";
   const lang   = user.language_code || "—";
-  const isPrem = user.is_premium   || false;
+  const isPrem = user.is_premium    || false;
 
-  // صورة الحساب أو الحرف الأول
   const av = document.getElementById("avatar");
   if (user.photo_url) {
     av.innerHTML = `<img src="${user.photo_url}" alt="avatar">`;
@@ -277,6 +305,7 @@ function fillUser(user) {
   document.getElementById("usernameVal").textContent = uname || "لا يوجد";
   document.getElementById("langCode").textContent    = lang + " " + langFlag(lang);
   document.getElementById("isPremium").textContent   = isPrem ? "✅ نعم" : "❌ لا";
+  document.getElementById("regDate").textContent     = "~ " + estimateRegDate(user.id);
 
   if (uname) document.getElementById("copyUsernameBtn").style.display = "block";
 }
@@ -295,9 +324,9 @@ function fillEnv() {
 
 function fillTheme() {
   const colors = [
-    { label: "الخلفية",         var: "--tg-theme-bg-color",            fallback: "#ffffff" },
-    { label: "النص",            var: "--tg-theme-text-color",          fallback: "#000000" },
-    { label: "الزرار",          var: "--tg-theme-button-color",        fallback: "#2AABEE" },
+    { label: "الخلفية",          var: "--tg-theme-bg-color",           fallback: "#ffffff" },
+    { label: "النص",             var: "--tg-theme-text-color",         fallback: "#000000" },
+    { label: "الزرار",           var: "--tg-theme-button-color",       fallback: "#2AABEE" },
     { label: "الخلفية الثانوية", var: "--tg-theme-secondary-bg-color", fallback: "#f4f4f5" },
   ];
 
@@ -324,6 +353,7 @@ function showDemo() {
   document.getElementById("copyUsernameBtn").style.display = "block";
   document.getElementById("langCode").textContent    = "ar 🇸🇦";
   document.getElementById("isPremium").textContent   = "❌ لا";
+  document.getElementById("regDate").textContent     = "~ يناير 2019";
   document.getElementById("badgeRow").innerHTML = `
     <div class="badge">📱 browser</div>
     <div class="badge">☀️ فاتح</div>
@@ -341,7 +371,11 @@ function copyVal(id) {
 }
 
 function langFlag(code) {
-  const flags = { ar:"🇸🇦", en:"🇺🇸", ru:"🇷🇺", de:"🇩🇪", fr:"🇫🇷", tr:"🇹🇷", es:"🇪🇸", it:"🇮🇹", zh:"🇨🇳", ja:"🇯🇵" };
+  const flags = {
+    ar:"🇸🇦", en:"🇺🇸", ru:"🇷🇺", de:"🇩🇪",
+    fr:"🇫🇷", tr:"🇹🇷", es:"🇪🇸", it:"🇮🇹",
+    zh:"🇨🇳", ja:"🇯🇵", uk:"🇺🇦", fa:"🇮🇷"
+  };
   return flags[code] || "🌍";
 }
 
