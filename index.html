@@ -7,270 +7,413 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-  body {
-    font-family: 'Tajawal', sans-serif;
-    background-color: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
-    min-height: 100vh;
-    padding-bottom: 40px;
-  }
+body {
+  font-family: 'Tajawal', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  background: var(--tg-theme-bg-color, #0f0f1a);
+  color: var(--tg-theme-text-color, #ffffff);
+  position: relative;
+  overflow-x: hidden;
+}
 
-  .avatar-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 36px 20px 24px;
-  }
+/* ── BG BLOBS ── */
+.bg-blob {
+  position: fixed; border-radius: 50%; filter: blur(80px);
+  pointer-events: none; z-index: 0; opacity: 0.35;
+}
+.blob1 { width: 300px; height: 300px; background: #2AABEE; top: -80px; right: -60px; }
+.blob2 { width: 250px; height: 250px; background: #9C27B0; bottom: 100px; left: -80px; }
+.blob3 { width: 200px; height: 200px; background: #00BCD4; top: 40%; left: 50%; transform: translateX(-50%); opacity: 0.2; }
 
-  .avatar-ring {
-    width: 98px; height: 98px; border-radius: 50%;
-    padding: 3px;
-    background: linear-gradient(135deg, #74d7ff, #2AABEE, #74d7ff);
-    margin-bottom: 14px;
-    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-    box-shadow: 0 0 20px #2AABEE55;
-  }
+/* ── GLASS ── */
+.glass {
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+}
 
-  .avatar {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: var(--tg-theme-button-color, #2AABEE);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 38px; font-weight: 800;
-    color: var(--tg-theme-button-text-color, #fff);
-    overflow: hidden;
-    border: 3px solid var(--tg-theme-bg-color, #ffffff);
-  }
+/* ── TABS ── */
+.tabs {
+  display: flex; gap: 0;
+  margin: 16px 16px 0;
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 4px;
+  position: relative; z-index: 1;
+  animation: fadeUp .4s ease both;
+}
+.tab-btn {
+  flex: 1; padding: 10px; border: none; border-radius: 10px;
+  font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.25s; color: rgba(255,255,255,0.5);
+  background: transparent;
+}
+.tab-btn.active {
+  background: rgba(42,171,238,0.3);
+  color: #fff;
+  box-shadow: 0 2px 12px #2AABEE33;
+}
 
-  .avatar img {
-    width: 100%; height: 100%;
-    object-fit: cover; border-radius: 50%;
-    display: block;
-  }
+/* ── AVATAR ── */
+.avatar-section {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 32px 20px 20px; position: relative; z-index: 1;
+  animation: fadeUp .4s ease both;
+}
+.avatar-ring {
+  width: 100px; height: 100px; border-radius: 50%; padding: 3px;
+  background: linear-gradient(135deg, #74d7ff, #2AABEE, #b388ff);
+  margin-bottom: 14px;
+  box-shadow: 0 0 30px #2AABEE44, 0 0 60px #2AABEE22;
+  animation: popIn .5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.avatar {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 800; color: #fff;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.1);
+}
+.avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+.full-name { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; animation: fadeUp .4s .1s ease both; }
+.username  { font-size: 14px; margin-top: 4px; color: #2AABEE; animation: fadeUp .4s .15s ease both; }
 
-  .full-name {
-    font-size: 22px; font-weight: 800;
-    color: var(--tg-theme-text-color, #000);
-    letter-spacing: -0.4px;
-    animation: fadeUp 0.4s 0.1s ease both;
-  }
+/* ── GLASS CARD ── */
+.card-wrap { padding: 0 16px; position: relative; z-index: 1; animation: fadeUp .4s .2s ease both; }
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  padding: 0 4px 8px;
+}
+.card { margin-bottom: 16px; overflow: hidden; }
 
-  .username {
-    font-size: 14px; margin-top: 4px;
-    color: var(--tg-theme-link-color, #2AABEE);
-    animation: fadeUp 0.4s 0.15s ease both;
-  }
+.row {
+  display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06); transition: background .15s;
+}
+.row:last-child { border-bottom: none; }
+.row:active { background: rgba(255,255,255,0.05); }
 
-  .section {
-    padding: 0 16px;
-    animation: fadeUp 0.4s 0.2s ease both;
-  }
+.row-icon {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: rgba(42,171,238,0.15);
+}
+.row-info { flex: 1; min-width: 0; }
+.row-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
+.row-value { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .section-label {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: var(--tg-theme-hint-color, #999);
-    padding: 0 4px 8px;
-  }
+.row-btn {
+  font-size: 12px; font-weight: 700; color: #2AABEE;
+  background: rgba(42,171,238,0.15); border: none; border-radius: 8px;
+  padding: 5px 10px; cursor: pointer; font-family: 'Tajawal', sans-serif;
+  transition: all .2s; flex-shrink: 0;
+}
+.row-btn:active { background: rgba(42,171,238,0.3); transform: scale(0.95); }
 
-  .card {
-    background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
+/* ── UTILITIES GRID ── */
+.utils-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  padding: 0 16px; position: relative; z-index: 1;
+  animation: fadeUp .4s .2s ease both; margin-bottom: 16px;
+}
+.util-btn {
+  glass: true;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 14px 12px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: all .2s; font-family: 'Tajawal', sans-serif; color: #fff;
+}
+.util-btn:active { transform: scale(0.95); background: rgba(42,171,238,0.2); }
+.util-icon { font-size: 26px; }
+.util-label { font-size: 12px; font-weight: 700; text-align: center; color: rgba(255,255,255,0.8); }
+.util-desc  { font-size: 10px; color: rgba(255,255,255,0.4); text-align: center; }
 
-  .row {
-    display: flex; align-items: center; gap: 14px;
-    padding: 13px 16px;
-    border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, #999) 15%, transparent);
-    transition: background 0.15s;
-  }
-  .row:last-child { border-bottom: none; }
+/* ── LOOKUP ── */
+.lookup-wrap {
+  padding: 0 16px; position: relative; z-index: 1;
+  animation: fadeUp .4s .2s ease both;
+}
+.lookup-input-row {
+  display: flex; gap: 10px; margin-bottom: 14px;
+}
+.lookup-input {
+  flex: 1; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;
+  padding: 12px 16px; color: #fff; font-size: 14px;
+  font-family: 'Tajawal', sans-serif; outline: none;
+  transition: border-color .2s;
+}
+.lookup-input:focus { border-color: rgba(42,171,238,0.5); }
+.lookup-input::placeholder { color: rgba(255,255,255,0.3); }
+.lookup-go {
+  width: 48px; height: 48px; border-radius: 14px; border: none;
+  background: linear-gradient(135deg, #1c6ca8, #2AABEE);
+  color: #fff; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 15px #2AABEE44; transition: all .2s; flex-shrink: 0;
+}
+.lookup-go:active { transform: scale(0.92); }
 
-  .row-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
-  }
+.lookup-result { margin-bottom: 14px; }
+.lookup-empty {
+  text-align: center; padding: 30px;
+  color: rgba(255,255,255,0.3); font-size: 14px;
+}
 
-  .row-info { flex: 1; min-width: 0; }
-  .row-label { font-size: 12px; color: var(--tg-theme-hint-color, #999); margin-bottom: 1px; }
-  .row-value { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ── THEME CHIPS ── */
+.theme-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 16px;
+}
+.color-chip {
+  height: 56px; border-radius: 14px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-direction: column;
+}
+.chip-dot { width: 22px; height: 22px; border-radius: 50%; }
 
-  .row-copy {
-    font-size: 13px; color: var(--tg-theme-link-color, #2AABEE);
-    background: none; border: none; cursor: pointer;
-    font-family: 'Tajawal', sans-serif; font-weight: 600; flex-shrink: 0;
-    padding: 4px 8px; border-radius: 8px;
-    transition: background 0.15s;
-  }
-  .row-copy:active { background: color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent); }
+/* ── BADGE ── */
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.badge {
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  background: rgba(42,171,238,0.15);
+  border: 1px solid rgba(42,171,238,0.25);
+  color: #2AABEE;
+}
 
-  .badge-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    padding: 0 16px 4px;
-    animation: fadeUp 0.4s 0.25s ease both;
-  }
-  .badge {
-    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
-    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
-    color: var(--tg-theme-button-color, #2AABEE);
-  }
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
 
-  .theme-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 8px; padding: 0 16px;
-    animation: fadeUp 0.4s 0.3s ease both;
-    margin-bottom: 20px;
-  }
-  .color-chip {
-    height: 52px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 600; gap: 6px; flex-direction: column;
-  }
-  .chip-dot { width: 20px; height: 20px; border-radius: 50%; }
-
-  .toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px);
-    background: #34C759; color: #fff;
-    padding: 10px 22px; border-radius: 20px;
-    font-size: 14px; font-weight: 600;
-    opacity: 0; pointer-events: none;
-    transition: all 0.3s; z-index: 999;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  @keyframes popIn {
-    from { transform: scale(0.5); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* ── ANIMATIONS ── */
+@keyframes popIn  { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
 
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+<div class="bg-blob blob3"></div>
+
+<!-- AVATAR -->
 <div class="avatar-section">
   <div class="avatar-ring">
     <div class="avatar" id="avatar">؟</div>
   </div>
   <div class="full-name" id="fullName">جاري التحميل...</div>
-  <div class="username" id="username"></div>
+  <div class="username"  id="username"></div>
 </div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .18s ease both">
-  <div class="section-label">معلومات الحساب</div>
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('info',this)">👤 معلوماتي</button>
+  <button class="tab-btn"        onclick="switchTab('utils',this)">🛠 أدوات TG</button>
+  <button class="tab-btn"        onclick="switchTab('lookup',this)">🔍 فحص مستخدم</button>
 </div>
 
-<div class="section">
-  <div class="card">
-    <div class="row">
-      <div class="row-icon">🆔</div>
-      <div class="row-info">
-        <div class="row-label">User ID</div>
-        <div class="row-value" id="userId">—</div>
+<!-- ════ TAB: INFO ════ -->
+<div class="page active" id="tab-info">
+  <div style="height:14px"></div>
+  <div class="card-wrap">
+    <div class="section-label">معلومات الحساب</div>
+    <div class="card glass">
+      <div class="row">
+        <div class="row-icon">🆔</div>
+        <div class="row-info"><div class="row-label">User ID</div><div class="row-value" id="userId">—</div></div>
+        <button class="row-btn" onclick="tgCopy('userId','User ID')">نسخ</button>
       </div>
-      <button class="row-copy" onclick="copyVal('userId')">نسخ</button>
-    </div>
-    <div class="row">
-      <div class="row-icon">👤</div>
-      <div class="row-info">
-        <div class="row-label">الاسم الأول</div>
-        <div class="row-value" id="firstName">—</div>
+      <div class="row">
+        <div class="row-icon">👤</div>
+        <div class="row-info"><div class="row-label">الاسم الأول</div><div class="row-value" id="firstName">—</div></div>
       </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">👤</div>
-      <div class="row-info">
-        <div class="row-label">الاسم الأخير</div>
-        <div class="row-value" id="lastName">—</div>
+      <div class="row">
+        <div class="row-icon">👤</div>
+        <div class="row-info"><div class="row-label">الاسم الأخير</div><div class="row-value" id="lastName">—</div></div>
       </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">🔗</div>
-      <div class="row-info">
-        <div class="row-label">اسم المستخدم</div>
-        <div class="row-value" id="usernameVal">—</div>
+      <div class="row">
+        <div class="row-icon">🔗</div>
+        <div class="row-info"><div class="row-label">اسم المستخدم</div><div class="row-value" id="usernameVal">—</div></div>
+        <button class="row-btn" id="copyUnBtn" onclick="tgCopy('usernameVal','اسم المستخدم')" style="display:none">نسخ</button>
       </div>
-      <button class="row-copy" id="copyUsernameBtn" onclick="copyVal('usernameVal')" style="display:none">نسخ</button>
-    </div>
-    <div class="row">
-      <div class="row-icon">🌍</div>
-      <div class="row-info">
-        <div class="row-label">اللغة</div>
-        <div class="row-value" id="langCode">—</div>
+      <div class="row">
+        <div class="row-icon">🌍</div>
+        <div class="row-info"><div class="row-label">اللغة</div><div class="row-value" id="langCode">—</div></div>
+      </div>
+      <div class="row">
+        <div class="row-icon">⭐</div>
+        <div class="row-info"><div class="row-label">حساب Premium</div><div class="row-value" id="isPremium">—</div></div>
+      </div>
+      <div class="row">
+        <div class="row-icon">📅</div>
+        <div class="row-info"><div class="row-label">تاريخ الإنشاء (تقريبي)</div><div class="row-value" id="regDate">—</div></div>
       </div>
     </div>
-    <div class="row">
-      <div class="row-icon">⭐</div>
-      <div class="row-info">
-        <div class="row-label">حساب Premium</div>
-        <div class="row-value" id="isPremium">—</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">📅</div>
-      <div class="row-info">
-        <div class="row-label">تاريخ الإنشاء (تقريبي)</div>
-        <div class="row-value" id="regDate">—</div>
-      </div>
-    </div>
+
+    <div class="section-label">بيئة التشغيل</div>
+    <div class="badge-row" id="badgeRow"></div>
+
+    <div class="section-label">ألوان الثيم</div>
+    <div class="theme-grid" id="themeGrid"></div>
   </div>
 </div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .22s ease both">
-  <div class="section-label">بيئة التشغيل</div>
+<!-- ════ TAB: UTILS ════ -->
+<div class="page" id="tab-utils">
+  <div style="height:14px"></div>
+  <div class="card-wrap">
+    <div class="section-label">تنبيهات تيليجرام</div>
+  </div>
+  <div class="utils-grid">
+    <button class="util-btn" onclick="demoAlert()">
+      <div class="util-icon">⚠️</div>
+      <div class="util-label">showAlert</div>
+      <div class="util-desc">تنبيه بسيط</div>
+    </button>
+    <button class="util-btn" onclick="demoConfirm()">
+      <div class="util-icon">❓</div>
+      <div class="util-label">showConfirm</div>
+      <div class="util-desc">تأكيد / إلغاء</div>
+    </button>
+    <button class="util-btn" onclick="demoPopup()">
+      <div class="util-icon">💬</div>
+      <div class="util-label">showPopup</div>
+      <div class="util-desc">نافذة مخصصة</div>
+    </button>
+    <button class="util-btn" onclick="demoScanQR()">
+      <div class="util-icon">📷</div>
+      <div class="util-label">showScanQrPopup</div>
+      <div class="util-desc">مسح QR Code</div>
+    </button>
+  </div>
+
+  <div class="card-wrap">
+    <div class="section-label">الاهتزاز Haptic</div>
+  </div>
+  <div class="utils-grid">
+    <button class="util-btn" onclick="haptic('light')">
+      <div class="util-icon">🫧</div>
+      <div class="util-label">light</div>
+      <div class="util-desc">خفيف</div>
+    </button>
+    <button class="util-btn" onclick="haptic('medium')">
+      <div class="util-icon">📳</div>
+      <div class="util-label">medium</div>
+      <div class="util-desc">متوسط</div>
+    </button>
+    <button class="util-btn" onclick="haptic('heavy')">
+      <div class="util-icon">💥</div>
+      <div class="util-label">heavy</div>
+      <div class="util-desc">قوي</div>
+    </button>
+    <button class="util-btn" onclick="hapticNotif('success')">
+      <div class="util-icon">✅</div>
+      <div class="util-label">success</div>
+      <div class="util-desc">نجاح</div>
+    </button>
+    <button class="util-btn" onclick="hapticNotif('error')">
+      <div class="util-icon">❌</div>
+      <div class="util-label">error</div>
+      <div class="util-desc">خطأ</div>
+    </button>
+    <button class="util-btn" onclick="hapticNotif('warning')">
+      <div class="util-icon">⚠️</div>
+      <div class="util-label">warning</div>
+      <div class="util-desc">تحذير</div>
+    </button>
+  </div>
+
+  <div class="card-wrap">
+    <div class="section-label">أزرار تيليجرام</div>
+  </div>
+  <div class="utils-grid">
+    <button class="util-btn" onclick="demoMainBtn()">
+      <div class="util-icon">🔵</div>
+      <div class="util-label">MainButton</div>
+      <div class="util-desc">الزرار الرئيسي</div>
+    </button>
+    <button class="util-btn" onclick="demoBackBtn()">
+      <div class="util-icon">◀️</div>
+      <div class="util-label">BackButton</div>
+      <div class="util-desc">زرار الرجوع</div>
+    </button>
+    <button class="util-btn" onclick="demoExpand()">
+      <div class="util-icon">↕️</div>
+      <div class="util-label">expand()</div>
+      <div class="util-desc">توسيع الشاشة</div>
+    </button>
+    <button class="util-btn" onclick="demoClose()">
+      <div class="util-icon">❎</div>
+      <div class="util-label">close()</div>
+      <div class="util-desc">إغلاق الميني اب</div>
+    </button>
+  </div>
+
+  <div class="card-wrap">
+    <div class="section-label">حافظة الكلبورد</div>
+  </div>
+  <div class="utils-grid">
+    <button class="util-btn" onclick="demoReadClipboard()">
+      <div class="util-icon">📋</div>
+      <div class="util-label">readTextFromClipboard</div>
+      <div class="util-desc">قراءة الكلبورد</div>
+    </button>
+    <button class="util-btn" onclick="demoOpenLink()">
+      <div class="util-icon">🔗</div>
+      <div class="util-label">openLink</div>
+      <div class="util-desc">فتح رابط</div>
+    </button>
+  </div>
 </div>
 
-<div class="badge-row" id="badgeRow"></div>
-<div style="height:16px"></div>
+<!-- ════ TAB: LOOKUP ════ -->
+<div class="page" id="tab-lookup">
+  <div style="height:14px"></div>
+  <div class="lookup-wrap">
+    <div class="section-label">فحص مستخدم بالـ ID أو اليوزرنيم</div>
+    <div class="lookup-input-row">
+      <input class="lookup-input" id="lookupInput"
+        placeholder="أدخل User ID أو @username"
+        onkeydown="if(event.key==='Enter') doLookup()">
+      <button class="lookup-go" onclick="doLookup()">🔍</button>
+    </div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .28s ease both">
-  <div class="section-label">ألوان الثيم الحالي</div>
+    <div id="lookupResult">
+      <div class="lookup-empty">
+        🔍<br>أدخل User ID أو @username<br>لعرض معلومات المستخدم
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:8px">مستخدمون محفوظون</div>
+    <div id="savedUsers"></div>
+  </div>
 </div>
-
-<div class="theme-grid" id="themeGrid"></div>
-<div class="toast" id="toast">✓ تم النسخ</div>
 
 <script>
 const tg = window.Telegram?.WebApp;
 
-const AVATAR_COLORS = [
-  "#2AABEE","#E91E8C","#9C27B0",
-  "#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"
-];
+// ── COLORS ──
+const AVATAR_COLORS = ["#2AABEE","#E91E8C","#9C27B0","#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"];
 
-function estimateRegDate(userId) {
-  const refs = [
-    { id: 100000000,  date: new Date("2014-01-01") },
-    { id: 500000000,  date: new Date("2017-06-01") },
-    { id: 1000000000, date: new Date("2019-01-01") },
-    { id: 1500000000, date: new Date("2020-06-01") },
-    { id: 2000000000, date: new Date("2021-06-01") },
-    { id: 5000000000, date: new Date("2023-01-01") },
-    { id: 7000000000, date: new Date("2024-01-01") },
-    { id: 9000000000, date: new Date("2025-01-01") },
-  ];
-  for (let i = 1; i < refs.length; i++) {
-    if (userId <= refs[i].id) {
-      const prev  = refs[i - 1];
-      const next  = refs[i];
-      const ratio = (userId - prev.id) / (next.id - prev.id);
-      const ms    = prev.date.getTime() + ratio * (next.date.getTime() - prev.date.getTime());
-      return new Date(ms).toLocaleDateString("ar-EG", { year: "numeric", month: "long" });
-    }
-  }
-  return "2025+";
-}
+// محفوظات المستخدمين المفحوصين
+let savedLookups = JSON.parse(localStorage.getItem("tg_lookups") || "[]");
 
+// ══════════════════════
+//  INIT
+// ══════════════════════
 function init() {
-  if (!tg) { showDemo(); return; }
+  if (!tg) { showDemo(); renderSaved(); return; }
   tg.ready();
   tg.expand();
   const user = tg.initDataUnsafe?.user;
@@ -278,11 +421,14 @@ function init() {
   fillEnv();
   fillTheme();
   tg.onEvent("themeChanged", fillTheme);
+  renderSaved();
 }
 
+// ══════════════════════
+//  FILL USER
+// ══════════════════════
 function fillUser(user) {
   if (!user) { showDemo(); return; }
-
   const first  = user.first_name    || "";
   const last   = user.last_name     || "";
   const uname  = user.username      || "";
@@ -294,89 +440,339 @@ function fillUser(user) {
     av.innerHTML = `<img src="${user.photo_url}" alt="avatar">`;
   } else {
     av.textContent = first[0] || "؟";
-    av.style.background = AVATAR_COLORS[user.id % AVATAR_COLORS.length];
+    av.style.background = `linear-gradient(135deg, ${AVATAR_COLORS[user.id % AVATAR_COLORS.length]}, #1a1a2e)`;
   }
 
-  document.getElementById("fullName").textContent    = (first + " " + last).trim() || "مجهول";
-  document.getElementById("username").textContent    = uname ? "@" + uname : "";
+  document.getElementById("fullName").textContent    = (first+" "+last).trim() || "مجهول";
+  document.getElementById("username").textContent    = uname ? "@"+uname : "";
   document.getElementById("userId").textContent      = user.id;
   document.getElementById("firstName").textContent   = first || "—";
   document.getElementById("lastName").textContent    = last  || "—";
   document.getElementById("usernameVal").textContent = uname || "لا يوجد";
-  document.getElementById("langCode").textContent    = lang + " " + langFlag(lang);
+  document.getElementById("langCode").textContent    = lang+" "+langFlag(lang);
   document.getElementById("isPremium").textContent   = isPrem ? "✅ نعم" : "❌ لا";
-  document.getElementById("regDate").textContent     = "~ " + estimateRegDate(user.id);
-
-  if (uname) document.getElementById("copyUsernameBtn").style.display = "block";
+  document.getElementById("regDate").textContent     = "~ "+estimateRegDate(user.id);
+  if (uname) document.getElementById("copyUnBtn").style.display = "block";
 }
 
 function fillEnv() {
   const platform    = tg?.platform    || "unknown";
   const version     = tg?.version     || "—";
   const colorScheme = tg?.colorScheme || "light";
-
   document.getElementById("badgeRow").innerHTML = [
-    { icon: "📱", text: platform },
-    { icon: "🔧", text: "v" + version },
-    { icon: colorScheme === "dark" ? "🌙" : "☀️", text: colorScheme === "dark" ? "داكن" : "فاتح" },
-  ].map(b => `<div class="badge">${b.icon} ${b.text}</div>`).join("");
+    {icon:"📱", text: platform},
+    {icon:"🔧", text: "v"+version},
+    {icon: colorScheme==="dark"?"🌙":"☀️", text: colorScheme==="dark"?"داكن":"فاتح"},
+  ].map(b=>`<div class="badge">${b.icon} ${b.text}</div>`).join("");
 }
 
 function fillTheme() {
-  const colors = [
-    { label: "الخلفية",          var: "--tg-theme-bg-color",           fallback: "#ffffff" },
-    { label: "النص",             var: "--tg-theme-text-color",         fallback: "#000000" },
-    { label: "الزرار",           var: "--tg-theme-button-color",       fallback: "#2AABEE" },
-    { label: "الخلفية الثانوية", var: "--tg-theme-secondary-bg-color", fallback: "#f4f4f5" },
+  const cols = [
+    {label:"الخلفية",         css:"--tg-theme-bg-color",            fb:"#0f0f1a"},
+    {label:"النص",            css:"--tg-theme-text-color",          fb:"#ffffff"},
+    {label:"الزرار",          css:"--tg-theme-button-color",        fb:"#2AABEE"},
+    {label:"خلفية ثانوية",    css:"--tg-theme-secondary-bg-color",  fb:"#1a1a2e"},
   ];
-
-  document.getElementById("themeGrid").innerHTML = colors.map(c => {
-    const val = getComputedStyle(document.documentElement).getPropertyValue(c.var).trim() || c.fallback;
-    return `
-      <div class="color-chip" style="background:var(--tg-theme-secondary-bg-color,#f4f4f5)">
-        <div class="chip-dot" style="background:${val}; box-shadow:0 2px 8px ${val}66"></div>
-        <span style="color:var(--tg-theme-hint-color,#999); font-size:11px">${c.label}</span>
-      </div>`;
+  document.getElementById("themeGrid").innerHTML = cols.map(c => {
+    const val = getComputedStyle(document.documentElement).getPropertyValue(c.css).trim() || c.fb;
+    return `<div class="color-chip">
+      <div class="chip-dot" style="background:${val};box-shadow:0 2px 10px ${val}88"></div>
+      <span style="color:rgba(255,255,255,0.4);font-size:10px">${c.label}</span>
+    </div>`;
   }).join("");
 }
 
 function showDemo() {
   const av = document.getElementById("avatar");
-  av.textContent = "م";
-  av.style.background = "#2AABEE";
+  av.textContent = "م"; av.style.background = "linear-gradient(135deg,#2AABEE,#1a1a2e)";
   document.getElementById("fullName").textContent    = "مستخدم تجريبي";
   document.getElementById("username").textContent    = "@demo_user";
   document.getElementById("userId").textContent      = "123456789";
   document.getElementById("firstName").textContent   = "مستخدم";
   document.getElementById("lastName").textContent    = "تجريبي";
   document.getElementById("usernameVal").textContent = "@demo_user";
-  document.getElementById("copyUsernameBtn").style.display = "block";
+  document.getElementById("copyUnBtn").style.display = "block";
   document.getElementById("langCode").textContent    = "ar 🇸🇦";
   document.getElementById("isPremium").textContent   = "❌ لا";
   document.getElementById("regDate").textContent     = "~ يناير 2019";
   document.getElementById("badgeRow").innerHTML = `
     <div class="badge">📱 browser</div>
     <div class="badge">☀️ فاتح</div>
-    <div class="badge">🧪 وضع تجريبي</div>`;
+    <div class="badge">🧪 تجريبي</div>`;
   fillTheme();
 }
 
-function copyVal(id) {
+// ══════════════════════
+//  TABS
+// ══════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active");
+  btn.classList.add("active");
+  haptic("light");
+}
+
+// ══════════════════════
+//  TG COPY
+// ══════════════════════
+function tgCopy(id, label) {
   const text = document.getElementById(id).textContent;
-  navigator.clipboard?.writeText(text).catch(() => {});
-  tg?.HapticFeedback?.impactOccurred("light");
-  const t = document.getElementById("toast");
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2000);
+  navigator.clipboard?.writeText(text).catch(()=>{});
+  haptic("light");
+  if (tg?.showAlert) {
+    tg.showAlert(`✅ تم نسخ ${label}:\n${text}`);
+  }
+}
+
+// ══════════════════════
+//  TG UTILITIES DEMOS
+// ══════════════════════
+function demoAlert() {
+  haptic("medium");
+  if (tg?.showAlert) {
+    tg.showAlert("👋 مرحباً!\nهذا مثال على showAlert في تيليجرام.");
+  } else {
+    alert("showAlert — غير متاح خارج تيليجرام");
+  }
+}
+
+function demoConfirm() {
+  haptic("medium");
+  if (tg?.showConfirm) {
+    tg.showConfirm("هل تريد المتابعة؟", (ok) => {
+      if (ok) hapticNotif("success");
+      else    hapticNotif("error");
+      tg.showAlert(ok ? "✅ اخترت: موافق" : "❌ اخترت: إلغاء");
+    });
+  } else {
+    const ok = confirm("showConfirm — موافق؟");
+    alert(ok ? "اخترت: موافق" : "اخترت: إلغاء");
+  }
+}
+
+function demoPopup() {
+  haptic("medium");
+  if (tg?.showPopup) {
+    tg.showPopup({
+      title: "🛠 showPopup",
+      message: "هذه نافذة مخصصة بأزرار متعددة!",
+      buttons: [
+        { id: "ok",     type: "default",     text: "موافق ✅" },
+        { id: "info",   type: "default",     text: "معلومات ℹ️" },
+        { id: "cancel", type: "destructive",  text: "إلغاء ❌" },
+      ]
+    }, (btnId) => {
+      hapticNotif(btnId === "cancel" ? "error" : "success");
+      tg.showAlert(`ضغطت على: ${btnId}`);
+    });
+  } else {
+    alert("showPopup — غير متاح خارج تيليجرام");
+  }
+}
+
+function demoScanQR() {
+  haptic("medium");
+  if (tg?.showScanQrPopup) {
+    tg.showScanQrPopup({ text: "امسح QR Code لقراءة البيانات" }, (data) => {
+      tg.closeScanQrPopup();
+      tg.showAlert("📷 تم مسح:\n" + data);
+    });
+  } else {
+    alert("showScanQrPopup — غير متاح خارج تيليجرام");
+  }
+}
+
+function haptic(type) {
+  tg?.HapticFeedback?.impactOccurred(type);
+}
+
+function hapticNotif(type) {
+  tg?.HapticFeedback?.notificationOccurred(type);
+}
+
+function demoMainBtn() {
+  haptic("medium");
+  if (!tg?.MainButton) { alert("MainButton — غير متاح"); return; }
+  tg.MainButton.setText("🎉 تم الضغط!");
+  tg.MainButton.show();
+  tg.MainButton.onClick(() => {
+    hapticNotif("success");
+    tg.MainButton.hide();
+    tg.showAlert("✅ ضغطت على MainButton!");
+  });
+}
+
+function demoBackBtn() {
+  haptic("medium");
+  if (!tg?.BackButton) { alert("BackButton — غير متاح"); return; }
+  tg.BackButton.show();
+  tg.BackButton.onClick(() => {
+    hapticNotif("warning");
+    tg.BackButton.hide();
+    tg.showAlert("◀️ ضغطت على BackButton!");
+  });
+}
+
+function demoExpand() {
+  haptic("medium");
+  tg?.expand ? tg.expand() : alert("expand() — غير متاح");
+}
+
+function demoClose() {
+  if (tg?.showConfirm) {
+    tg.showConfirm("هل تريد إغلاق الميني اب؟", (ok) => {
+      if (ok) tg.close();
+    });
+  } else {
+    alert("close() — غير متاح خارج تيليجرام");
+  }
+}
+
+function demoReadClipboard() {
+  haptic("medium");
+  if (tg?.readTextFromClipboard) {
+    tg.readTextFromClipboard((text) => {
+      tg.showAlert("📋 محتوى الكلبورد:\n" + (text || "(فارغ)"));
+    });
+  } else {
+    navigator.clipboard?.readText().then(t => alert("📋 " + (t || "(فارغ)"))).catch(() => alert("تعذر قراءة الكلبورد"));
+  }
+}
+
+function demoOpenLink() {
+  haptic("medium");
+  if (tg?.openLink) {
+    tg.openLink("https://telegram.org");
+  } else {
+    window.open("https://telegram.org", "_blank");
+  }
+}
+
+// ══════════════════════
+//  USER LOOKUP
+// ══════════════════════
+async function doLookup() {
+  const raw = document.getElementById("lookupInput").value.trim();
+  if (!raw) {
+    if (tg?.showAlert) tg.showAlert("⚠️ أدخل User ID أو @username أولاً");
+    else alert("أدخل User ID أو @username");
+    return;
+  }
+
+  haptic("medium");
+  const query = raw.startsWith("@") ? raw.slice(1) : raw;
+  const isId  = /^\d+$/.test(query);
+
+  // محاكاة فحص — في الواقع محتاج API من السيرفر
+  const result = buildLookupResult(query, isId);
+  renderLookupResult(result);
+
+  // حفظ في السجل
+  if (!savedLookups.find(u => u.query === query)) {
+    savedLookups.unshift({ query, isId, time: new Date().toLocaleTimeString("ar") });
+    if (savedLookups.length > 10) savedLookups.pop();
+    localStorage.setItem("tg_lookups", JSON.stringify(savedLookups));
+  }
+  renderSaved();
+}
+
+function buildLookupResult(query, isId) {
+  // تقدير بيانات من الـ ID لو رقم
+  if (isId) {
+    const id = parseInt(query);
+    return {
+      id,
+      type: "user",
+      regDate: estimateRegDate(id),
+      color: AVATAR_COLORS[id % AVATAR_COLORS.length],
+      initial: "#",
+      note: "بيانات تقريبية من الـ ID"
+    };
+  }
+  return {
+    username: query,
+    type: "username",
+    color: AVATAR_COLORS[query.length % AVATAR_COLORS.length],
+    initial: query[0]?.toUpperCase() || "?",
+    note: "للحصول على بيانات كاملة يلزم Bot API من السيرفر"
+  };
+}
+
+function renderLookupResult(r) {
+  const el = document.getElementById("lookupResult");
+  el.innerHTML = `
+    <div class="card glass lookup-result">
+      <div class="row">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,${r.color},#1a1a2e);
+          display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0">
+          ${r.initial}
+        </div>
+        <div class="row-info">
+          <div class="row-label">${r.type === "user" ? "User ID" : "Username"}</div>
+          <div class="row-value">${r.id || "@"+r.username}</div>
+        </div>
+      </div>
+      ${r.regDate ? `<div class="row">
+        <div class="row-icon">📅</div>
+        <div class="row-info"><div class="row-label">تاريخ الإنشاء (تقريبي)</div>
+        <div class="row-value">~ ${r.regDate}</div></div>
+      </div>` : ""}
+      <div class="row">
+        <div class="row-icon">ℹ️</div>
+        <div class="row-info"><div class="row-label">ملاحظة</div>
+        <div class="row-value" style="white-space:normal;font-size:12px;color:rgba(255,255,255,0.5)">${r.note}</div></div>
+      </div>
+    </div>`;
+  hapticNotif("success");
+}
+
+function renderSaved() {
+  const el = document.getElementById("savedUsers");
+  if (!savedLookups.length) {
+    el.innerHTML = `<div class="lookup-empty" style="padding:16px">لا يوجد سجل بعد</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="card glass">` +
+    savedLookups.map(u => `
+      <div class="row" onclick="document.getElementById('lookupInput').value='${u.isId ? u.query : '@'+u.query}'; doLookup();" style="cursor:pointer">
+        <div class="row-icon">${u.isId ? "🆔" : "👤"}</div>
+        <div class="row-info">
+          <div class="row-value">${u.isId ? u.query : "@"+u.query}</div>
+          <div class="row-label">${u.time}</div>
+        </div>
+        <div style="color:rgba(255,255,255,0.3);font-size:18px">›</div>
+      </div>`
+    ).join("") + `</div>`;
+}
+
+// ══════════════════════
+//  HELPERS
+// ══════════════════════
+function estimateRegDate(userId) {
+  const refs = [
+    {id:100000000,  date:new Date("2014-01-01")},
+    {id:500000000,  date:new Date("2017-06-01")},
+    {id:1000000000, date:new Date("2019-01-01")},
+    {id:1500000000, date:new Date("2020-06-01")},
+    {id:2000000000, date:new Date("2021-06-01")},
+    {id:5000000000, date:new Date("2023-01-01")},
+    {id:7000000000, date:new Date("2024-01-01")},
+    {id:9000000000, date:new Date("2025-01-01")},
+  ];
+  for (let i=1; i<refs.length; i++) {
+    if (userId <= refs[i].id) {
+      const p = refs[i-1], n = refs[i];
+      const r = (userId-p.id)/(n.id-p.id);
+      return new Date(p.date.getTime()+r*(n.date.getTime()-p.date.getTime()))
+        .toLocaleDateString("ar-EG",{year:"numeric",month:"long"});
+    }
+  }
+  return "2025+";
 }
 
 function langFlag(code) {
-  const flags = {
-    ar:"🇸🇦", en:"🇺🇸", ru:"🇷🇺", de:"🇩🇪",
-    fr:"🇫🇷", tr:"🇹🇷", es:"🇪🇸", it:"🇮🇹",
-    zh:"🇨🇳", ja:"🇯🇵", uk:"🇺🇦", fa:"🇮🇷"
-  };
-  return flags[code] || "🌍";
+  return ({ar:"🇸🇦",en:"🇺🇸",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",tr:"🇹🇷",es:"🇪🇸",it:"🇮🇹",zh:"🇨🇳",ja:"🇯🇵",uk:"🇺🇦",fa:"🇮🇷"})[code] || "🌍";
 }
 
 init();
