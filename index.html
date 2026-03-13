@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>معلوماتي</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ── AVATAR ── */
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 20px 24px;
+  }
+
+  .avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: var(--tg-theme-button-color, #2AABEE);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px; font-weight: 800;
+    color: var(--tg-theme-button-text-color, #fff);
+    margin-bottom: 14px;
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 35%, transparent);
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .full-name {
+    font-size: 22px; font-weight: 800;
+    color: var(--tg-theme-text-color, #000);
+    letter-spacing: -0.4px;
+    animation: fadeUp 0.4s 0.1s ease both;
+  }
+
+  .username {
+    font-size: 14px; margin-top: 4px;
+    color: var(--tg-theme-link-color, #2AABEE);
+    animation: fadeUp 0.4s 0.15s ease both;
+  }
+
+  /* ── CARDS ── */
+  .section {
+    padding: 0 16px;
+    animation: fadeUp 0.4s 0.2s ease both;
+  }
+
+  .section-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--tg-theme-hint-color, #999);
+    padding: 0 4px 8px;
+  }
+
+  .card {
+    background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, #999) 15%, transparent);
+    transition: background 0.15s;
+  }
+  .row:last-child { border-bottom: none; }
+
+  .row-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
+  }
+
+  .row-info { flex: 1; min-width: 0; }
+  .row-label { font-size: 12px; color: var(--tg-theme-hint-color, #999); margin-bottom: 1px; }
+  .row-value { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .row-copy {
+    font-size: 13px; color: var(--tg-theme-link-color, #2AABEE);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Tajawal', sans-serif; font-weight: 600; flex-shrink: 0;
+    padding: 4px 8px; border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .row-copy:active { background: color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent); }
+
+  /* ── PLATFORM BADGE ── */
+  .badge-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 0 16px 4px;
+    animation: fadeUp 0.4s 0.25s ease both;
+  }
+  .badge {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
+    color: var(--tg-theme-button-color, #2AABEE);
+  }
+
+  /* ── THEME PREVIEW ── */
+  .theme-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; padding: 0 16px;
+    animation: fadeUp 0.4s 0.3s ease both;
+    margin-bottom: 20px;
+  }
+  .color-chip {
+    height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; gap: 6px; flex-direction: column;
+  }
+  .chip-dot { width: 20px; height: 20px; border-radius: 50%; }
+
+  /* ── COPY TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: #34C759; color: #fff;
+    padding: 10px 22px; border-radius: 20px;
+    font-size: 14px; font-weight: 600;
+    opacity: 0; pointer-events: none;
+    transition: all 0.3s; z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="avatar-section">
+  <div class="avatar" id="avatar">؟</div>
+  <div class="full-name" id="fullName">جاري التحميل...</div>
+  <div class="username" id="username"></div>
+</div>
+
+<div style="padding:0 16px 8px; animation:fadeUp .4s .18s ease both">
+  <div class="section-label">معلومات الحساب</div>
+</div>
+
+<div class="section">
+  <div class="card" id="infoCard">
+    <div class="row">
+      <div class="row-icon">🆔</div>
+      <div class="row-info">
+        <div class="row-label">User ID</div>
+        <div class="row-value" id="userId">—</div>
+      </div>
+      <button class="row-copy" onclick="copyVal('userId')">نسخ</button>
+    </div>
+    <div class="row">
+      <div class="row-icon">👤</div>
+      <div class="row-info">
+        <div class="row-label">الاسم الأول</div>
+        <div class="row-value" id="firstName">—</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon">👤</div>
+      <div class="row-info">
+        <div class="row-label">الاسم الأخير</div>
+        <div class="row-value" id="lastName">—</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon">🔗</div>
+      <div class="row-info">
+        <div class="row-label">اسم المستخدم</div>
+        <div class="row-value" id="usernameVal">—</div>
+      </div>
+      <button class="row-copy" id="copyUsernameBtn" onclick="copyVal('usernameVal')" style="display:none">نسخ</button>
+    </div>
+    <div class="row">
+      <div class="row-icon">🌍</div>
+      <div class="row-info">
+        <div class="row-label">اللغة</div>
+        <div class="row-value" id="langCode">—</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon">⭐</div>
+      <div class="row-info">
+        <div class="row-label">حساب Premium</div>
+        <div class="row-value" id="isPremium">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 16px 8px; animation:fadeUp .4s .22s ease both">
+  <div class="section-label">بيئة التشغيل</div>
+</div>
+
+<div class="badge-row" id="badgeRow"></div>
+<div style="height:16px"></div>
+
+<div style="padding:0 16px 8px; animation:fadeUp .4s .28s ease both">
+  <div class="section-label">ألوان الثيم الحالي</div>
+</div>
+
+<div class="theme-grid" id="themeGrid"></div>
+
+<div class="toast" id="toast">✓ تم النسخ</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+
+// ── COLORS LIST ──
+const AVATAR_COLORS = [
+  "#2AABEE","#E91E8C","#9C27B0",
+  "#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"
+];
+
+function init() {
+  if (!tg) { showDemo(); return; }
+
+  tg.ready();
+  tg.expand();
+
+  const user = tg.initDataUnsafe?.user;
+  fillUser(user);
+  fillEnv();
+  fillTheme();
+
+  tg.onEvent("themeChanged", fillTheme);
+}
+
+function fillUser(user) {
+  if (!user) { showDemo(); return; }
+
+  const first  = user.first_name  || "";
+  const last   = user.last_name   || "";
+  const uname  = user.username    || "";
+  const lang   = user.language_code || "—";
+  const isPrem = user.is_premium  || false;
+
+  // Avatar
+  const av = document.getElementById("avatar");
+  av.textContent = first[0] || "؟";
+  av.style.background = AVATAR_COLORS[user.id % AVATAR_COLORS.length];
+
+  document.getElementById("fullName").textContent = (first + " " + last).trim() || "مجهول";
+  document.getElementById("username").textContent  = uname ? "@" + uname : "";
+
+  // Info rows
+  document.getElementById("userId").textContent    = user.id;
+  document.getElementById("firstName").textContent = first || "—";
+  document.getElementById("lastName").textContent  = last  || "—";
+  document.getElementById("usernameVal").textContent = uname || "لا يوجد";
+  document.getElementById("langCode").textContent  = lang + " " + langFlag(lang);
+  document.getElementById("isPremium").textContent = isPrem ? "✅ نعم" : "❌ لا";
+
+  if (uname) document.getElementById("copyUsernameBtn").style.display = "block";
+}
+
+function fillEnv() {
+  const platform  = tg?.platform  || "unknown";
+  const version   = tg?.version   || "—";
+  const colorScheme = tg?.colorScheme || "light";
+
+  const badges = [
+    { icon: "📱", text: platform },
+    { icon: "🔧", text: "v" + version },
+    { icon: colorScheme === "dark" ? "🌙" : "☀️", text: colorScheme === "dark" ? "داكن" : "فاتح" },
+  ];
+
+  document.getElementById("badgeRow").innerHTML = badges.map(b =>
+    `<div class="badge">${b.icon} ${b.text}</div>`
+  ).join("");
+}
+
+function fillTheme() {
+  const colors = [
+    { label: "الخلفية",        var: "--tg-theme-bg-color",           fallback: "#ffffff" },
+    { label: "النص",           var: "--tg-theme-text-color",         fallback: "#000000" },
+    { label: "الزرار",         var: "--tg-theme-button-color",       fallback: "#2AABEE" },
+    { label: "الخلفية الثانوية", var: "--tg-theme-secondary-bg-color", fallback: "#f4f4f5" },
+  ];
+
+  document.getElementById("themeGrid").innerHTML = colors.map(c => {
+    const val = getComputedStyle(document.documentElement).getPropertyValue(c.var).trim() || c.fallback;
+    return `
+      <div class="color-chip" style="background:var(--tg-theme-secondary-bg-color,#f4f4f5)">
+        <div class="chip-dot" style="background:${val}; box-shadow:0 2px 8px ${val}66"></div>
+        <span style="color:var(--tg-theme-hint-color,#999); font-size:11px">${c.label}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function showDemo() {
+  document.getElementById("avatar").textContent    = "م";
+  document.getElementById("fullName").textContent  = "مستخدم تجريبي";
+  document.getElementById("username").textContent  = "@demo_user";
+  document.getElementById("userId").textContent    = "123456789";
+  document.getElementById("firstName").textContent = "مستخدم";
+  document.getElementById("lastName").textContent  = "تجريبي";
+  document.getElementById("usernameVal").textContent = "@demo_user";
+  document.getElementById("copyUsernameBtn").style.display = "block";
+  document.getElementById("langCode").textContent  = "ar 🇸🇦";
+  document.getElementById("isPremium").textContent = "❌ لا";
+
+  document.getElementById("badgeRow").innerHTML = `
+    <div class="badge">📱 browser</div>
+    <div class="badge">☀️ فاتح</div>
+    <div class="badge">🧪 وضع تجريبي</div>
+  `;
+  fillTheme();
+}
+
+function copyVal(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard?.writeText(text).catch(() => {});
+  tg?.HapticFeedback?.impactOccurred("light");
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+function langFlag(code) {
+  const flags = { ar:"🇸🇦", en:"🇺🇸", ru:"🇷🇺", de:"🇩🇪", fr:"🇫🇷", tr:"🇹🇷", es:"🇪🇸", it:"🇮🇹", zh:"🇨🇳", ja:"🇯🇵" };
+  return flags[code] || "🌍";
+}
+
+init();
+</script>
+</body>
+</html>
