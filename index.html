@@ -1,1 +1,219 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GG Script Maker Pro</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
+    min-height: 100vh; padding: 20px; transition: 0.3s;
+  }
+
+  body.dark-mode { --tg-theme-bg-color: #1c1c1d; --tg-theme-text-color: #ffffff; --tg-theme-secondary-bg-color: #2c2c2e; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; animation: fadeUp 0.4s ease; }
+  .title { font-size: 22px; font-weight: 800; color: var(--tg-theme-button-color, #2AABEE); }
+
+  .card {
+    background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+    border-radius: 18px; padding: 15px; margin-bottom: 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .section-label { font-size: 12px; font-weight: 700; color: var(--tg-theme-hint-color, #999); margin-bottom: 10px; display: block; }
+
+  input, textarea {
+    width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px;
+    border: 1px solid color-mix(in srgb, var(--tg-theme-hint-color) 30%, transparent);
+    background: var(--tg-theme-bg-color); color: var(--tg-theme-text-color);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  button {
+    background: var(--tg-theme-button-color, #2AABEE);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none; padding: 12px; border-radius: 12px;
+    font-weight: 700; cursor: pointer; transition: 0.2s;
+    font-family: 'Tajawal', sans-serif; font-size: 13px;
+  }
+
+  button:active { transform: scale(0.96); opacity: 0.8; }
+
+  #editor {
+    height: 200px; font-family: monospace; direction: ltr; font-size: 14px;
+    border: 2px solid var(--tg-theme-button-color); line-height: 1.5;
+  }
+
+  .btn-theme { width: 44px; height: 44px; border-radius: 50%; padding: 0; font-size: 20px; }
+  .btn-send { background: #34C759; width: 100%; margin-top: 10px; font-size: 15px; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title" id="appTitle">صانع سكربتات GG</div>
+  <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</div>
+
+<div class="card">
+  <span class="section-label" id="labelSettings">إعدادات السكربت</span>
+  <input type="text" id="scriptName" placeholder="اسم السكربت (مثال: Sayed_Hack)">
+  <input type="text" id="scriptPass" placeholder="كلمة مرور الدخول (اختياري)">
+</div>
+
+<div class="card">
+  <span class="section-label" id="labelTools">أدوات البرمجة الذكية</span>
+  <div class="grid">
+    <button onclick="askSearch()">🔍 بحث جديد</button>
+    <button onclick="askEdit()">✍️ تعديل النتائج</button>
+    <button onclick="askAlert()">💬 رسالة تنبيه</button>
+    <button onclick="askToast()">🍞 إشعار Toast</button>
+    <button onclick="addCode('gg.clearResults()')">🗑️ مسح النتائج</button>
+    <button onclick="addCode('gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)')">🌐 تحديد النطاق</button>
+  </div>
+</div>
+
+<div class="card">
+  <span class="section-label">محرر الكود</span>
+  <textarea id="editor" placeholder="-- اكتب كود Lua هنا أو استخدم الأدوات..."></textarea>
+  <div class="grid" style="margin-top:10px;">
+    <button style="background: #FF3B30;" onclick="clearEditor()">❌ مسح</button>
+    <button onclick="downloadFile()">💾 حفظ للجهاز</button>
+  </div>
+  <button class="btn-send" onclick="sendToBot()">🚀 إرسال الملف للبوت</button>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+const BOT_TOKEN = "8695529806:AAEkG_Da8uAoWihqyzhYBI7hNInGkqGbPWA"; // التوكن الخاص بك
+
+function init() {
+  tg.ready();
+  tg.expand();
+  
+  // ترجمة تلقائية بناءً على لغة المستخدم
+  const lang = tg.initDataUnsafe?.user?.language_code || 'ar';
+  if (lang !== 'ar') {
+    document.getElementById('appTitle').innerText = "GG Script Maker";
+    document.getElementById('labelSettings').innerText = "Script Settings";
+    document.getElementById('labelTools').innerText = "Smart Tools";
+    document.getElementById('scriptName').placeholder = "Script Name";
+    document.getElementById('scriptPass').placeholder = "Password (Optional)";
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  document.getElementById('themeBtn').innerText = isDark ? '☀️' : '🌙';
+}
+
+function addCode(code) {
+  const editor = document.getElementById('editor');
+  editor.value += code + "\n";
+  tg.HapticFeedback.impactOccurred("light");
+}
+
+// وظائف الإدخال الذكي
+function askSearch() {
+  const val = prompt("أدخل الرقم الذي تريد البحث عنه:", "100");
+  if (val) {
+    const type = prompt("اختر النوع (4:DWORD, 16:FLOAT, 2:WORD):", "4");
+    addCode(`gg.searchNumber("${val}", ${type})`);
+  }
+}
+
+function askEdit() {
+  const val = prompt("القيمة الجديدة للتعديل:", "99999");
+  if (val) {
+    const type = prompt("نوع البيانات:", "4");
+    addCode(`gg.editAll("${val}", ${type})`);
+  }
+}
+
+function askAlert() {
+  const msg = prompt("نص الرسالة (Alert):", "أهلاً بك يا سيد");
+  if (msg) addCode(`gg.alert("${msg}", "استمرار")`);
+}
+
+function askToast() {
+  const msg = prompt("نص الإشعار (Toast):", "تم تفعيل الهكر");
+  if (msg) addCode(`gg.toast("${msg}")`);
+}
+
+function clearEditor() {
+  if (confirm("هل تريد مسح كل الكود؟")) document.getElementById('editor').value = "";
+}
+
+// بناء السكربت النهائي
+function buildFullCode() {
+  const name = document.getElementById('scriptName').value || "Sayed_Script";
+  const pass = document.getElementById('scriptPass').value;
+  let code = `-- Built by Sayed GG Maker\n-- Name: ${name}\n`;
+  if (pass) code += `local p = gg.prompt({'Pass:'},{''},{'text'})\nif p[1] ~= '${pass}' then os.exit() end\n`;
+  code += document.getElementById('editor').value;
+  return { code, name };
+}
+
+// تحميل للجهاز
+function downloadFile() {
+  const { code, name } = buildFullCode();
+  const blob = new Blob([code], { type: 'text/lua' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name}.lua`;
+  a.click();
+  tg.showAlert("تم حفظ الملف في التحميلات!");
+}
+
+// إرسال للبوت (الفكرة الجديدة)
+async function sendToBot() {
+  const user = tg.initDataUnsafe?.user;
+  if (!user || !user.id) {
+    tg.showAlert("لا يمكن الحصول على هويتك، افتح التطبيق من داخل التليجرام.");
+    return;
+  }
+
+  const { code, name } = buildFullCode();
+  const blob = new Blob([code], { type: 'text/plain' });
+  const file = new File([blob], `${name}.lua`);
+
+  const formData = new FormData();
+  formData.append('chat_id', user.id);
+  formData.append('document', file);
+  formData.append('caption', `✅ تم تجهيز سكربتك بنجاح!\n📦 الاسم: ${name}\n👤 المستخدم: ${user.first_name}`);
+
+  tg.HapticFeedback.notificationOccurred("success");
+  
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (res.ok) {
+      tg.showAlert("🚀 تم إرسال السكربت إلى حسابك في البوت بنجاح!");
+    } else {
+      tg.showAlert("❌ فشل الإرسال. تأكد أنك بدأت المحادثة مع البوت أولاً.");
+    }
+  } catch (err) {
+    tg.showAlert("⚠️ خطأ في الاتصال بالبوت.");
+  }
+}
+
+init();
+</script>
+</body>
+</html>
