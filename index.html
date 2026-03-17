@@ -263,12 +263,13 @@ let lang = "ar";
 let tr   = T.ar;
 
 // ════════════════════════════════════════
-//  INIT
+//  INIT — كشف اللغة من المتصفح مباشرة
 // ════════════════════════════════════════
 function init() {
   if (tg) { tg.ready(); tg.expand(); }
 
-  const code = tg?.initDataUnsafe?.user?.language_code || "ar";
+  // navigator.language يعكس لغة تطبيق تيليجرام الحالية فعلاً
+  const code = navigator.language || navigator.userLanguage || "ar";
   lang = code.startsWith("ar") ? "ar" : "en";
   tr   = T[lang];
 
@@ -437,3 +438,4 @@ init();
 </script>
 </body>
 </html>
+
