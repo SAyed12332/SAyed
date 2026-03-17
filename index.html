@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>GG Script Maker Pro</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -14,105 +14,65 @@ body {
   background-color: var(--tg-theme-bg-color, #ffffff);
   color: var(--tg-theme-text-color, #000000);
   min-height: 100vh;
-  padding-bottom: 40px;
-  transition: background .3s, color .3s;
+  padding: 0 0 40px;
 }
 
-/* ── HEADER ── */
 .header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 16px 8px;
-  position: sticky; top: 0; z-index: 50;
-  background: var(--tg-theme-bg-color, #fff);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(128,128,128,0.1);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 16px 12px;
   animation: fadeUp .4s ease both;
 }
-.header-left { display: flex; align-items: center; gap: 10px; }
-.app-icon {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: var(--tg-theme-button-color, #2AABEE);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 40%, transparent);
-}
-.app-title  { font-size: 17px; font-weight: 800; }
-.app-sub    { font-size: 11px; color: var(--tg-theme-hint-color, #999); margin-top: 1px; }
-.header-right { display: flex; gap: 8px; }
-.icon-btn {
-  width: 36px; height: 36px; border-radius: 10px;
-  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-  border: none; cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center;
-  transition: .15s; color: var(--tg-theme-text-color,#000);
-}
-.icon-btn:active { opacity: .7; transform: scale(.93); }
-
-/* ── LANG BADGE ── */
+.title { font-size: 20px; font-weight: 800; color: var(--tg-theme-button-color, #2AABEE); }
 .lang-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
-  background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 15%, transparent);
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 4px; font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 12%, transparent);
   color: var(--tg-theme-button-color, #2AABEE);
-  margin: 10px 16px 0;
-  animation: fadeUp .4s .05s ease both;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 25%, transparent);
 }
-
-/* ── TABS ── */
-.tabs {
-  display: flex; gap: 0; margin: 12px 16px 0;
+.btn-theme {
+  width: 38px; height: 38px; border-radius: 50%;
   background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-  border-radius: 14px; padding: 4px;
-  animation: fadeUp .4s .1s ease both;
+  border: none; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: .15s;
 }
-.tab-btn {
-  flex: 1; padding: 9px 4px; border: none; border-radius: 10px;
-  font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: all .2s;
-  color: var(--tg-theme-hint-color, #999);
-  background: transparent;
-}
-.tab-btn.active {
-  background: var(--tg-theme-button-color, #2AABEE);
-  color: var(--tg-theme-button-text-color, #fff);
-  box-shadow: 0 2px 10px color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 40%, transparent);
-}
+.btn-theme:active { transform: scale(.9); }
 
-/* ── PAGES ── */
-.page { display: none; padding: 14px 16px 0; animation: fadeUp .3s ease both; }
-.page.active { display: block; }
-
-/* ── CARDS ── */
 .card {
   background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-  border-radius: 18px; padding: 14px; margin-bottom: 14px;
+  border-radius: 18px; padding: 14px;
+  margin: 0 16px 16px;
+  animation: fadeUp .5s ease both;
 }
 .card-label {
-  font-size: 11px; font-weight: 700; letter-spacing: .7px;
-  text-transform: uppercase; color: var(--tg-theme-hint-color,#999);
-  margin-bottom: 10px; display: block;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--tg-theme-hint-color, #999);
+  display: block; margin-bottom: 10px;
 }
 
-/* ── INPUTS ── */
-.field {
-  width: 100%; padding: 11px 14px; border-radius: 12px;
+input, textarea {
+  width: 100%; padding: 11px 13px;
+  border-radius: 12px; margin-bottom: 8px;
   border: 1.5px solid rgba(128,128,128,0.15);
-  background: var(--tg-theme-bg-color,#fff);
-  color: var(--tg-theme-text-color,#000);
+  background: var(--tg-theme-bg-color, #fff);
+  color: var(--tg-theme-text-color, #000);
   font-family: 'Tajawal', sans-serif; font-size: 14px;
-  outline: none; margin-bottom: 8px; transition: border-color .2s;
+  outline: none; transition: border-color .2s;
 }
-.field:focus { border-color: var(--tg-theme-button-color, #2AABEE); }
-.field::placeholder { color: var(--tg-theme-hint-color, #999); }
-.field:last-child { margin-bottom: 0; }
+input:focus, textarea:focus { border-color: var(--tg-theme-button-color, #2AABEE); }
+input::placeholder, textarea::placeholder { color: var(--tg-theme-hint-color, #aaa); }
+input:last-child { margin-bottom: 0; }
 
-textarea.field {
-  height: 210px; resize: none;
-  font-family: 'JetBrains Mono', monospace;
-  direction: ltr; font-size: 13px; line-height: 1.6;
+textarea#editor {
+  height: 200px; resize: none;
+  font-family: monospace; direction: ltr; font-size: 13px; line-height: 1.6;
+  border: 2px solid var(--tg-theme-button-color, #2AABEE);
+  margin-bottom: 0;
 }
 
-/* ── BUTTONS ── */
 .btn {
   background: var(--tg-theme-button-color, #2AABEE);
   color: var(--tg-theme-button-text-color, #fff);
@@ -121,326 +81,359 @@ textarea.field {
   cursor: pointer; transition: .2s; width: 100%;
 }
 .btn:active { transform: scale(.96); opacity: .85; }
-.btn-danger  { background: #FF3B30; }
-.btn-success { background: #34C759; }
+.btn-red   { background: #FF3B30; color: #fff; }
+.btn-green { background: #34C759; color: #fff; }
 .btn-neutral {
-  background: var(--tg-theme-secondary-bg-color,#f4f4f5);
-  color: var(--tg-theme-text-color,#000);
-  border: 1.5px solid rgba(128,128,128,0.15);
+  background: var(--tg-theme-bg-color, #fff);
+  color: var(--tg-theme-text-color, #000);
+  border: 1.5px solid rgba(128,128,128,0.2);
 }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 
-/* ── TOOL BUTTONS ── */
+.tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .tool-btn {
   background: var(--tg-theme-bg-color, #fff);
   border: 1.5px solid rgba(128,128,128,0.12);
   border-radius: 14px; padding: 12px 8px;
-  cursor: pointer; transition: .2s;
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  font-family: 'Tajawal', sans-serif; color: var(--tg-theme-text-color,#000);
+  cursor: pointer; transition: .18s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-family: 'Tajawal', sans-serif; color: var(--tg-theme-text-color, #000);
 }
-.tool-btn:active { transform: scale(.94); background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 10%, transparent); }
-.tool-icon  { font-size: 24px; }
-.tool-label { font-size: 11px; font-weight: 700; text-align: center; }
-.tool-desc  { font-size: 10px; color: var(--tg-theme-hint-color,#999); text-align: center; }
-
-/* ── CODE PREVIEW ── */
-.code-preview {
-  background: #1e1e2e; color: #cdd6f4;
-  border-radius: 14px; padding: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; line-height: 1.7; direction: ltr;
-  overflow-x: auto; white-space: pre; margin-bottom: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  min-height: 60px;
+.tool-btn:active {
+  transform: scale(.94);
+  background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 10%, transparent);
 }
-.code-preview .kw  { color: #cba6f7; }
-.code-preview .str { color: #a6e3a1; }
-.code-preview .cm  { color: #585b70; }
-.code-preview .fn  { color: #89b4fa; }
-.code-preview .num { color: #fab387; }
+.tool-icon  { font-size: 22px; }
+.tool-label { font-size: 12px; font-weight: 700; }
+.tool-desc  { font-size: 10px; color: var(--tg-theme-hint-color, #999); }
 
-/* ── TEMPLATE CHIPS ── */
-.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.chip {
-  padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-  background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 12%, transparent);
-  color: var(--tg-theme-button-color, #2AABEE);
-  border: 1px solid color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 25%, transparent);
-  cursor: pointer; transition: .15s;
+.btn-send {
+  font-size: 15px; padding: 14px;
+  margin: 0 16px; width: calc(100% - 32px);
+  animation: fadeUp .6s ease both;
 }
-.chip:active { background: color-mix(in srgb, var(--tg-theme-button-color,#2AABEE) 25%, transparent); }
 
-/* ── SEND STATUS ── */
-.send-status {
-  border-radius: 14px; padding: 12px 14px; margin-bottom: 12px;
-  font-size: 13px; font-weight: 600; text-align: center; display: none;
-}
-.send-status.ok  { background: #d1fae5; color: #065f46; }
-.send-status.err { background: #fee2e2; color: #991b1b; }
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══ -->
+<!-- HEADER -->
 <div class="header">
-  <div class="header-left">
-    <div class="app-icon">⚙️</div>
-    <div>
-      <div class="app-title" data-i18n="appTitle">صانع سكربتات GG</div>
-      <div class="app-sub"  data-i18n="appSub">Pro Script Builder</div>
-    </div>
+  <div>
+    <div class="title" id="el_title">صانع سكربتات GG</div>
+    <div class="lang-badge" id="el_langBadge">🌍</div>
   </div>
-  <div class="header-right">
-    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Theme">🌙</button>
-    <button class="icon-btn" id="previewBtn" onclick="switchTab('preview', document.querySelectorAll('.tab-btn')[2])" title="Preview">👁</button>
+  <button class="btn-theme" id="themeBtn" onclick="toggleTheme()">🌙</button>
+</div>
+
+<!-- SETTINGS -->
+<div class="card" style="animation-delay:.05s">
+  <span class="card-label" id="el_lblSettings">إعدادات السكربت</span>
+  <input id="scriptName"   placeholder="اسم السكربت">
+  <input id="scriptPass"   placeholder="كلمة مرور (اختياري)">
+  <input id="scriptAuthor" placeholder="اسم المطور (اختياري)">
+</div>
+
+<!-- TOOLS -->
+<div class="card" style="animation-delay:.1s">
+  <span class="card-label" id="el_lblTools">أدوات البرمجة</span>
+  <div class="tools-grid" id="toolsGrid"></div>
+</div>
+
+<!-- EDITOR -->
+<div class="card" style="animation-delay:.15s">
+  <span class="card-label" id="el_lblEditor">محرر الكود</span>
+  <textarea id="editor" placeholder="-- اكتب كود Lua هنا..."></textarea>
+  <div class="grid">
+    <button class="btn btn-red"     id="el_btnClear" onclick="clearEditor()">❌ مسح</button>
+    <button class="btn btn-neutral" id="el_btnSave"  onclick="downloadFile()">💾 حفظ</button>
   </div>
 </div>
 
-<!-- LANG BADGE -->
-<div class="lang-badge" id="langBadge">🌍 ar</div>
-
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('builder',this)" data-i18n="tabBuilder">🔨 البناء</button>
-  <button class="tab-btn"        onclick="switchTab('tools',this)"   data-i18n="tabTools">🛠 الأدوات</button>
-  <button class="tab-btn"        onclick="switchTab('preview',this)" data-i18n="tabPreview">👁 معاينة</button>
-  <button class="tab-btn"        onclick="switchTab('send',this)"    data-i18n="tabSend">🚀 إرسال</button>
-</div>
-
-<!-- ══ TAB: BUILDER ══ -->
-<div class="page active" id="tab-builder">
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblSettings">إعدادات السكربت</span>
-    <input class="field" id="scriptName" data-i18n-ph="phName" placeholder="اسم السكربت (مثال: Sayed_Hack)">
-    <input class="field" id="scriptPass" data-i18n-ph="phPass" placeholder="كلمة مرور (اختياري)">
-    <input class="field" id="scriptAuthor" data-i18n-ph="phAuthor" placeholder="اسم المطور (اختياري)">
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblTemplates">قوالب جاهزة</span>
-    <div class="chips" id="templatesChips"></div>
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblEditor">محرر الكود</span>
-    <textarea class="field" id="editor" data-i18n-ph="phEditor" placeholder="-- اكتب كود Lua هنا..."></textarea>
-    <div class="grid-2" style="margin-top:8px">
-      <button class="btn btn-neutral" onclick="clearEditor()" data-i18n="btnClear">❌ مسح</button>
-      <button class="btn" onclick="formatCode()" data-i18n="btnFormat">✨ تنسيق</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- ══ TAB: TOOLS ══ -->
-<div class="page" id="tab-tools">
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblSearchEdit">بحث وتعديل</span>
-    <div class="grid-2" id="toolsSearchGrid"></div>
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblUI">واجهة المستخدم</span>
-    <div class="grid-2" id="toolsUIGrid"></div>
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblMemory">الذاكرة والمناطق</span>
-    <div class="grid-2" id="toolsMemGrid"></div>
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblSnippets">مقاطع سريعة</span>
-    <div class="grid-3" id="toolsSnipGrid"></div>
-  </div>
-
-</div>
-
-<!-- ══ TAB: PREVIEW ══ -->
-<div class="page" id="tab-preview">
-  <div class="card">
-    <span class="card-label" data-i18n="lblCodePreview">معاينة الكود الكامل</span>
-    <div class="code-preview" id="codePreview">-- اضغط تحديث لعرض الكود</div>
-    <button class="btn" onclick="refreshPreview()" data-i18n="btnRefresh">🔄 تحديث المعاينة</button>
-  </div>
-  <div class="card">
-    <span class="card-label" data-i18n="lblStats">إحصائيات</span>
-    <div id="codeStats" style="font-size:13px;line-height:2;color:var(--tg-theme-hint-color,#999)">—</div>
-  </div>
-</div>
-
-<!-- ══ TAB: SEND ══ -->
-<div class="page" id="tab-send">
-  <div class="card">
-    <span class="card-label" data-i18n="lblBotToken">توكن البوت</span>
-    <input class="field" id="botToken" type="password" data-i18n-ph="phToken" placeholder="ضع توكن البوت هنا">
-    <div style="font-size:11px;color:var(--tg-theme-hint-color,#999);margin-top:4px" data-i18n="tokenNote">
-      * التوكن لا يُحفظ ولا يُرسل لأي مكان — يُستخدم فقط لإرسال الملف
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="card-label" data-i18n="lblExport">تصدير الملف</span>
-    <div class="grid-2">
-      <button class="btn btn-neutral" onclick="downloadFile()" data-i18n="btnDownload">💾 تحميل .lua</button>
-      <button class="btn" onclick="copyCode()" data-i18n="btnCopyCode">📋 نسخ الكود</button>
-    </div>
-  </div>
-
-  <div class="send-status" id="sendStatus"></div>
-
-  <button class="btn btn-success" style="font-size:15px;padding:14px" onclick="sendToBot()" data-i18n="btnSend">
-    🚀 إرسال الملف للبوت
-  </button>
-</div>
+<!-- SEND -->
+<button class="btn btn-green btn-send" id="el_btnSend" onclick="sendToBot()">🚀 إرسال الملف للبوت</button>
 
 <script>
-// ══════════════════════════════════════════════
-//  I18N — ترجمات كاملة
-// ══════════════════════════════════════════════
-const TRANSLATIONS = {
-  ar: {
-    appTitle:"صانع سكربتات GG", appSub:"منشئ السكربتات الاحترافي",
-    tabBuilder:"🔨 البناء", tabTools:"🛠 الأدوات", tabPreview:"👁 معاينة", tabSend:"🚀 إرسال",
-    lblSettings:"إعدادات السكربت", lblTemplates:"قوالب جاهزة", lblEditor:"محرر الكود",
-    lblSearchEdit:"البحث والتعديل", lblUI:"واجهة المستخدم", lblMemory:"الذاكرة والمناطق",
-    lblSnippets:"مقاطع سريعة", lblCodePreview:"معاينة الكود الكامل", lblStats:"إحصائيات",
-    lblBotToken:"توكن البوت", lblExport:"تصدير الملف",
-    phName:"اسم السكربت (مثال: Sayed_Hack)",
-    phPass:"كلمة مرور (اختياري)",
-    phAuthor:"اسم المطور (اختياري)",
-    phEditor:"-- اكتب كود Lua هنا...",
-    phToken:"ضع توكن البوت هنا",
-    tokenNote:"* التوكن لا يُحفظ ولا يُرسل — يُستخدم فقط لإرسال الملف",
-    btnClear:"❌ مسح", btnFormat:"✨ تنسيق", btnRefresh:"🔄 تحديث المعاينة",
-    btnDownload:"💾 تحميل .lua", btnCopyCode:"📋 نسخ الكود", btnSend:"🚀 إرسال الملف للبوت",
-    langLabel:"اللغة المكتشفة",
-    confirmClear:"هل تريد مسح كل الكود؟",
-    alertSent:"🚀 تم إرسال السكربت إلى البوت بنجاح!",
-    alertFail:"❌ فشل الإرسال. تأكد أن البوت Token صحيح وأنك بدأت المحادثة.",
-    alertConnErr:"⚠️ خطأ في الاتصال.",
-    alertNoToken:"⚠️ أدخل توكن البوت في تاب الإرسال أولاً.",
-    alertCopied:"✅ تم نسخ الكود!",
-    alertSaved:"✅ تم حفظ الملف!",
-    alertNoCode:"⚠️ الكود فارغ! أضف كوداً أولاً.",
-    promptSearch:"أدخل الرقم للبحث عنه:",
-    promptType:"نوع البيانات (4=DWORD, 16=FLOAT, 2=WORD):",
-    promptEditVal:"القيمة الجديدة:",
-    promptAlertMsg:"نص رسالة التنبيه:",
-    promptToastMsg:"نص الإشعار:",
-    promptDelay:"مدة الانتظار (ثانية):",
-    statsLines:"عدد الأسطر", statsChars:"عدد الأحرف", statsName:"اسم السكربت", statsHasPass:"كلمة مرور",
-    yes:"نعم", no:"لا",
-    templates: [
-      {name:"هكر بسيط",  code:"gg.searchNumber('100', 4)\ngg.editAll('99999', 4)\ngg.toast('تم الهكر!')"},
-      {name:"بروتكشن",    code:"local p = gg.prompt({'الرمز:'},{''}, {'text'})\nif p == nil or p[1] ~= 'MyPass' then\n  gg.alert('رمز خاطئ')\n  os.exit()\nend"},
-      {name:"لوب مستمر",  code:"while true do\n  gg.searchNumber('100', 4)\n  gg.editAll('9999', 4)\n  gg.sleep(1000)\nend"},
-      {name:"قائمة",      code:"local m = gg.multiChoice({'هكر الذهب','هكر الصحة','خروج'})\nif m[1] then gg.toast('هكر الذهب') end\nif m[2] then gg.toast('هكر الصحة') end"},
-    ],
-    tools: {
-      search: [{icon:"🔍",label:"بحث رقم",    desc:"searchNumber",  fn:"askSearch"},
-               {icon:"🔎",label:"بحث خفي",    desc:"searchNumber+",  fn:"askSearchAll"},
-               {icon:"🎯",label:"تعديل الكل", desc:"editAll",       fn:"askEdit"},
-               {icon:"📌",label:"تعديل محدد", desc:"editSelected",  fn:"askEditSel"}],
-      ui:     [{icon:"💬",label:"Alert",       desc:"رسالة منبثقة",  fn:"askAlert"},
-               {icon:"🍞",label:"Toast",       desc:"إشعار سريع",   fn:"askToast"},
-               {icon:"📋",label:"Prompt",      desc:"إدخال بيانات",  fn:"askPrompt"},
-               {icon:"☑️",label:"MultiChoice", desc:"قائمة اختيار", fn:"askMulti"}],
-      mem:    [{icon:"🌐",label:"ANONYMOUS",   desc:"نطاق مجهول",   fn:"addAnon"},
-               {icon:"🔵",label:"C_ALLOC",     desc:"نطاق C_ALLOC", fn:"addCAlloc"},
-               {icon:"🟢",label:"JAVA",        desc:"نطاق Java",    fn:"addJava"},
-               {icon:"🧹",label:"مسح النتائج",desc:"clearResults",  fn:"addClear"}],
-      snip:   [{icon:"⏱",label:"Sleep",        desc:"تأخير", fn:"askSleep"},
-               {icon:"🔁",label:"While Loop",  desc:"حلقة", fn:"addWhile"},
-               {icon:"🔒",label:"Password",    desc:"حماية", fn:"addPass"},
-               {icon:"📦",label:"Variables",   desc:"متغيرات", fn:"addVars"},
-               {icon:"📝",label:"Comment",     desc:"تعليق", fn:"addComment"},
-               {icon:"🚪",label:"Exit",        desc:"خروج", fn:"addExit"}]
-    }
-  },
+// ════════════════════════════════════════
+//  ⬇️  ضع التوكن هنا
+// ════════════════════════════════════════
+const BOT_TOKEN = "ضع_التوكن_هنا";
 
+// ════════════════════════════════════════
+//  TRANSLATIONS
+// ════════════════════════════════════════
+const T = {
+  ar: {
+    title:       "صانع سكربتات GG",
+    langBadge:   "🇸🇦 اللغة: العربية",
+    lblSettings: "إعدادات السكربت",
+    lblTools:    "أدوات البرمجة",
+    lblEditor:   "محرر الكود",
+    phName:      "اسم السكربت (مثال: Sayed_Hack)",
+    phPass:      "كلمة مرور (اختياري)",
+    phAuthor:    "اسم المطور (اختياري)",
+    phEditor:    "-- اكتب كود Lua هنا...",
+    btnClear:    "❌ مسح",
+    btnSave:     "💾 حفظ",
+    btnSend:     "🚀 إرسال الملف للبوت",
+    confirmClear:"هل تريد مسح كل الكود؟",
+    alertSaved:  "✅ تم حفظ الملف!",
+    alertSent:   "🚀 تم إرسال السكربت بنجاح!",
+    alertFail:   "❌ فشل الإرسال. تأكد أنك بدأت محادثة مع البوت.",
+    alertErr:    "⚠️ خطأ في الاتصال.",
+    alertEmpty:  "⚠️ الكود فارغ!",
+    alertNoUser: "افتح التطبيق من داخل تيليجرام.",
+    pSearch:     "الرقم للبحث عنه:",
+    pType:       "نوع البيانات (4=DWORD, 16=FLOAT):",
+    pEditVal:    "القيمة الجديدة:",
+    pAlertMsg:   "نص التنبيه:",
+    pToastMsg:   "نص الإشعار:",
+    pSleep:      "مدة الانتظار (ثانية):",
+    okBtn:       "موافق",
+    wrongPass:   "رمز خاطئ",
+    passLabel:   "كلمة المرور:",
+    tools: [
+      {icon:"🔍", label:"بحث",        desc:"searchNumber", fn:"askSearch"},
+      {icon:"✍️", label:"تعديل",      desc:"editAll",      fn:"askEdit"},
+      {icon:"💬", label:"Alert",       desc:"رسالة",        fn:"askAlert"},
+      {icon:"🍞", label:"Toast",       desc:"إشعار",        fn:"askToast"},
+      {icon:"📋", label:"Prompt",      desc:"إدخال",        fn:"askPrompt"},
+      {icon:"☑️", label:"قائمة",       desc:"multiChoice",  fn:"askMulti"},
+      {icon:"🌐", label:"النطاق",      desc:"setRanges",    fn:"askRanges"},
+      {icon:"🗑️", label:"مسح",        desc:"clearResults", fn:"addClear"},
+      {icon:"⏱",  label:"Sleep",       desc:"تأخير",        fn:"askSleep"},
+      {icon:"🔒", label:"حماية",       desc:"password",     fn:"addPass"},
+      {icon:"🔁", label:"Loop",        desc:"while",        fn:"addWhile"},
+      {icon:"🚪", label:"خروج",        desc:"os.exit",      fn:"addExit"},
+    ]
+  },
   en: {
-    appTitle:"GG Script Maker", appSub:"Pro Script Builder",
-    tabBuilder:"🔨 Builder", tabTools:"🛠 Tools", tabPreview:"👁 Preview", tabSend:"🚀 Send",
-    lblSettings:"Script Settings", lblTemplates:"Ready Templates", lblEditor:"Code Editor",
-    lblSearchEdit:"Search & Edit", lblUI:"User Interface", lblMemory:"Memory & Regions",
-    lblSnippets:"Quick Snippets", lblCodePreview:"Full Code Preview", lblStats:"Statistics",
-    lblBotToken:"Bot Token", lblExport:"Export File",
-    phName:"Script Name (e.g. Sayed_Hack)",
-    phPass:"Password (optional)",
-    phAuthor:"Developer Name (optional)",
-    phEditor:"-- Write Lua code here...",
-    phToken:"Paste your Bot Token here",
-    tokenNote:"* Token is NOT saved or sent anywhere — used only to send the file",
-    btnClear:"❌ Clear", btnFormat:"✨ Format", btnRefresh:"🔄 Refresh Preview",
-    btnDownload:"💾 Download .lua", btnCopyCode:"📋 Copy Code", btnSend:"🚀 Send File to Bot",
-    langLabel:"Detected Language",
+    title:       "GG Script Maker Pro",
+    langBadge:   "🇺🇸 Language: English",
+    lblSettings: "Script Settings",
+    lblTools:    "Smart Tools",
+    lblEditor:   "Code Editor",
+    phName:      "Script Name (e.g. Sayed_Hack)",
+    phPass:      "Password (optional)",
+    phAuthor:    "Developer Name (optional)",
+    phEditor:    "-- Write Lua code here...",
+    btnClear:    "❌ Clear",
+    btnSave:     "💾 Save",
+    btnSend:     "🚀 Send File to Bot",
     confirmClear:"Clear all code?",
-    alertSent:"🚀 Script sent to your bot successfully!",
-    alertFail:"❌ Send failed. Check your Bot Token and start a chat first.",
-    alertConnErr:"⚠️ Connection error.",
-    alertNoToken:"⚠️ Enter your Bot Token in the Send tab first.",
-    alertCopied:"✅ Code copied!",
-    alertSaved:"✅ File saved!",
-    alertNoCode:"⚠️ Code is empty! Add some code first.",
-    promptSearch:"Enter number to search:",
-    promptType:"Data type (4=DWORD, 16=FLOAT, 2=WORD):",
-    promptEditVal:"New value:",
-    promptAlertMsg:"Alert message text:",
-    promptToastMsg:"Toast notification text:",
-    promptDelay:"Delay (seconds):",
-    statsLines:"Lines", statsChars:"Characters", statsName:"Script Name", statsHasPass:"Password",
-    yes:"Yes", no:"No",
-    templates: [
-      {name:"Simple Hack",  code:"gg.searchNumber('100', 4)\ngg.editAll('99999', 4)\ngg.toast('Hacked!')"},
-      {name:"Protection",   code:"local p = gg.prompt({'Code:'},{''}, {'text'})\nif p == nil or p[1] ~= 'MyPass' then\n  gg.alert('Wrong code')\n  os.exit()\nend"},
-      {name:"Loop",         code:"while true do\n  gg.searchNumber('100', 4)\n  gg.editAll('9999', 4)\n  gg.sleep(1000)\nend"},
-      {name:"Menu",         code:"local m = gg.multiChoice({'Gold Hack','Health Hack','Exit'})\nif m[1] then gg.toast('Gold Hack') end\nif m[2] then gg.toast('Health Hack') end"},
-    ],
-    tools: {
-      search: [{icon:"🔍",label:"Search",       desc:"searchNumber",  fn:"askSearch"},
-               {icon:"🔎",label:"Search All",   desc:"searchNumber+", fn:"askSearchAll"},
-               {icon:"🎯",label:"Edit All",     desc:"editAll",       fn:"askEdit"},
-               {icon:"📌",label:"Edit Selected",desc:"editSelected",  fn:"askEditSel"}],
-      ui:     [{icon:"💬",label:"Alert",        desc:"Popup message", fn:"askAlert"},
-               {icon:"🍞",label:"Toast",        desc:"Quick notif",  fn:"askToast"},
-               {icon:"📋",label:"Prompt",       desc:"Input dialog",  fn:"askPrompt"},
-               {icon:"☑️",label:"MultiChoice",  desc:"Choice list",  fn:"askMulti"}],
-      mem:    [{icon:"🌐",label:"ANONYMOUS",    desc:"Anon region",  fn:"addAnon"},
-               {icon:"🔵",label:"C_ALLOC",      desc:"C_ALLOC region",fn:"addCAlloc"},
-               {icon:"🟢",label:"JAVA",         desc:"Java region",  fn:"addJava"},
-               {icon:"🧹",label:"Clear Results",desc:"clearResults", fn:"addClear"}],
-      snip:   [{icon:"⏱",label:"Sleep",         desc:"Delay", fn:"askSleep"},
-               {icon:"🔁",label:"While Loop",   desc:"Loop",  fn:"addWhile"},
-               {icon:"🔒",label:"Password",     desc:"Protect", fn:"addPass"},
-               {icon:"📦",label:"Variables",    desc:"Vars",  fn:"addVars"},
-               {icon:"📝",label:"Comment",      desc:"Note",  fn:"addComment"},
-               {icon:"🚪",label:"Exit",         desc:"Quit",  fn:"addExit"}]
-    }
+    alertSaved:  "✅ File saved!",
+    alertSent:   "🚀 Script sent successfully!",
+    alertFail:   "❌ Send failed. Start a chat with the bot first.",
+    alertErr:    "⚠️ Connection error.",
+    alertEmpty:  "⚠️ Code is empty!",
+    alertNoUser: "Open the app from inside Telegram.",
+    pSearch:     "Number to search:",
+    pType:       "Data type (4=DWORD, 16=FLOAT):",
+    pEditVal:    "New value:",
+    pAlertMsg:   "Alert message:",
+    pToastMsg:   "Toast text:",
+    pSleep:      "Delay (seconds):",
+    okBtn:       "OK",
+    wrongPass:   "Wrong code",
+    passLabel:   "Password:",
+    tools: [
+      {icon:"🔍", label:"Search",      desc:"searchNumber", fn:"askSearch"},
+      {icon:"✍️", label:"Edit All",    desc:"editAll",      fn:"askEdit"},
+      {icon:"💬", label:"Alert",       desc:"message",      fn:"askAlert"},
+      {icon:"🍞", label:"Toast",       desc:"notification", fn:"askToast"},
+      {icon:"📋", label:"Prompt",      desc:"input",        fn:"askPrompt"},
+      {icon:"☑️", label:"Menu",        desc:"multiChoice",  fn:"askMulti"},
+      {icon:"🌐", label:"Ranges",      desc:"setRanges",    fn:"askRanges"},
+      {icon:"🗑️", label:"Clear",       desc:"clearResults", fn:"addClear"},
+      {icon:"⏱",  label:"Sleep",       desc:"delay",        fn:"askSleep"},
+      {icon:"🔒", label:"Protect",     desc:"password",     fn:"addPass"},
+      {icon:"🔁", label:"Loop",        desc:"while",        fn:"addWhile"},
+      {icon:"🚪", label:"Exit",        desc:"os.exit",      fn:"addExit"},
+    ]
   }
 };
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════
 //  GLOBALS
-// ══════════════════════════════════════════════
-const tg   = window.Telegram?.WebApp;
-let   lang = "ar";
-let   T    = TRANSLATIONS.ar;
-let   isDark = false;
+// ════════════════════════════════════════
+const tg = window.Telegram?.WebApp;
+let lang = "ar";
+let tr   = T.ar;
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════
 //  INIT
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════
 function init() {
   if (tg) { tg.ready(); tg.expand(); }
 
-  // كشف اللغة من تيليجرام
-  const tgLang = tg?.initDataUnsafe?.user?.lang
+  const code = tg?.initDataUnsafe?.user?.language_code || "ar";
+  lang = code.startsWith("ar") ? "ar" : "en";
+  tr   = T[lang];
+
+  document.documentElement.dir  = lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+
+  applyUI();
+  renderTools();
+}
+
+function applyUI() {
+  document.getElementById("el_title").textContent      = tr.title;
+  document.getElementById("el_langBadge").textContent  = tr.langBadge;
+  document.getElementById("el_lblSettings").textContent= tr.lblSettings;
+  document.getElementById("el_lblTools").textContent   = tr.lblTools;
+  document.getElementById("el_lblEditor").textContent  = tr.lblEditor;
+  document.getElementById("el_btnClear").textContent   = tr.btnClear;
+  document.getElementById("el_btnSave").textContent    = tr.btnSave;
+  document.getElementById("el_btnSend").textContent    = tr.btnSend;
+  document.getElementById("scriptName").placeholder    = tr.phName;
+  document.getElementById("scriptPass").placeholder    = tr.phPass;
+  document.getElementById("scriptAuthor").placeholder  = tr.phAuthor;
+  document.getElementById("editor").placeholder        = tr.phEditor;
+}
+
+function renderTools() {
+  document.getElementById("toolsGrid").innerHTML = tr.tools.map(t => `
+    <button class="tool-btn" onclick="${t.fn}()">
+      <div class="tool-icon">${t.icon}</div>
+      <div class="tool-label">${t.label}</div>
+      <div class="tool-desc">${t.desc}</div>
+    </button>`
+  ).join("");
+}
+
+// ════════════════════════════════════════
+//  THEME
+// ════════════════════════════════════════
+function toggleTheme() {
+  const btn = document.getElementById("themeBtn");
+  btn.textContent = btn.textContent === "🌙" ? "☀️" : "🌙";
+  haptic("light");
+}
+
+// ════════════════════════════════════════
+//  CODE
+// ════════════════════════════════════════
+function addCode(code) {
+  const ed = document.getElementById("editor");
+  ed.value += (ed.value.trim() ? "\n" : "") + code;
+  haptic("light");
+}
+
+function buildCode() {
+  const name   = document.getElementById("scriptName").value.trim()   || "MyScript";
+  const pass   = document.getElementById("scriptPass").value.trim();
+  const author = document.getElementById("scriptAuthor").value.trim();
+  const body   = document.getElementById("editor").value.trim();
+
+  let c = `-- Script: ${name}\n`;
+  if (author) c += `-- Author: ${author}\n`;
+  c += `-- Built with GG Script Maker Pro\n\n`;
+  if (pass) {
+    c += `local _p = gg.prompt({'${tr.passLabel}'},{''}, {'text'})\n`;
+    c += `if _p == nil or _p[1] ~= '${pass}' then\n`;
+    c += `  gg.alert("${tr.wrongPass}")\n  os.exit()\nend\n\n`;
+  }
+  c += body;
+  return { code: c, name };
+}
+
+// ════════════════════════════════════════
+//  TOOLS
+// ════════════════════════════════════════
+function askSearch() {
+  const v = prompt(tr.pSearch, "100"); if (!v) return;
+  const t = prompt(tr.pType, "4");     if (!t) return;
+  addCode(`gg.searchNumber("${v}", ${t})`);
+}
+function askEdit() {
+  const v = prompt(tr.pEditVal, "99999"); if (!v) return;
+  const t = prompt(tr.pType, "4");        if (!t) return;
+  addCode(`gg.editAll("${v}", ${t})`);
+}
+function askAlert() {
+  const m = prompt(tr.pAlertMsg, lang==="ar"?"أهلاً":"Hello");
+  if (m) addCode(`gg.alert("${m}", "${tr.okBtn}")`);
+}
+function askToast() {
+  const m = prompt(tr.pToastMsg, lang==="ar"?"تم التفعيل":"Activated");
+  if (m) addCode(`gg.toast("${m}")`);
+}
+function askPrompt() {
+  addCode(`local p = gg.prompt(\n  {'${lang==="ar"?"أدخل القيمة:":"Enter value:"}'},\n  {'100'}, {'number'}\n)\nif p == nil then return end\ngg.searchNumber(p[1], 4)`);
+}
+function askMulti() {
+  addCode(`local m = gg.multiChoice({\n  '${lang==="ar"?"خيار 1":"Option 1"}',\n  '${lang==="ar"?"خيار 2":"Option 2"}',\n  '${lang==="ar"?"خروج":"Exit"}'\n})\nif m == nil then return end\nif m[3] then os.exit() end`);
+}
+function askRanges() { addCode(`gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)`); }
+function addClear()  { addCode(`gg.clearResults()`); }
+function askSleep() {
+  const s = prompt(tr.pSleep, "1");
+  if (s) addCode(`gg.sleep(${Math.round(parseFloat(s) * 1000)})`);
+}
+function addPass() {
+  addCode(`local _p = gg.prompt({'${tr.passLabel}'},{''}, {'text'})\nif _p == nil or _p[1] ~= 'MyPass' then\n  gg.alert("${tr.wrongPass}")\n  os.exit()\nend`);
+}
+function addWhile() {
+  addCode(`while true do\n  -- ${lang==="ar"?"الكود هنا":"code here"}\n  gg.sleep(1000)\nend`);
+}
+function addExit() { addCode(`os.exit()`); }
+
+// ════════════════════════════════════════
+//  ACTIONS
+// ════════════════════════════════════════
+function clearEditor() {
+  tgConfirm(tr.confirmClear, ok => {
+    if (ok) { document.getElementById("editor").value = ""; hapticNotif("warning"); }
+  });
+}
+
+function downloadFile() {
+  const { code, name } = buildCode();
+  if (!document.getElementById("editor").value.trim()) { tgAlert(tr.alertEmpty); return; }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([code], { type: "text/lua" }));
+  a.download = `${name}.lua`;
+  a.click();
+  tgAlert(tr.alertSaved);
+  hapticNotif("success");
+}
+
+async function sendToBot() {
+  const user = tg?.initDataUnsafe?.user;
+  if (!user?.id) { tgAlert(tr.alertNoUser); return; }
+  if (!document.getElementById("editor").value.trim()) { tgAlert(tr.alertEmpty); return; }
+
+  const { code, name } = buildCode();
+  hapticNotif("success");
+
+  const file = new File([new Blob([code], { type: "text/plain" })], `${name}.lua`);
+  const fd = new FormData();
+  fd.append("chat_id", user.id);
+  fd.append("document", file);
+  fd.append("caption", `✅ ${name}.lua\n👤 ${user.first_name}`);
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, { method: "POST", body: fd });
+    tgAlert(res.ok ? tr.alertSent : tr.alertFail);
+    hapticNotif(res.ok ? "success" : "error");
+  } catch {
+    tgAlert(tr.alertErr);
+    hapticNotif("error");
+  }
+}
+
+// ════════════════════════════════════════
+//  TG HELPERS
+// ════════════════════════════════════════
+function tgAlert(msg)       { tg?.showAlert   ? tg.showAlert(msg)      : alert(msg); }
+function tgConfirm(msg, cb) { tg?.showConfirm ? tg.showConfirm(msg,cb) : cb(confirm(msg)); }
+function haptic(t)          { tg?.HapticFeedback?.impactOccurred(t); }
+function hapticNotif(t)     { tg?.HapticFeedback?.notificationOccurred(t); }
+
+init();
+</script>
+</body>
+</html>
