@@ -1,781 +1,235 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>معلوماتي</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GG Script Maker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --link-color: var(--tg-theme-link-color, #248bcf);
+            --button-color: var(--tg-theme-button-color, #248bcf);
+            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f0f0f0);
+        }
 
-body {
-  font-family: 'Tajawal', sans-serif;
-  min-height: 100vh;
-  padding-bottom: 50px;
-  background: var(--tg-theme-bg-color, #0f0f1a);
-  color: var(--tg-theme-text-color, #ffffff);
-  position: relative;
-  overflow-x: hidden;
-}
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            direction: rtl; /* الافتراضي عربي */
+        }
 
-/* ── BG BLOBS ── */
-.bg-blob {
-  position: fixed; border-radius: 50%; filter: blur(80px);
-  pointer-events: none; z-index: 0; opacity: 0.35;
-}
-.blob1 { width: 300px; height: 300px; background: #2AABEE; top: -80px; right: -60px; }
-.blob2 { width: 250px; height: 250px; background: #9C27B0; bottom: 100px; left: -80px; }
-.blob3 { width: 200px; height: 200px; background: #00BCD4; top: 40%; left: 50%; transform: translateX(-50%); opacity: 0.2; }
+        .section {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
 
-/* ── GLASS ── */
-.glass {
-  background: rgba(255,255,255,0.07);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 20px;
-}
+        h2 { font-size: 1.1em; margin-top: 0; border-bottom: 1px solid var(--hint-color); padding-bottom: 5px; }
 
-/* ── TABS ── */
-.tabs {
-  display: flex; gap: 0;
-  margin: 16px 16px 0;
-  background: rgba(255,255,255,0.06);
-  border-radius: 14px; padding: 4px;
-  position: relative; z-index: 1;
-  animation: fadeUp .4s ease both;
-}
-.tab-btn {
-  flex: 1; padding: 10px; border: none; border-radius: 10px;
-  font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.25s; color: rgba(255,255,255,0.5);
-  background: transparent;
-}
-.tab-btn.active {
-  background: rgba(42,171,238,0.3);
-  color: #fff;
-  box-shadow: 0 2px 12px #2AABEE33;
-}
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border: 1px solid var(--hint-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
 
-/* ── AVATAR ── */
-.avatar-section {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 32px 20px 20px; position: relative; z-index: 1;
-  animation: fadeUp .4s ease both;
-}
-.avatar-ring {
-  width: 100px; height: 100px; border-radius: 50%; padding: 3px;
-  background: linear-gradient(135deg, #74d7ff, #2AABEE, #b388ff);
-  margin-bottom: 14px;
-  box-shadow: 0 0 30px #2AABEE44, 0 0 60px #2AABEE22;
-  animation: popIn .5s cubic-bezier(0.34,1.56,0.64,1) both;
-}
-.avatar {
-  width: 100%; height: 100%; border-radius: 50%;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; font-weight: 800; color: #fff;
-  overflow: hidden;
-  border: 3px solid rgba(255,255,255,0.1);
-}
-.avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
-.full-name { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; animation: fadeUp .4s .1s ease both; }
-.username  { font-size: 14px; margin-top: 4px; color: #2AABEE; animation: fadeUp .4s .15s ease both; }
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+        }
 
-/* ── GLASS CARD ── */
-.card-wrap { padding: 0 16px; position: relative; z-index: 1; animation: fadeUp .4s .2s ease both; }
-.section-label {
-  font-size: 11px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
-  padding: 0 4px 8px;
-}
-.card { margin-bottom: 16px; overflow: hidden; }
+        button {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-.row {
-  display: flex; align-items: center; gap: 12px; padding: 13px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.06); transition: background .15s;
-}
-.row:last-child { border-bottom: none; }
-.row:active { background: rgba(255,255,255,0.05); }
+        button:active { opacity: 0.8; }
 
-.row-icon {
-  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-  background: rgba(42,171,238,0.15);
-}
-.row-info { flex: 1; min-width: 0; }
-.row-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
-.row-value { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .editor-area {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', Courier, monospace;
+            height: 200px;
+            direction: ltr; /* الكود دائماً يسار */
+        }
 
-.row-btn {
-  font-size: 12px; font-weight: 700; color: #2AABEE;
-  background: rgba(42,171,238,0.15); border: none; border-radius: 8px;
-  padding: 5px 10px; cursor: pointer; font-family: 'Tajawal', sans-serif;
-  transition: all .2s; flex-shrink: 0;
-}
-.row-btn:active { background: rgba(42,171,238,0.3); transform: scale(0.95); }
-
-/* ── UTILITIES GRID ── */
-.utils-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  padding: 0 16px; position: relative; z-index: 1;
-  animation: fadeUp .4s .2s ease both; margin-bottom: 16px;
-}
-.util-btn {
-  glass: true;
-  background: rgba(255,255,255,0.07);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  padding: 14px 12px; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  transition: all .2s; font-family: 'Tajawal', sans-serif; color: #fff;
-}
-.util-btn:active { transform: scale(0.95); background: rgba(42,171,238,0.2); }
-.util-icon { font-size: 26px; }
-.util-label { font-size: 12px; font-weight: 700; text-align: center; color: rgba(255,255,255,0.8); }
-.util-desc  { font-size: 10px; color: rgba(255,255,255,0.4); text-align: center; }
-
-/* ── LOOKUP ── */
-.lookup-wrap {
-  padding: 0 16px; position: relative; z-index: 1;
-  animation: fadeUp .4s .2s ease both;
-}
-.lookup-input-row {
-  display: flex; gap: 10px; margin-bottom: 14px;
-}
-.lookup-input {
-  flex: 1; background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;
-  padding: 12px 16px; color: #fff; font-size: 14px;
-  font-family: 'Tajawal', sans-serif; outline: none;
-  transition: border-color .2s;
-}
-.lookup-input:focus { border-color: rgba(42,171,238,0.5); }
-.lookup-input::placeholder { color: rgba(255,255,255,0.3); }
-.lookup-go {
-  width: 48px; height: 48px; border-radius: 14px; border: none;
-  background: linear-gradient(135deg, #1c6ca8, #2AABEE);
-  color: #fff; font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 15px #2AABEE44; transition: all .2s; flex-shrink: 0;
-}
-.lookup-go:active { transform: scale(0.92); }
-
-.lookup-result { margin-bottom: 14px; }
-.lookup-empty {
-  text-align: center; padding: 30px;
-  color: rgba(255,255,255,0.3); font-size: 14px;
-}
-
-/* ── THEME CHIPS ── */
-.theme-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-  margin-bottom: 16px;
-}
-.color-chip {
-  height: 56px; border-radius: 14px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.1);
-  display: flex; align-items: center; justify-content: center;
-  gap: 8px; flex-direction: column;
-}
-.chip-dot { width: 22px; height: 22px; border-radius: 50%; }
-
-/* ── BADGE ── */
-.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-.badge {
-  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
-  background: rgba(42,171,238,0.15);
-  border: 1px solid rgba(42,171,238,0.25);
-  color: #2AABEE;
-}
-
-/* ── PAGES ── */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ── ANIMATIONS ── */
-@keyframes popIn  { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
-@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-</style>
+        #status { font-size: 0.8em; color: var(--link-color); text-align: center; }
+    </style>
 </head>
 <body>
 
-<div class="bg-blob blob1"></div>
-<div class="bg-blob blob2"></div>
-<div class="bg-blob blob3"></div>
+    <div id="main-content">
+        <h1 id="title">صانع سكربتات GG</h1>
 
-<!-- AVATAR -->
-<div class="avatar-section">
-  <div class="avatar-ring">
-    <div class="avatar" id="avatar">؟</div>
-  </div>
-  <div class="full-name" id="fullName">جاري التحميل...</div>
-  <div class="username"  id="username"></div>
-</div>
+        <div class="section">
+            <h2 id="sec-info">إعدادات السكربت الأساسية</h2>
+            <input type="text" id="scriptName" placeholder="اسم السكربت">
+            <input type="text" id="scriptPass" placeholder="كلمة المرور (اختياري)">
+            <input type="date" id="expiryDate" title="تاريخ الانتهاء">
+        </div>
 
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('info',this)">👤 معلوماتي</button>
-  <button class="tab-btn"        onclick="switchTab('utils',this)">🛠 أدوات TG</button>
-  <button class="tab-btn"        onclick="switchTab('lookup',this)">🔍 فحص مستخدم</button>
-</div>
+        <div class="section">
+            <h2 id="sec-search">عمليات البحث (GG Search)</h2>
+            <div class="btn-grid">
+                <button onclick="addCode('gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)')">Set Ranges</button>
+                <button onclick="addCode('gg.searchNumber(\'100\', gg.TYPE_DWORD)')">Search DWORD</button>
+                <button onclick="addCode('gg.getResults(100)')">Get Results</button>
+                <button onclick="addCode('gg.editAll(\'999\', gg.TYPE_DWORD)')">Edit All</button>
+                <button onclick="addCode('gg.clearResults()')">Clear</button>
+            </div>
+        </div>
 
-<!-- ════ TAB: INFO ════ -->
-<div class="page active" id="tab-info">
-  <div style="height:14px"></div>
-  <div class="card-wrap">
-    <div class="section-label">معلومات الحساب</div>
-    <div class="card glass">
-      <div class="row">
-        <div class="row-icon">🆔</div>
-        <div class="row-info"><div class="row-label">User ID</div><div class="row-value" id="userId">—</div></div>
-        <button class="row-btn" onclick="tgCopy('userId','User ID')">نسخ</button>
-      </div>
-      <div class="row">
-        <div class="row-icon">👤</div>
-        <div class="row-info"><div class="row-label">الاسم الأول</div><div class="row-value" id="firstName">—</div></div>
-      </div>
-      <div class="row">
-        <div class="row-icon">👤</div>
-        <div class="row-info"><div class="row-label">الاسم الأخير</div><div class="row-value" id="lastName">—</div></div>
-      </div>
-      <div class="row">
-        <div class="row-icon">🔗</div>
-        <div class="row-info"><div class="row-label">اسم المستخدم</div><div class="row-value" id="usernameVal">—</div></div>
-        <button class="row-btn" id="copyUnBtn" onclick="tgCopy('usernameVal','اسم المستخدم')" style="display:none">نسخ</button>
-      </div>
-      <div class="row">
-        <div class="row-icon">🌍</div>
-        <div class="row-info"><div class="row-label">اللغة</div><div class="row-value" id="langCode">—</div></div>
-      </div>
-      <div class="row">
-        <div class="row-icon">⭐</div>
-        <div class="row-info"><div class="row-label">حساب Premium</div><div class="row-value" id="isPremium">—</div></div>
-      </div>
-      <div class="row">
-        <div class="row-icon">📅</div>
-        <div class="row-info"><div class="row-label">تاريخ الإنشاء (تقريبي)</div><div class="row-value" id="regDate">—</div></div>
-      </div>
+        <div class="section">
+            <h2 id="sec-ui">القوائم والواجهات (UI)</h2>
+            <div class="btn-grid">
+                <button onclick="addCode('gg.alert(\'Welcome\', \'OK\')')">Alert</button>
+                <button onclick="addCode('gg.choice({\'Menu 1\', \'Menu 2\'}, nil, \'Choose\')')">Choice Menu</button>
+                <button onclick="addCode('gg.toast(\'Active!\')')">Toast</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 id="sec-editor">الكود الناتج</h2>
+            <textarea id="editor" class="editor-area" placeholder="-- Script will appear here..."></textarea>
+            <div class="btn-grid" style="margin-top:10px;">
+                <button style="background: #f44336;" onclick="clearEditor()">مسح الكل</button>
+                <button onclick="exportOffline()">تصدير ملف (Offline)</button>
+                <button onclick="exportOnline()">رفع أونلاين (Online)</button>
+            </div>
+        </div>
+        
+        <p id="status"></p>
     </div>
 
-    <div class="section-label">بيئة التشغيل</div>
-    <div class="badge-row" id="badgeRow"></div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
 
-    <div class="section-label">ألوان الثيم</div>
-    <div class="theme-grid" id="themeGrid"></div>
-  </div>
-</div>
+        // القاموس للترجمة
+        const i18n = {
+            ar: {
+                title: "صانع سكربتات GG الشامل",
+                info: "إعدادات السكربت",
+                search: "عمليات البحث",
+                ui: "الواجهات",
+                editor: "الكود الناتج",
+                p_name: "اسم السكربت",
+                p_pass: "كلمة المرور"
+            },
+            en: {
+                title: "GG Script Maker Pro",
+                info: "Basic Settings",
+                search: "Search Operations",
+                ui: "UI Elements",
+                editor: "Code Output",
+                p_name: "Script Name",
+                p_pass: "Password (Optional)"
+            }
+        };
 
-<!-- ════ TAB: UTILS ════ -->
-<div class="page" id="tab-utils">
-  <div style="height:14px"></div>
-  <div class="card-wrap">
-    <div class="section-label">تنبيهات تيليجرام</div>
-  </div>
-  <div class="utils-grid">
-    <button class="util-btn" onclick="demoAlert()">
-      <div class="util-icon">⚠️</div>
-      <div class="util-label">showAlert</div>
-      <div class="util-desc">تنبيه بسيط</div>
-    </button>
-    <button class="util-btn" onclick="demoConfirm()">
-      <div class="util-icon">❓</div>
-      <div class="util-label">showConfirm</div>
-      <div class="util-desc">تأكيد / إلغاء</div>
-    </button>
-    <button class="util-btn" onclick="demoPopup()">
-      <div class="util-icon">💬</div>
-      <div class="util-label">showPopup</div>
-      <div class="util-desc">نافذة مخصصة</div>
-    </button>
-    <button class="util-btn" onclick="demoScanQR()">
-      <div class="util-icon">📷</div>
-      <div class="util-label">showScanQrPopup</div>
-      <div class="util-desc">مسح QR Code</div>
-    </button>
-  </div>
+        // تفعيل اللغة
+        const lang = tg.initDataUnsafe?.user?.language_code === 'ar' ? 'ar' : 'en';
+        document.body.style.direction = lang === 'ar' ? 'rtl' : 'ltr';
+        document.getElementById('title').innerText = i18n[lang].title;
+        document.getElementById('sec-info').innerText = i18n[lang].info;
+        document.getElementById('scriptName').placeholder = i18n[lang].p_name;
+        document.getElementById('scriptPass').placeholder = i18n[lang].p_pass;
 
-  <div class="card-wrap">
-    <div class="section-label">الاهتزاز Haptic</div>
-  </div>
-  <div class="utils-grid">
-    <button class="util-btn" onclick="haptic('light')">
-      <div class="util-icon">🫧</div>
-      <div class="util-label">light</div>
-      <div class="util-desc">خفيف</div>
-    </button>
-    <button class="util-btn" onclick="haptic('medium')">
-      <div class="util-icon">📳</div>
-      <div class="util-label">medium</div>
-      <div class="util-desc">متوسط</div>
-    </button>
-    <button class="util-btn" onclick="haptic('heavy')">
-      <div class="util-icon">💥</div>
-      <div class="util-label">heavy</div>
-      <div class="util-desc">قوي</div>
-    </button>
-    <button class="util-btn" onclick="hapticNotif('success')">
-      <div class="util-icon">✅</div>
-      <div class="util-label">success</div>
-      <div class="util-desc">نجاح</div>
-    </button>
-    <button class="util-btn" onclick="hapticNotif('error')">
-      <div class="util-icon">❌</div>
-      <div class="util-label">error</div>
-      <div class="util-desc">خطأ</div>
-    </button>
-    <button class="util-btn" onclick="hapticNotif('warning')">
-      <div class="util-icon">⚠️</div>
-      <div class="util-label">warning</div>
-      <div class="util-desc">تحذير</div>
-    </button>
-  </div>
+        const editor = document.getElementById('editor');
 
-  <div class="card-wrap">
-    <div class="section-label">أزرار تيليجرام</div>
-  </div>
-  <div class="utils-grid">
-    <button class="util-btn" onclick="demoMainBtn()">
-      <div class="util-icon">🔵</div>
-      <div class="util-label">MainButton</div>
-      <div class="util-desc">الزرار الرئيسي</div>
-    </button>
-    <button class="util-btn" onclick="demoBackBtn()">
-      <div class="util-icon">◀️</div>
-      <div class="util-label">BackButton</div>
-      <div class="util-desc">زرار الرجوع</div>
-    </button>
-    <button class="util-btn" onclick="demoExpand()">
-      <div class="util-icon">↕️</div>
-      <div class="util-label">expand()</div>
-      <div class="util-desc">توسيع الشاشة</div>
-    </button>
-    <button class="util-btn" onclick="demoClose()">
-      <div class="util-icon">❎</div>
-      <div class="util-label">close()</div>
-      <div class="util-desc">إغلاق الميني اب</div>
-    </button>
-  </div>
+        function addCode(code) {
+            editor.value += code + "\n";
+        }
 
-  <div class="card-wrap">
-    <div class="section-label">حافظة الكلبورد</div>
-  </div>
-  <div class="utils-grid">
-    <button class="util-btn" onclick="demoReadClipboard()">
-      <div class="util-icon">📋</div>
-      <div class="util-label">readTextFromClipboard</div>
-      <div class="util-desc">قراءة الكلبورد</div>
-    </button>
-    <button class="util-btn" onclick="demoOpenLink()">
-      <div class="util-icon">🔗</div>
-      <div class="util-label">openLink</div>
-      <div class="util-desc">فتح رابط</div>
-    </button>
-  </div>
-</div>
+        function clearEditor() {
+            editor.value = "";
+        }
 
-<!-- ════ TAB: LOOKUP ════ -->
-<div class="page" id="tab-lookup">
-  <div style="height:14px"></div>
-  <div class="lookup-wrap">
-    <div class="section-label">فحص مستخدم بالـ ID أو اليوزرنيم</div>
-    <div class="lookup-input-row">
-      <input class="lookup-input" id="lookupInput"
-        placeholder="أدخل User ID أو @username"
-        onkeydown="if(event.key==='Enter') doLookup()">
-      <button class="lookup-go" onclick="doLookup()">🔍</button>
-    </div>
+        function buildFullScript() {
+            let name = document.getElementById('scriptName').value || "MyScript";
+            let pass = document.getElementById('scriptPass').value;
+            let expiry = document.getElementById('expiryDate').value;
+            
+            let finalCode = `-- Built with GG Maker\n-- Name: ${name}\n`;
+            
+            if(pass) {
+                finalCode += `local p = gg.prompt({'Password:'}, {''}, {'text'})\nif p[1] ~= '${pass}' then os.exit() end\n`;
+            }
+            
+            if(expiry) {
+                finalCode += `if os.date('%Y-%m-%d') > '${expiry}' then gg.alert('Expired!') os.exit() end\n`;
+            }
 
-    <div id="lookupResult">
-      <div class="lookup-empty">
-        🔍<br>أدخل User ID أو @username<br>لعرض معلومات المستخدم
-      </div>
-    </div>
+            finalCode += "\n" + editor.value;
+            return finalCode;
+        }
 
-    <div class="section-label" style="margin-top:8px">مستخدمون محفوظون</div>
-    <div id="savedUsers"></div>
-  </div>
-</div>
+        // تصدير أوفلاين
+        function exportOffline() {
+            const code = buildFullScript();
+            const blob = new Blob([code], { type: 'text/plain' });
+            const hour = new Date().getTime();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `script_${hour}.lua`;
+            link.click();
+            tg.showAlert("تم تجهيز ملف السكربت بنجاح!");
+        }
 
-<script>
-const tg = window.Telegram?.WebApp;
+        // تصدير أونلاين (Hastebin)
+        async function exportOnline() {
+            const code = buildFullScript();
+            document.getElementById('status').innerText = "جاري الرفع...";
 
-// ── COLORS ──
-const AVATAR_COLORS = ["#2AABEE","#E91E8C","#9C27B0","#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"];
-
-// محفوظات المستخدمين المفحوصين
-let savedLookups = JSON.parse(localStorage.getItem("tg_lookups") || "[]");
-
-// ══════════════════════
-//  INIT
-// ══════════════════════
-function init() {
-  if (!tg) { showDemo(); renderSaved(); return; }
-  tg.ready();
-  tg.expand();
-  const user = tg.initDataUnsafe?.user;
-  fillUser(user);
-  fillEnv();
-  fillTheme();
-  tg.onEvent("themeChanged", fillTheme);
-  renderSaved();
-}
-
-// ══════════════════════
-//  FILL USER
-// ══════════════════════
-function fillUser(user) {
-  if (!user) { showDemo(); return; }
-  const first  = user.first_name    || "";
-  const last   = user.last_name     || "";
-  const uname  = user.username      || "";
-  const lang   = user.language_code || "—";
-  const isPrem = user.is_premium    || false;
-
-  const av = document.getElementById("avatar");
-  if (user.photo_url) {
-    av.innerHTML = `<img src="${user.photo_url}" alt="avatar">`;
-  } else {
-    av.textContent = first[0] || "؟";
-    av.style.background = `linear-gradient(135deg, ${AVATAR_COLORS[user.id % AVATAR_COLORS.length]}, #1a1a2e)`;
-  }
-
-  document.getElementById("fullName").textContent    = (first+" "+last).trim() || "مجهول";
-  document.getElementById("username").textContent    = uname ? "@"+uname : "";
-  document.getElementById("userId").textContent      = user.id;
-  document.getElementById("firstName").textContent   = first || "—";
-  document.getElementById("lastName").textContent    = last  || "—";
-  document.getElementById("usernameVal").textContent = uname || "لا يوجد";
-  document.getElementById("langCode").textContent    = lang+" "+langFlag(lang);
-  document.getElementById("isPremium").textContent   = isPrem ? "✅ نعم" : "❌ لا";
-  document.getElementById("regDate").textContent     = "~ "+estimateRegDate(user.id);
-  if (uname) document.getElementById("copyUnBtn").style.display = "block";
-}
-
-function fillEnv() {
-  const platform    = tg?.platform    || "unknown";
-  const version     = tg?.version     || "—";
-  const colorScheme = tg?.colorScheme || "light";
-  document.getElementById("badgeRow").innerHTML = [
-    {icon:"📱", text: platform},
-    {icon:"🔧", text: "v"+version},
-    {icon: colorScheme==="dark"?"🌙":"☀️", text: colorScheme==="dark"?"داكن":"فاتح"},
-  ].map(b=>`<div class="badge">${b.icon} ${b.text}</div>`).join("");
-}
-
-function fillTheme() {
-  const cols = [
-    {label:"الخلفية",         css:"--tg-theme-bg-color",            fb:"#0f0f1a"},
-    {label:"النص",            css:"--tg-theme-text-color",          fb:"#ffffff"},
-    {label:"الزرار",          css:"--tg-theme-button-color",        fb:"#2AABEE"},
-    {label:"خلفية ثانوية",    css:"--tg-theme-secondary-bg-color",  fb:"#1a1a2e"},
-  ];
-  document.getElementById("themeGrid").innerHTML = cols.map(c => {
-    const val = getComputedStyle(document.documentElement).getPropertyValue(c.css).trim() || c.fb;
-    return `<div class="color-chip">
-      <div class="chip-dot" style="background:${val};box-shadow:0 2px 10px ${val}88"></div>
-      <span style="color:rgba(255,255,255,0.4);font-size:10px">${c.label}</span>
-    </div>`;
-  }).join("");
-}
-
-function showDemo() {
-  const av = document.getElementById("avatar");
-  av.textContent = "م"; av.style.background = "linear-gradient(135deg,#2AABEE,#1a1a2e)";
-  document.getElementById("fullName").textContent    = "مستخدم تجريبي";
-  document.getElementById("username").textContent    = "@demo_user";
-  document.getElementById("userId").textContent      = "123456789";
-  document.getElementById("firstName").textContent   = "مستخدم";
-  document.getElementById("lastName").textContent    = "تجريبي";
-  document.getElementById("usernameVal").textContent = "@demo_user";
-  document.getElementById("copyUnBtn").style.display = "block";
-  document.getElementById("langCode").textContent    = "ar 🇸🇦";
-  document.getElementById("isPremium").textContent   = "❌ لا";
-  document.getElementById("regDate").textContent     = "~ يناير 2019";
-  document.getElementById("badgeRow").innerHTML = `
-    <div class="badge">📱 browser</div>
-    <div class="badge">☀️ فاتح</div>
-    <div class="badge">🧪 تجريبي</div>`;
-  fillTheme();
-}
-
-// ══════════════════════
-//  TABS
-// ══════════════════════
-function switchTab(name, btn) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById("tab-"+name).classList.add("active");
-  btn.classList.add("active");
-  haptic("light");
-}
-
-// ══════════════════════
-//  TG COPY
-// ══════════════════════
-function tgCopy(id, label) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard?.writeText(text).catch(()=>{});
-  haptic("light");
-  if (tg?.showAlert) {
-    tg.showAlert(`✅ تم نسخ ${label}:\n${text}`);
-  }
-}
-
-// ══════════════════════
-//  TG UTILITIES DEMOS
-// ══════════════════════
-function demoAlert() {
-  haptic("medium");
-  if (tg?.showAlert) {
-    tg.showAlert("👋 مرحباً!\nهذا مثال على showAlert في تيليجرام.");
-  } else {
-    alert("showAlert — غير متاح خارج تيليجرام");
-  }
-}
-
-function demoConfirm() {
-  haptic("medium");
-  if (tg?.showConfirm) {
-    tg.showConfirm("هل تريد المتابعة؟", (ok) => {
-      if (ok) hapticNotif("success");
-      else    hapticNotif("error");
-      tg.showAlert(ok ? "✅ اخترت: موافق" : "❌ اخترت: إلغاء");
-    });
-  } else {
-    const ok = confirm("showConfirm — موافق؟");
-    alert(ok ? "اخترت: موافق" : "اخترت: إلغاء");
-  }
-}
-
-function demoPopup() {
-  haptic("medium");
-  if (tg?.showPopup) {
-    tg.showPopup({
-      title: "🛠 showPopup",
-      message: "هذه نافذة مخصصة بأزرار متعددة!",
-      buttons: [
-        { id: "ok",     type: "default",     text: "موافق ✅" },
-        { id: "info",   type: "default",     text: "معلومات ℹ️" },
-        { id: "cancel", type: "destructive",  text: "إلغاء ❌" },
-      ]
-    }, (btnId) => {
-      hapticNotif(btnId === "cancel" ? "error" : "success");
-      tg.showAlert(`ضغطت على: ${btnId}`);
-    });
-  } else {
-    alert("showPopup — غير متاح خارج تيليجرام");
-  }
-}
-
-function demoScanQR() {
-  haptic("medium");
-  if (tg?.showScanQrPopup) {
-    tg.showScanQrPopup({ text: "امسح QR Code لقراءة البيانات" }, (data) => {
-      tg.closeScanQrPopup();
-      tg.showAlert("📷 تم مسح:\n" + data);
-    });
-  } else {
-    alert("showScanQrPopup — غير متاح خارج تيليجرام");
-  }
-}
-
-function haptic(type) {
-  tg?.HapticFeedback?.impactOccurred(type);
-}
-
-function hapticNotif(type) {
-  tg?.HapticFeedback?.notificationOccurred(type);
-}
-
-function demoMainBtn() {
-  haptic("medium");
-  if (!tg?.MainButton) { alert("MainButton — غير متاح"); return; }
-  tg.MainButton.setText("🎉 تم الضغط!");
-  tg.MainButton.show();
-  tg.MainButton.onClick(() => {
-    hapticNotif("success");
-    tg.MainButton.hide();
-    tg.showAlert("✅ ضغطت على MainButton!");
-  });
-}
-
-function demoBackBtn() {
-  haptic("medium");
-  if (!tg?.BackButton) { alert("BackButton — غير متاح"); return; }
-  tg.BackButton.show();
-  tg.BackButton.onClick(() => {
-    hapticNotif("warning");
-    tg.BackButton.hide();
-    tg.showAlert("◀️ ضغطت على BackButton!");
-  });
-}
-
-function demoExpand() {
-  haptic("medium");
-  tg?.expand ? tg.expand() : alert("expand() — غير متاح");
-}
-
-function demoClose() {
-  if (tg?.showConfirm) {
-    tg.showConfirm("هل تريد إغلاق الميني اب؟", (ok) => {
-      if (ok) tg.close();
-    });
-  } else {
-    alert("close() — غير متاح خارج تيليجرام");
-  }
-}
-
-function demoReadClipboard() {
-  haptic("medium");
-  if (tg?.readTextFromClipboard) {
-    tg.readTextFromClipboard((text) => {
-      tg.showAlert("📋 محتوى الكلبورد:\n" + (text || "(فارغ)"));
-    });
-  } else {
-    navigator.clipboard?.readText().then(t => alert("📋 " + (t || "(فارغ)"))).catch(() => alert("تعذر قراءة الكلبورد"));
-  }
-}
-
-function demoOpenLink() {
-  haptic("medium");
-  if (tg?.openLink) {
-    tg.openLink("https://telegram.org");
-  } else {
-    window.open("https://telegram.org", "_blank");
-  }
-}
-
-// ══════════════════════
-//  USER LOOKUP
-// ══════════════════════
-async function doLookup() {
-  const raw = document.getElementById("lookupInput").value.trim();
-  if (!raw) {
-    if (tg?.showAlert) tg.showAlert("⚠️ أدخل User ID أو @username أولاً");
-    else alert("أدخل User ID أو @username");
-    return;
-  }
-
-  haptic("medium");
-  const query = raw.startsWith("@") ? raw.slice(1) : raw;
-  const isId  = /^\d+$/.test(query);
-
-  // محاكاة فحص — في الواقع محتاج API من السيرفر
-  const result = buildLookupResult(query, isId);
-  renderLookupResult(result);
-
-  // حفظ في السجل
-  if (!savedLookups.find(u => u.query === query)) {
-    savedLookups.unshift({ query, isId, time: new Date().toLocaleTimeString("ar") });
-    if (savedLookups.length > 10) savedLookups.pop();
-    localStorage.setItem("tg_lookups", JSON.stringify(savedLookups));
-  }
-  renderSaved();
-}
-
-function buildLookupResult(query, isId) {
-  // تقدير بيانات من الـ ID لو رقم
-  if (isId) {
-    const id = parseInt(query);
-    return {
-      id,
-      type: "user",
-      regDate: estimateRegDate(id),
-      color: AVATAR_COLORS[id % AVATAR_COLORS.length],
-      initial: "#",
-      note: "بيانات تقريبية من الـ ID"
-    };
-  }
-  return {
-    username: query,
-    type: "username",
-    color: AVATAR_COLORS[query.length % AVATAR_COLORS.length],
-    initial: query[0]?.toUpperCase() || "?",
-    note: "للحصول على بيانات كاملة يلزم Bot API من السيرفر"
-  };
-}
-
-function renderLookupResult(r) {
-  const el = document.getElementById("lookupResult");
-  el.innerHTML = `
-    <div class="card glass lookup-result">
-      <div class="row">
-        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,${r.color},#1a1a2e);
-          display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0">
-          ${r.initial}
-        </div>
-        <div class="row-info">
-          <div class="row-label">${r.type === "user" ? "User ID" : "Username"}</div>
-          <div class="row-value">${r.id || "@"+r.username}</div>
-        </div>
-      </div>
-      ${r.regDate ? `<div class="row">
-        <div class="row-icon">📅</div>
-        <div class="row-info"><div class="row-label">تاريخ الإنشاء (تقريبي)</div>
-        <div class="row-value">~ ${r.regDate}</div></div>
-      </div>` : ""}
-      <div class="row">
-        <div class="row-icon">ℹ️</div>
-        <div class="row-info"><div class="row-label">ملاحظة</div>
-        <div class="row-value" style="white-space:normal;font-size:12px;color:rgba(255,255,255,0.5)">${r.note}</div></div>
-      </div>
-    </div>`;
-  hapticNotif("success");
-}
-
-function renderSaved() {
-  const el = document.getElementById("savedUsers");
-  if (!savedLookups.length) {
-    el.innerHTML = `<div class="lookup-empty" style="padding:16px">لا يوجد سجل بعد</div>`;
-    return;
-  }
-  el.innerHTML = `<div class="card glass">` +
-    savedLookups.map(u => `
-      <div class="row" onclick="document.getElementById('lookupInput').value='${u.isId ? u.query : '@'+u.query}'; doLookup();" style="cursor:pointer">
-        <div class="row-icon">${u.isId ? "🆔" : "👤"}</div>
-        <div class="row-info">
-          <div class="row-value">${u.isId ? u.query : "@"+u.query}</div>
-          <div class="row-label">${u.time}</div>
-        </div>
-        <div style="color:rgba(255,255,255,0.3);font-size:18px">›</div>
-      </div>`
-    ).join("") + `</div>`;
-}
-
-// ══════════════════════
-//  HELPERS
-// ══════════════════════
-function estimateRegDate(userId) {
-  const refs = [
-    {id:100000000,  date:new Date("2014-01-01")},
-    {id:500000000,  date:new Date("2017-06-01")},
-    {id:1000000000, date:new Date("2019-01-01")},
-    {id:1500000000, date:new Date("2020-06-01")},
-    {id:2000000000, date:new Date("2021-06-01")},
-    {id:5000000000, date:new Date("2023-01-01")},
-    {id:7000000000, date:new Date("2024-01-01")},
-    {id:9000000000, date:new Date("2025-01-01")},
-  ];
-  for (let i=1; i<refs.length; i++) {
-    if (userId <= refs[i].id) {
-      const p = refs[i-1], n = refs[i];
-      const r = (userId-p.id)/(n.id-p.id);
-      return new Date(p.date.getTime()+r*(n.date.getTime()-p.date.getTime()))
-        .toLocaleDateString("ar-EG",{year:"numeric",month:"long"});
-    }
-  }
-  return "2025+";
-}
-
-function langFlag(code) {
-  return ({ar:"🇸🇦",en:"🇺🇸",ru:"🇷🇺",de:"🇩🇪",fr:"🇫🇷",tr:"🇹🇷",es:"🇪🇸",it:"🇮🇹",zh:"🇨🇳",ja:"🇯🇵",uk:"🇺🇦",fa:"🇮🇷"})[code] || "🌍";
-}
-
-init();
-</script>
+            try {
+                // ملاحظة: قد تحتاج لبروكسي لتجاوز CORS في المتصفح، هنا نستخدم Hastebin كمثال
+                const response = await fetch('https://hastebin.com/documents', {
+                    method: 'POST',
+                    body: code
+                });
+                const data = await response.json();
+                const rawLink = `https://hastebin.com/raw/${data.key}`;
+                
+                const loaderCode = `
+-- Loader Script
+local url = "${rawLink}"
+local res = gg.makeRequest(url).content
+local load_script = load(res)
+if load_script then 
+    load_script() 
+else 
+    print("Failed to load online script") 
+end`;
+                
+                editor.value = loaderCode;
+                tg.showPopup({
+                    title: 'تم الرفع!',
+                    message: 'تم استبدال الكود بكود الاتصال (MakeRequest). يمكنك الآن حفظه.',
+                    buttons: [{type: 'ok'}]
+                });
+            } catch (e) {
+                document.getElementById('status').innerText = "خطأ في الرفع: تأكد من إعدادات الـ CORS أو API Key";
+                console.error(e);
+            }
+        }
+    </script>
 </body>
 </html>
