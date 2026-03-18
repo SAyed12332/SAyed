@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -6,12 +9,9 @@
 <title>GG Control Panel</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-  
 <style>
 :root {
   --bg:      #06090f;
-  --bg2:     #0d1220;
   --cyan:    #00d4ff;
   --green:   #00ff9d;
   --red:     #ff4060;
@@ -25,7 +25,6 @@
   --card-bg: rgba(13,18,32,0.9);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 body {
   font-family: 'Tajawal', sans-serif;
   background: var(--bg);
@@ -35,7 +34,6 @@ body {
   overflow-x: hidden;
   position: relative;
 }
-
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0;
@@ -61,8 +59,6 @@ body::after {
   );
 }
 .content { position: relative; z-index: 2; }
-
-/* ── HEADER ── */
 .header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 16px 10px;
@@ -87,18 +83,12 @@ body::after {
 }
 .btn-theme img { width: 19px; height: 19px; }
 .btn-theme:active { transform: scale(.88); }
-
-/* ── STATUS CARD ── */
 .status-card {
-  margin: 0 16px 12px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(10px);
+  margin: 0 16px 12px; padding: 12px 14px;
+  border-radius: 16px; background: var(--card-bg);
+  border: 1px solid var(--border); backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: space-between;
-  animation: fadeUp .4s ease both;
-  position: relative; overflow: hidden;
+  animation: fadeUp .4s ease both; position: relative; overflow: hidden;
 }
 .status-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -115,205 +105,120 @@ body::after {
   box-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,157,0.3);
   animation: pulse 2s infinite;
 }
-.status-dot.offline {
-  background: var(--red);
-  box-shadow: 0 0 8px var(--red);
-  animation: none;
-}
+.status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
-
-.status-info {}
 .status-label {
   font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; letter-spacing: .6px;
-  transition: color .4s;
+  font-weight: 700; letter-spacing: .6px; transition: color .4s;
 }
 .status-label.online  { color: var(--green); }
 .status-label.offline { color: var(--red);   }
-.status-sub {
-  font-size: 10px; color: var(--muted); margin-top: 1px;
-  font-family: 'JetBrains Mono', monospace;
-}
+.status-sub { font-size: 10px; color: var(--muted); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
 .status-result {
   font-size: 11px; font-family: 'JetBrains Mono', monospace;
   color: var(--cyan); max-width: 140px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  text-align: left;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;
 }
-
-/* ── CARD ── */
 .card {
-  margin: 0 16px 12px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 13px;
+  margin: 0 16px 12px; background: var(--card-bg);
+  border: 1px solid var(--border); border-radius: 16px; padding: 13px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
-  animation: fadeUp .5s ease both;
-  position: relative; overflow: hidden;
+  animation: fadeUp .5s ease both; position: relative; overflow: hidden;
 }
 .card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: .4;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .4;
 }
-.card-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 11px;
-}
+.card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
 .card-icon {
   width: 28px; height: 28px; border-radius: 9px;
-  background: rgba(0,212,255,0.1);
-  border: 1px solid rgba(0,212,255,0.2);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));
 }
 .card-icon img { width: 16px; height: 16px; }
-.card-title-wrap {}
 .card-title {
   font-size: 12px; font-weight: 800; color: var(--cyan);
-  font-family: 'JetBrains Mono', monospace; letter-spacing: .5px;
-  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; text-transform: uppercase;
 }
 .card-desc { font-size: 10px; color: var(--muted); margin-top: 1px; }
-
-/* ── INPUTS ── */
 input[type="text"], input[type="number"] {
-  width: 100%; padding: 10px 13px;
-  border-radius: 10px; margin-bottom: 8px;
+  width: 100%; padding: 10px 13px; border-radius: 10px; margin-bottom: 8px;
   border: 1px solid rgba(255,255,255,0.07);
   background: rgba(255,255,255,0.04);
   color: var(--text); font-family: 'Tajawal', sans-serif; font-size: 14px;
-  outline: none; transition: .22s;
-  -webkit-appearance: none;
+  outline: none; transition: .22s; -webkit-appearance: none;
 }
 input:focus {
-  border-color: var(--cyan);
-  background: rgba(0,212,255,0.05);
+  border-color: var(--cyan); background: rgba(0,212,255,0.05);
   box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
 }
 input::placeholder { color: var(--muted); }
-
-/* ── TYPE ROW ── */
 .type-row {
-  display: flex; gap: 5px; overflow-x: auto;
-  padding-bottom: 2px; margin-bottom: 8px;
-  scrollbar-width: none;
+  display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px;
+  margin-bottom: 8px; scrollbar-width: none;
 }
 .type-row::-webkit-scrollbar { display: none; }
 .type-btn {
-  flex-shrink: 0; padding: 5px 11px;
-  border-radius: 8px; cursor: pointer; transition: .18s;
+  flex-shrink: 0; padding: 5px 11px; border-radius: 8px; cursor: pointer; transition: .18s;
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  background: rgba(255,255,255,0.04);
-  color: var(--muted);
+  background: rgba(255,255,255,0.04); color: var(--muted);
   border: 1px solid rgba(255,255,255,0.07);
 }
 .type-btn.active {
-  background: rgba(0,212,255,0.15);
-  color: var(--cyan);
-  border-color: rgba(0,212,255,0.4);
-  box-shadow: 0 0 8px rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.15); color: var(--cyan);
+  border-color: rgba(0,212,255,0.4); box-shadow: 0 0 8px rgba(0,212,255,0.2);
 }
 .type-btn:active { transform: scale(.93); }
-
-/* ── EXECUTE BUTTON ── */
 .exec-btn {
-  width: 100%; padding: 11px;
-  border-radius: 11px; border: none; cursor: pointer; transition: .18s;
-  font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  letter-spacing: .2px;
+  width: 100%; padding: 11px; border-radius: 11px; border: none; cursor: pointer;
+  transition: .18s; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: 7px; letter-spacing: .2px;
 }
 .exec-btn img { width: 16px; height: 16px; }
 .exec-btn:active { transform: scale(.95); opacity: .85; }
-
-.btn-cyan {
-  background: rgba(0,212,255,0.13);
-  color: var(--cyan);
-  border: 1px solid rgba(0,212,255,0.3);
-}
-.btn-cyan:active { box-shadow: 0 0 16px var(--glow-c); }
-
-.btn-green {
-  background: rgba(0,255,157,0.12);
-  color: var(--green);
-  border: 1px solid rgba(0,255,157,0.3);
-}
+.btn-cyan  { background: rgba(0,212,255,0.13); color: var(--cyan);   border: 1px solid rgba(0,212,255,0.3); }
+.btn-cyan:active  { box-shadow: 0 0 16px var(--glow-c); }
+.btn-green { background: rgba(0,255,157,0.12); color: var(--green);  border: 1px solid rgba(0,255,157,0.3); }
 .btn-green:active { box-shadow: 0 0 16px var(--glow-g); }
-
-.btn-red {
-  background: rgba(255,64,96,0.12);
-  color: var(--red);
-  border: 1px solid rgba(255,64,96,0.3);
-}
-.btn-red:active { box-shadow: 0 0 14px var(--glow-r); }
-
-.btn-yellow {
-  background: rgba(255,215,0,0.1);
-  color: var(--yellow);
-  border: 1px solid rgba(255,215,0,0.25);
-}
-.btn-yellow:active { box-shadow: 0 0 12px rgba(255,215,0,0.3); }
-
-/* ── QUICK ROW ── */
+.btn-red   { background: rgba(255,64,96,0.12); color: var(--red);    border: 1px solid rgba(255,64,96,0.3); }
+.btn-red:active   { box-shadow: 0 0 14px var(--glow-r); }
+.btn-yellow{ background: rgba(255,215,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,215,0,0.25); }
+.btn-yellow:active{ box-shadow: 0 0 12px rgba(255,215,0,0.3); }
 .quick-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
 .quick-btn {
-  padding: 10px 6px;
-  border-radius: 11px; border: none; cursor: pointer; transition: .18s;
+  padding: 10px 6px; border-radius: 11px; border: none; cursor: pointer; transition: .18s;
   font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 800;
   display: flex; flex-direction: column; align-items: center; gap: 5px;
 }
 .quick-btn img { width: 18px; height: 18px; }
 .quick-btn:active { transform: scale(.92); opacity: .85; }
-
-/* ── RANGES GRID ── */
 .ranges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 .range-btn {
-  padding: 9px;
-  border-radius: 10px; cursor: pointer; transition: .18s;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
+  padding: 9px; border-radius: 10px; cursor: pointer; transition: .18s;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  color: var(--text);
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 2px;
 }
 .range-btn span { font-size: 9px; color: var(--muted); font-weight: 400; }
-.range-btn:active {
-  transform: scale(.93);
-  border-color: var(--cyan);
-  box-shadow: 0 0 10px var(--glow-c);
-  color: var(--cyan);
-}
-
-/* ── TOAST ── */
+.range-btn:active { transform: scale(.93); border-color: var(--cyan); box-shadow: 0 0 10px var(--glow-c); color: var(--cyan); }
 .toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
-  z-index: 100;
-  background: rgba(13,18,32,0.95);
-  border: 1px solid var(--border);
+  z-index: 100; background: rgba(13,18,32,0.95); border: 1px solid var(--border);
   color: var(--text); font-size: 13px; font-weight: 700;
-  padding: 10px 18px; border-radius: 12px;
-  backdrop-filter: blur(16px);
-  transition: transform .3s ease, opacity .3s;
-  opacity: 0; white-space: nowrap;
+  padding: 10px 18px; border-radius: 12px; backdrop-filter: blur(16px);
+  transition: transform .3s ease, opacity .3s; opacity: 0; white-space: nowrap;
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-}
-
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.15); border-radius: 4px; }
 </style>
 </head>
 <body>
 <div class="scanline"></div>
 <div class="content">
 
-<!-- ── HEADER ── -->
 <div class="header">
   <div>
     <div class="title">GG Control Panel</div>
@@ -324,11 +229,10 @@ input::placeholder { color: var(--muted); }
   </button>
 </div>
 
-<!-- ── STATUS CARD ── -->
 <div class="status-card" style="animation-delay:.04s">
   <div class="status-left">
     <div class="status-dot offline" id="statusDot"></div>
-    <div class="status-info">
+    <div>
       <div class="status-label offline" id="statusLabel">OFFLINE</div>
       <div class="status-sub" id="statusSub">جارٍ الاتصال...</div>
     </div>
@@ -336,16 +240,11 @@ input::placeholder { color: var(--muted); }
   <div class="status-result" id="lastResult">—</div>
 </div>
 
-<!-- ── SEARCH ── -->
+<!-- SEARCH -->
 <div class="card" style="animation-delay:.08s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">SEARCH</div>
-      <div class="card-desc">ابحث عن رقم في الذاكرة — يمكن أكثر من قيمة مفصولة بـ ;</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">SEARCH</div><div class="card-desc">ابحث عن رقم في الذاكرة</div></div>
   </div>
   <input type="text" id="searchVal" placeholder="100  أو  100;200;300">
   <div class="type-row" id="searchTypeRow">
@@ -356,21 +255,15 @@ input::placeholder { color: var(--muted); }
     <button class="type-btn" onclick="selectType('search',this,2)">WORD</button>
   </div>
   <button class="exec-btn btn-cyan" onclick="doSearch()">
-    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
-    بحث
+    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""> بحث
   </button>
 </div>
 
-<!-- ── REFINE ── -->
+<!-- REFINE -->
 <div class="card" style="animation-delay:.11s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">REFINE</div>
-      <div class="card-desc">صقل النتائج الحالية بقيمة جديدة</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">REFINE</div><div class="card-desc">صقل النتائج الحالية</div></div>
   </div>
   <input type="text" id="refineVal" placeholder="200  أو  200;300">
   <div class="type-row" id="refineTypeRow">
@@ -381,21 +274,15 @@ input::placeholder { color: var(--muted); }
     <button class="type-btn" onclick="selectType('refine',this,2)">WORD</button>
   </div>
   <button class="exec-btn btn-cyan" onclick="doRefine()">
-    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
-    صقل
+    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""> صقل
   </button>
 </div>
 
-<!-- ── EDIT ── -->
+<!-- EDIT -->
 <div class="card" style="animation-delay:.14s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">EDIT ALL</div>
-      <div class="card-desc">تعديل كل النتائج الحالية بقيمة واحدة</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">EDIT ALL</div><div class="card-desc">تعديل كل النتائج</div></div>
   </div>
   <input type="text" id="editVal" placeholder="9999999">
   <div class="type-row" id="editTypeRow">
@@ -406,131 +293,88 @@ input::placeholder { color: var(--muted); }
     <button class="type-btn" onclick="selectType('edit',this,2)">WORD</button>
   </div>
   <button class="exec-btn btn-green" onclick="doEdit()">
-    <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
-    تعديل الكل
+    <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt=""> تعديل الكل
   </button>
 </div>
 
-<!-- ── FREEZE ── -->
+<!-- FREEZE -->
 <div class="card" style="animation-delay:.17s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">FREEZE</div>
-      <div class="card-desc">تجميد النتائج على قيمة ثابتة</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/lock-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">FREEZE</div><div class="card-desc">تجميد النتائج على قيمة</div></div>
   </div>
   <input type="text" id="freezeVal" placeholder="9999999">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
     <button class="exec-btn btn-yellow" onclick="doFreeze()">
-      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
-      تجميد نتائج
+      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt=""> تجميد نتائج
     </button>
     <button class="exec-btn btn-yellow" onclick="doFreezeList()">
-      <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
-      تجميد قائمة
+      <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt=""> تجميد قائمة
     </button>
   </div>
 </div>
 
-<!-- ── QUICK ACTIONS ── -->
+<!-- QUICK -->
 <div class="card" style="animation-delay:.2s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">QUICK ACTIONS</div>
-      <div class="card-desc">أوامر سريعة بضغطة واحدة</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">QUICK ACTIONS</div><div class="card-desc">أوامر سريعة</div></div>
   </div>
   <div class="quick-row">
     <button class="quick-btn btn-red" onclick="doClear()">
-      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
-      مسح
+      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""> مسح
     </button>
     <button class="quick-btn btn-cyan" onclick="doCount()">
-      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
-      عدد
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""> عدد
     </button>
     <button class="quick-btn btn-green" onclick="doUnfreeze()">
-      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
-      رفع
+      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""> رفع
     </button>
     <button class="quick-btn btn-cyan" onclick="doGoto()">
-      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt="">
-      فتح GG
+      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""> فتح GG
     </button>
     <button class="quick-btn btn-yellow" onclick="doGetResults()">
-      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt="">
-      نتائج
+      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""> نتائج
     </button>
     <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doHide()">
-      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt="">
-      إخفاء
+      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""> إخفاء
     </button>
   </div>
 </div>
 
-<!-- ── RANGES ── -->
+<!-- RANGES -->
 <div class="card" style="animation-delay:.23s">
   <div class="card-header">
-    <div class="card-icon">
-      <img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt="">
-    </div>
-    <div class="card-title-wrap">
-      <div class="card-title">MEMORY RANGES</div>
-      <div class="card-desc">تحديد نطاق الذاكرة للبحث</div>
-    </div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="card-title">MEMORY RANGES</div><div class="card-desc">تحديد نطاق الذاكرة</div></div>
   </div>
   <div class="ranges-grid">
-    <button class="range-btn" onclick="doRanges(2147483712)">
-      ANON + ALLOC
-      <span>الأشيع استخداماً</span>
-    </button>
-    <button class="range-btn" onclick="doRanges(536870912)">
-      JAVA
-      <span>ذاكرة Java</span>
-    </button>
-    <button class="range-btn" onclick="doRanges(8)">
-      CODE APP
-      <span>كود التطبيق</span>
-    </button>
-    <button class="range-btn" onclick="doRanges(4294967295)">
-      ALL REGIONS
-      <span>كل النطاقات</span>
-    </button>
+    <button class="range-btn" onclick="doRanges(2147483712)">ANON + ALLOC<span>الأشيع</span></button>
+    <button class="range-btn" onclick="doRanges(536870912)">JAVA<span>ذاكرة Java</span></button>
+    <button class="range-btn" onclick="doRanges(8)">CODE APP<span>كود التطبيق</span></button>
+    <button class="range-btn" onclick="doRanges(4294967295)">ALL REGIONS<span>كل النطاقات</span></button>
   </div>
 </div>
 
-</div><!-- /content -->
-
-<!-- Toast -->
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-
-
-  
+// ══ CONFIG ══
 const BOT_TOKEN = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
-  
 const tg = window.Telegram?.WebApp;
 
-// ── TYPE STATE ──
+// ══ TYPE STATE ══
 const types = { search: 4, refine: 4, edit: 4 };
 function selectType(group, btn, val) {
-    const row = document.getElementById(group + "TypeRow");
-    row.querySelectorAll(".type-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById(group + "TypeRow")
+        .querySelectorAll(".type-btn")
+        .forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     types[group] = val;
 }
 
-// ── STATUS ──
-let connected = false;
-let lastCheck = 0;
-
+// ══ STATUS CHECK ══
 async function checkStatus() {
     try {
         const r = await fetch(
@@ -543,7 +387,6 @@ async function checkStatus() {
         if (m) {
             const age = Math.floor(Date.now() / 1000) - parseInt(m[1]);
             setStatus(age < 18);
-            lastCheck = Date.now();
         } else {
             setStatus(false);
         }
@@ -563,7 +406,6 @@ async function getLastResult() {
 }
 
 function setStatus(isOnline) {
-    connected = isOnline;
     const dot   = document.getElementById("statusDot");
     const label = document.getElementById("statusLabel");
     const sub   = document.getElementById("statusSub");
@@ -580,17 +422,32 @@ function setStatus(isOnline) {
     }
 }
 
-// ── SEND COMMAND ──
-function sendCmd(cmd) {
-    if (tg && tg.initData && tg.initData !== "") {
-        showToast("تم إرسال الأمر...");
-        setTimeout(() => tg.sendData(JSON.stringify(cmd)), 300);
-    } else {
-        showToast("[اختبار] " + JSON.stringify(cmd));
+// ══ FIX: إرسال الأمر عبر fetch مباشرة — لا يغلق الـ WebApp ══
+async function sendCmd(cmd) {
+    const user = tg?.initDataUnsafe?.user;
+    if (!user?.id) {
+        showToast("[TEST] " + JSON.stringify(cmd));
+        return;
+    }
+    try {
+        showToast("جارٍ الإرسال...");
+        const text = "__GG__" + JSON.stringify(cmd);
+        const url  = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`
+                   + `?chat_id=${user.id}&text=${encodeURIComponent(text)}`;
+        const r = await fetch(url);
+        const d = await r.json();
+        if (d.ok) {
+            showToast("تم الإرسال بنجاح");
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+        } else {
+            showToast("خطأ: " + (d.description || "فشل الإرسال"));
+        }
+    } catch(e) {
+        showToast("خطأ في الاتصال");
     }
 }
 
-// ── COMMANDS ──
+// ══ COMMANDS ══
 function doSearch() {
     const v = document.getElementById("searchVal").value.trim();
     if (!v) { showToast("أدخل قيمة البحث"); return; }
@@ -624,17 +481,17 @@ function doHide()       { sendCmd({ c: "hide"       }); }
 function doGetResults() { sendCmd({ c: "getResults", v: "15" }); }
 function doRanges(val)  { sendCmd({ c: "ranges", v: String(val) }); }
 
-// ── TOAST ──
+// ══ TOAST ══
 let toastTimer = null;
 function showToast(msg) {
     const el = document.getElementById("toast");
     el.textContent = msg;
     el.classList.add("show");
     if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
 }
 
-// ── THEME ──
+// ══ THEME ══
 let isDark = true;
 function toggleTheme() {
     isDark = !isDark;
@@ -644,12 +501,12 @@ function toggleTheme() {
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
 }
 
-// ── INIT ──
+// ══ INIT ══
 if (tg) { tg.ready(); tg.expand(); }
 checkStatus();
 getLastResult();
-setInterval(checkStatus,    6000);
-setInterval(getLastResult,  9000);
+setInterval(checkStatus,   6000);
+setInterval(getLastResult, 9000);
 </script>
 </body>
 </html>
