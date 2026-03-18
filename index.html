@@ -7,6 +7,11 @@
 
 
 
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -17,78 +22,208 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#06090f;--cyan:#00d4ff;--green:#00ff9d;--red:#ff4060;
-  --yellow:#ffd700;--text:#e2e8f0;--muted:#4a5568;
-  --border:rgba(0,212,255,0.15);--glow-c:rgba(0,212,255,0.35);
-  --glow-g:rgba(0,255,157,0.35);--glow-r:rgba(255,64,96,0.4);
-  --card-bg:rgba(13,18,32,0.9);
+  --bg:      #06090f;
+  --cyan:    #00d4ff;
+  --green:   #00ff9d;
+  --red:     #ff4060;
+  --yellow:  #ffd700;
+  --text:    #e2e8f0;
+  --muted:   #4a5568;
+  --border:  rgba(0,212,255,0.15);
+  --glow-c:  rgba(0,212,255,0.35);
+  --glow-g:  rgba(0,255,157,0.35);
+  --glow-r:  rgba(255,64,96,0.4);
+  --card-bg: rgba(13,18,32,0.9);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;overflow-x:hidden;position:relative}
-body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,212,255,0.1),transparent),radial-gradient(ellipse 60% 50% at 100% 90%,rgba(0,255,157,0.06),transparent);pointer-events:none}
-body::after{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);background-size:36px 36px;pointer-events:none}
-.scanline{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px)}
-.content{position:relative;z-index:2}
-.header{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px;animation:fadeUp .35s ease both}
-.title{font-size:21px;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.3px}
-.title-sub{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.8px;margin-top:2px}
-.btn-theme{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center}
-.btn-theme img{width:19px;height:19px}
-.btn-theme:active{transform:scale(.88)}
-.status-card{margin:0 16px 12px;padding:12px 14px;border-radius:16px;background:var(--card-bg);border:1px solid var(--border);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;animation:fadeUp .4s ease both;position:relative;overflow:hidden}
-.status-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.5}
-.status-left{display:flex;align-items:center;gap:10px}
-.status-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;transition:background .4s,box-shadow .4s}
-.status-dot.online{background:var(--green);box-shadow:0 0 10px var(--green),0 0 20px rgba(0,255,157,0.3);animation:pulse 2s infinite}
-.status-dot.offline{background:var(--red);box-shadow:0 0 8px var(--red)}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
-.status-label{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.6px;transition:color .4s}
-.status-label.online{color:var(--green)}
-.status-label.offline{color:var(--red)}
-.status-sub{font-size:10px;color:var(--muted);margin-top:1px;font-family:'JetBrains Mono',monospace}
-.status-result{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
-
-/* DEBUG CARD */
-.debug-card{margin:0 16px 12px;padding:10px 14px;border-radius:12px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);font-family:'JetBrains Mono',monospace;font-size:10px;color:#ffd700;line-height:1.7;animation:fadeUp .4s ease both;display:none}
-.debug-card.show{display:block}
-
-.card{margin:0 16px 12px;background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:13px;backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.03);animation:fadeUp .5s ease both;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.4}
-.card-header{display:flex;align-items:center;gap:8px;margin-bottom:11px}
-.card-icon{width:28px;height:28px;border-radius:9px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(0,212,255,0.4))}
-.card-icon img{width:16px;height:16px}
-.card-title{font-size:12px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;text-transform:uppercase}
-.card-desc{font-size:10px;color:var(--muted);margin-top:1px}
-input[type="text"],input[type="number"]{width:100%;padding:10px 13px;border-radius:10px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.04);color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:.22s;-webkit-appearance:none}
-input:focus{border-color:var(--cyan);background:rgba(0,212,255,0.05);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
-input::placeholder{color:var(--muted)}
-.type-row{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;margin-bottom:8px;scrollbar-width:none}
-.type-row::-webkit-scrollbar{display:none}
-.type-btn{flex-shrink:0;padding:5px 11px;border-radius:8px;cursor:pointer;transition:.18s;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.07)}
-.type-btn.active{background:rgba(0,212,255,0.15);color:var(--cyan);border-color:rgba(0,212,255,0.4);box-shadow:0 0 8px rgba(0,212,255,0.2)}
-.type-btn:active{transform:scale(.93)}
-.exec-btn{width:100%;padding:11px;border-radius:11px;border:none;cursor:pointer;transition:.18s;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:7px;letter-spacing:.2px}
-.exec-btn img{width:16px;height:16px}
-.exec-btn:active{transform:scale(.95);opacity:.85}
-.btn-cyan{background:rgba(0,212,255,0.13);color:var(--cyan);border:1px solid rgba(0,212,255,0.3)}
-.btn-cyan:active{box-shadow:0 0 16px var(--glow-c)}
-.btn-green{background:rgba(0,255,157,0.12);color:var(--green);border:1px solid rgba(0,255,157,0.3)}
-.btn-green:active{box-shadow:0 0 16px var(--glow-g)}
-.btn-red{background:rgba(255,64,96,0.12);color:var(--red);border:1px solid rgba(255,64,96,0.3)}
-.btn-red:active{box-shadow:0 0 14px var(--glow-r)}
-.btn-yellow{background:rgba(255,215,0,0.1);color:var(--yellow);border:1px solid rgba(255,215,0,0.25)}
-.btn-yellow:active{box-shadow:0 0 12px rgba(255,215,0,0.3)}
-.quick-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
-.quick-btn{padding:10px 6px;border-radius:11px;border:none;cursor:pointer;transition:.18s;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:5px}
-.quick-btn img{width:18px;height:18px}
-.quick-btn:active{transform:scale(.92);opacity:.85}
-.ranges-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.range-btn{padding:9px;border-radius:10px;cursor:pointer;transition:.18s;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:2px}
-.range-btn span{font-size:9px;color:var(--muted);font-weight:400}
-.range-btn:active{transform:scale(.93);border-color:var(--cyan);box-shadow:0 0 10px var(--glow-c);color:var(--cyan)}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);z-index:100;background:rgba(13,18,32,0.95);border:1px solid var(--border);color:var(--text);font-size:13px;font-weight:700;padding:10px 18px;border-radius:12px;backdrop-filter:blur(16px);transition:transform .3s ease,opacity .3s;opacity:0;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 60px;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,212,255,0.1), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 90%, rgba(0,255,157,0.06), transparent);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
+.scanline {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+}
+.content { position: relative; z-index: 2; }
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 16px 10px;
+  animation: fadeUp .35s ease both;
+}
+.title {
+  font-size: 21px; font-weight: 900;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; letter-spacing: -.3px;
+}
+.title-sub {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  color: var(--muted); letter-spacing: .8px; margin-top: 2px;
+}
+.btn-theme {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; transition: .18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-theme img { width: 19px; height: 19px; }
+.btn-theme:active { transform: scale(.88); }
+.status-card {
+  margin: 0 16px 12px; padding: 12px 14px;
+  border-radius: 16px; background: var(--card-bg);
+  border: 1px solid var(--border); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: space-between;
+  animation: fadeUp .4s ease both; position: relative; overflow: hidden;
+}
+.status-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: .5;
+}
+.status-left { display: flex; align-items: center; gap: 10px; }
+.status-dot {
+  width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+  transition: background .4s, box-shadow .4s;
+}
+.status-dot.online {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,157,0.3);
+  animation: pulse 2s infinite;
+}
+.status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
+.status-label {
+  font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; letter-spacing: .6px; transition: color .4s;
+}
+.status-label.online  { color: var(--green); }
+.status-label.offline { color: var(--red);   }
+.status-sub { font-size: 10px; color: var(--muted); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+.status-result {
+  font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan); max-width: 140px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;
+}
+.card {
+  margin: 0 16px 12px; background: var(--card-bg);
+  border: 1px solid var(--border); border-radius: 16px; padding: 13px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+  animation: fadeUp .5s ease both; position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .4;
+}
+.card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
+.card-icon {
+  width: 28px; height: 28px; border-radius: 9px;
+  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));
+}
+.card-icon img { width: 16px; height: 16px; }
+.card-title {
+  font-size: 12px; font-weight: 800; color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; text-transform: uppercase;
+}
+.card-desc { font-size: 10px; color: var(--muted); margin-top: 1px; }
+input[type="text"], input[type="number"] {
+  width: 100%; padding: 10px 13px; border-radius: 10px; margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.04);
+  color: var(--text); font-family: 'Tajawal', sans-serif; font-size: 14px;
+  outline: none; transition: .22s; -webkit-appearance: none;
+}
+input:focus {
+  border-color: var(--cyan); background: rgba(0,212,255,0.05);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+}
+input::placeholder { color: var(--muted); }
+.type-row {
+  display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px;
+  margin-bottom: 8px; scrollbar-width: none;
+}
+.type-row::-webkit-scrollbar { display: none; }
+.type-btn {
+  flex-shrink: 0; padding: 5px 11px; border-radius: 8px; cursor: pointer; transition: .18s;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  background: rgba(255,255,255,0.04); color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.type-btn.active {
+  background: rgba(0,212,255,0.15); color: var(--cyan);
+  border-color: rgba(0,212,255,0.4); box-shadow: 0 0 8px rgba(0,212,255,0.2);
+}
+.type-btn:active { transform: scale(.93); }
+.exec-btn {
+  width: 100%; padding: 11px; border-radius: 11px; border: none; cursor: pointer;
+  transition: .18s; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: 7px; letter-spacing: .2px;
+}
+.exec-btn img { width: 16px; height: 16px; }
+.exec-btn:active { transform: scale(.95); opacity: .85; }
+.btn-cyan  { background: rgba(0,212,255,0.13); color: var(--cyan);   border: 1px solid rgba(0,212,255,0.3); }
+.btn-cyan:active  { box-shadow: 0 0 16px var(--glow-c); }
+.btn-green { background: rgba(0,255,157,0.12); color: var(--green);  border: 1px solid rgba(0,255,157,0.3); }
+.btn-green:active { box-shadow: 0 0 16px var(--glow-g); }
+.btn-red   { background: rgba(255,64,96,0.12); color: var(--red);    border: 1px solid rgba(255,64,96,0.3); }
+.btn-red:active   { box-shadow: 0 0 14px var(--glow-r); }
+.btn-yellow{ background: rgba(255,215,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,215,0,0.25); }
+.btn-yellow:active{ box-shadow: 0 0 12px rgba(255,215,0,0.3); }
+.quick-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.quick-btn {
+  padding: 10px 6px; border-radius: 11px; border: none; cursor: pointer; transition: .18s;
+  font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 800;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.quick-btn img { width: 18px; height: 18px; }
+.quick-btn:active { transform: scale(.92); opacity: .85; }
+.ranges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.range-btn {
+  padding: 9px; border-radius: 10px; cursor: pointer; transition: .18s;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.range-btn span { font-size: 9px; color: var(--muted); font-weight: 400; }
+.range-btn:active { transform: scale(.93); border-color: var(--cyan); box-shadow: 0 0 10px var(--glow-c); color: var(--cyan); }
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+  z-index: 100; background: rgba(13,18,32,0.95); border: 1px solid var(--border);
+  color: var(--text); font-size: 13px; font-weight: 700;
+  padding: 10px 18px; border-radius: 12px; backdrop-filter: blur(16px);
+  transition: transform .3s ease, opacity .3s; opacity: 0; white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
@@ -105,7 +240,6 @@ input::placeholder{color:var(--muted)}
   </button>
 </div>
 
-<!-- STATUS -->
 <div class="status-card" style="animation-delay:.04s">
   <div class="status-left">
     <div class="status-dot offline" id="statusDot"></div>
@@ -115,20 +249,6 @@ input::placeholder{color:var(--muted)}
     </div>
   </div>
   <div class="status-result" id="lastResult">—</div>
-</div>
-
-<!-- DEBUG INFO — يظهر لو في مشكلة في chat_id -->
-<div class="debug-card" id="debugCard">
-  <div id="debugText">جارٍ تحميل بيانات المستخدم...</div>
-  <!-- حقل يدوي للـ chat_id كبديل -->
-  <div style="margin-top:8px;display:none" id="manualRow">
-    <input type="text" id="manualChatId" placeholder="أدخل chat_id يدوياً"
-      style="margin-bottom:4px;font-family:'JetBrains Mono',monospace;font-size:12px;border-color:rgba(255,215,0,0.3)">
-    <button onclick="saveChatId()"
-      style="width:100%;padding:7px;border-radius:8px;background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.3);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer">
-      حفظ chat_id
-    </button>
-  </div>
 </div>
 
 <!-- SEARCH -->
@@ -251,75 +371,12 @@ input::placeholder{color:var(--muted)}
 <div class="toast" id="toast"></div>
 
 <script>
+// ══ CONFIG ══
 const BOT_TOKEN = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
-const tg = window.Telegram?.WebApp;
+const BASE      = `https://api.telegram.org/bot${BOT_TOKEN}`;
+const tg        = window.Telegram?.WebApp;
 
-// ══════════════════════════════════════════
-//  FIX: استخراج chat_id بثلاث طرق
-// ══════════════════════════════════════════
-let CHAT_ID = null;
-
-function parseChatId() {
-    // طريقة 1: initDataUnsafe مباشرة
-    try {
-        const u = tg?.initDataUnsafe?.user;
-        if (u?.id) { CHAT_ID = u.id; return; }
-    } catch(e) {}
-
-    // طريقة 2: parse initData يدوياً
-    try {
-        const raw = tg?.initData || "";
-        if (raw) {
-            const params = new URLSearchParams(raw);
-            const userStr = params.get("user");
-            if (userStr) {
-                const userObj = JSON.parse(decodeURIComponent(userStr));
-                if (userObj?.id) { CHAT_ID = userObj.id; return; }
-            }
-        }
-    } catch(e) {}
-
-    // طريقة 3: من localStorage (لو حفظناه قبل كده)
-    try {
-        const saved = localStorage.getItem("gg_chat_id");
-        if (saved) { CHAT_ID = saved; return; }
-    } catch(e) {}
-
-    CHAT_ID = null;
-}
-
-function saveChatId() {
-    const val = document.getElementById("manualChatId").value.trim();
-    if (!val) { showToast("أدخل chat_id أولاً"); return; }
-    CHAT_ID = val;
-    try { localStorage.setItem("gg_chat_id", val); } catch(e) {}
-    document.getElementById("debugCard").classList.remove("show");
-    showToast("تم حفظ chat_id: " + val);
-}
-
-function showDebug() {
-    const card = document.getElementById("debugCard");
-    const txt  = document.getElementById("debugText");
-    const manualRow = document.getElementById("manualRow");
-
-    let info = "";
-    info += "tg loaded: " + (tg ? "YES" : "NO") + "\n";
-    info += "initData: " + (tg?.initData ? tg.initData.substring(0,60) + "..." : "EMPTY") + "\n";
-    info += "user: " + JSON.stringify(tg?.initDataUnsafe?.user || null) + "\n";
-    info += "chat_id resolved: " + (CHAT_ID || "NULL ← المشكلة هنا");
-
-    txt.textContent = info;
-    card.classList.add("show");
-
-    // لو CHAT_ID فاضي اظهر حقل اليدوي
-    if (!CHAT_ID) {
-        manualRow.style.display = "block";
-    }
-}
-
-// ══════════════════════════════════════════
-//  TYPE STATE
-// ══════════════════════════════════════════
+// ══ TYPE STATE ══
 const types = { search: 4, refine: 4, edit: 4 };
 function selectType(group, btn, val) {
     document.getElementById(group + "TypeRow")
@@ -329,15 +386,10 @@ function selectType(group, btn, val) {
     types[group] = val;
 }
 
-// ══════════════════════════════════════════
-//  STATUS
-// ══════════════════════════════════════════
+// ══ STATUS CHECK — يقرأ description للـ heartbeat ══
 async function checkStatus() {
     try {
-        const r = await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/getMyDescription`,
-            { cache: "no-store" }
-        );
+        const r = await fetch(`${BASE}/getMyDescription`, { cache: "no-store" });
         const d = await r.json();
         const desc = d?.result?.description || "";
         const m = desc.match(/GG_ONLINE_(\d+)/);
@@ -350,15 +402,15 @@ async function checkStatus() {
     } catch { setStatus(false); }
 }
 
+// ══ النتيجة — يقرأ short_description ويعرض فقط إذا يبدأ بـ RES: ══
 async function getLastResult() {
     try {
-        const r = await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/getMyShortDescription`,
-            { cache: "no-store" }
-        );
+        const r = await fetch(`${BASE}/getMyShortDescription`, { cache: "no-store" });
         const d = await r.json();
-        const res = d?.result?.short_description;
-        if (res) document.getElementById("lastResult").textContent = res;
+        const sd = d?.result?.short_description || "";
+        if (sd.startsWith("RES:")) {
+            document.getElementById("lastResult").textContent = sd.slice(4);
+        }
     } catch {}
 }
 
@@ -367,92 +419,78 @@ function setStatus(isOnline) {
     const label = document.getElementById("statusLabel");
     const sub   = document.getElementById("statusSub");
     if (isOnline) {
-        dot.className = "status-dot online";
+        dot.className   = "status-dot online";
         label.className = "status-label online";
         label.textContent = "ONLINE";
-        sub.textContent = "السكربت متصل بـ GG";
+        sub.textContent   = "السكربت متصل بـ GG";
     } else {
-        dot.className = "status-dot offline";
+        dot.className   = "status-dot offline";
         label.className = "status-label offline";
         label.textContent = "OFFLINE";
-        sub.textContent = "السكربت غير متصل";
+        sub.textContent   = "السكربت غير متصل";
     }
 }
 
-// ══════════════════════════════════════════
-//  SEND COMMAND — عبر fetch مباشرة
-// ══════════════════════════════════════════
+// ══ ✅ الإصلاح الرئيسي — إرسال الأمر عبر setMyShortDescription ══
+// السكربت يقرأ short_description كل ثانية ويشغل أي أمر يبدأ بـ CMD:
 async function sendCmd(cmd) {
-    // تحقق من chat_id
-    if (!CHAT_ID) {
-        showDebug();
-        showToast("لم يتم التعرف على chat_id");
-        return;
-    }
-
+    showToast("جارٍ الإرسال...");
     try {
-        showToast("جارٍ الإرسال...");
-        const text = "__GG__" + JSON.stringify(cmd);
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`
-                  + `?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
-        const r = await fetch(url);
+        const text = "CMD:" + JSON.stringify(cmd);
+        const r = await fetch(
+            `${BASE}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,
+            { cache: "no-store" }
+        );
         const d = await r.json();
         if (d.ok) {
-            showToast("تم الإرسال بنجاح ✓");
+            showToast("✓ تم الإرسال");
             if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+            // انتظر النتيجة بعد ثانيتين
+            setTimeout(getLastResult, 2000);
+            setTimeout(getLastResult, 3500);
         } else {
-            showToast("خطأ Bot: " + (d.description || "فشل"));
-            // لو chat_id غلط امسحه
-            if (d.description?.includes("chat not found")) {
-                CHAT_ID = null;
-                try { localStorage.removeItem("gg_chat_id"); } catch(e) {}
-                showDebug();
-            }
+            showToast("خطأ: " + (d.description || "فشل الإرسال"));
         }
     } catch(e) {
-        showToast("خطأ في الاتصال: " + e.message);
+        showToast("خطأ في الاتصال");
     }
 }
 
-// ══════════════════════════════════════════
-//  COMMANDS
-// ══════════════════════════════════════════
+// ══ COMMANDS ══
 function doSearch() {
     const v = document.getElementById("searchVal").value.trim();
     if (!v) { showToast("أدخل قيمة البحث"); return; }
-    sendCmd({ c:"search", v:v, t:types.search });
+    sendCmd({ c: "search", v: v, t: types.search });
 }
 function doRefine() {
     const v = document.getElementById("refineVal").value.trim();
     if (!v) { showToast("أدخل قيمة الصقل"); return; }
-    sendCmd({ c:"refine", v:v, t:types.refine });
+    sendCmd({ c: "refine", v: v, t: types.refine });
 }
 function doEdit() {
     const v = document.getElementById("editVal").value.trim();
     if (!v) { showToast("أدخل القيمة الجديدة"); return; }
-    sendCmd({ c:"edit", v:v, t:types.edit });
+    sendCmd({ c: "edit", v: v, t: types.edit });
 }
 function doFreeze() {
     const v = document.getElementById("freezeVal").value.trim();
     if (!v) { showToast("أدخل قيمة التجميد"); return; }
-    sendCmd({ c:"freeze", v:v });
+    sendCmd({ c: "freeze", v: v });
 }
 function doFreezeList() {
     const v = document.getElementById("freezeVal").value.trim();
     if (!v) { showToast("أدخل قيمة التجميد"); return; }
-    sendCmd({ c:"freezeList", v:v });
+    sendCmd({ c: "freezeList", v: v });
 }
-function doClear()      { sendCmd({ c:"clear"      }); }
-function doCount()      { sendCmd({ c:"count"      }); }
-function doUnfreeze()   { sendCmd({ c:"unfreeze"   }); }
-function doGoto()       { sendCmd({ c:"goto"       }); }
-function doHide()       { sendCmd({ c:"hide"       }); }
-function doGetResults() { sendCmd({ c:"getResults", v:"15" }); }
-function doRanges(val)  { sendCmd({ c:"ranges", v:String(val) }); }
+function doClear()      { sendCmd({ c: "clear"      }); }
+function doCount()      { sendCmd({ c: "count"      }); }
+function doUnfreeze()   { sendCmd({ c: "unfreeze"   }); }
+function doGoto()       { sendCmd({ c: "goto"       }); }
+function doHide()       { sendCmd({ c: "hide"       }); }
+function doGetResults() { sendCmd({ c: "getResults", v: "15" }); }
+function doRanges(val)  { sendCmd({ c: "ranges", v: String(val) }); }
 
-// ══════════════════════════════════════════
-//  TOAST & THEME
-// ══════════════════════════════════════════
+// ══ TOAST ══
 let toastTimer = null;
 function showToast(msg) {
     const el = document.getElementById("toast");
@@ -462,6 +500,7 @@ function showToast(msg) {
     toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
 }
 
+// ══ THEME ══
 let isDark = true;
 function toggleTheme() {
     isDark = !isDark;
@@ -471,24 +510,12 @@ function toggleTheme() {
     if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
 }
 
-// ══════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════
+// ══ INIT ══
 if (tg) { tg.ready(); tg.expand(); }
-
-// انتظر ثانية بعد تحميل Telegram SDK ثم اقرأ البيانات
-setTimeout(() => {
-    parseChatId();
-    if (!CHAT_ID) {
-        // اظهر debug card تلقائياً لو مفيش chat_id
-        showDebug();
-    }
-}, 500);
-
 checkStatus();
 getLastResult();
 setInterval(checkStatus,   6000);
-setInterval(getLastResult, 9000);
+setInterval(getLastResult, 4000);
 </script>
 </body>
 </html>
