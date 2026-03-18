@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GG Script Maker Pro</title>
+<title>GG Control Panel</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
@@ -11,19 +11,18 @@
 :root {
   --bg:      #06090f;
   --bg2:     #0d1220;
-  --bg3:     #111827;
   --cyan:    #00d4ff;
   --green:   #00ff9d;
   --red:     #ff4060;
+  --yellow:  #ffd700;
   --text:    #e2e8f0;
   --muted:   #4a5568;
-  --border:  rgba(0,212,255,0.18);
+  --border:  rgba(0,212,255,0.15);
   --glow-c:  rgba(0,212,255,0.35);
   --glow-g:  rgba(0,255,157,0.35);
-  --glow-r:  rgba(255,64,96,0.45);
-  --card-bg: rgba(13,18,32,0.85);
+  --glow-r:  rgba(255,64,96,0.4);
+  --card-bg: rgba(13,18,32,0.9);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -31,7 +30,7 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding-bottom: 50px;
+  padding-bottom: 60px;
   overflow-x: hidden;
   position: relative;
 }
@@ -40,40 +39,36 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,212,255,0.12), transparent),
-    radial-gradient(ellipse 50% 40% at 100% 80%, rgba(0,255,157,0.07), transparent),
-    linear-gradient(180deg, #06090f 0%, #0a0f1e 100%);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,212,255,0.1), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 90%, rgba(0,255,157,0.06), transparent);
   pointer-events: none;
 }
 body::after {
   content: '';
   position: fixed; inset: 0; z-index: 0;
   background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
   pointer-events: none;
 }
-
 .scanline {
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background: repeating-linear-gradient(
     0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
   );
 }
-
 .content { position: relative; z-index: 2; }
 
 /* ── HEADER ── */
 .header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 16px 14px;
-  animation: fadeUp .4s ease both;
+  padding: 18px 16px 10px;
+  animation: fadeUp .35s ease both;
 }
-.header-left { display: flex; flex-direction: column; gap: 2px; }
 .title {
-  font-size: 22px; font-weight: 900;
+  font-size: 21px; font-weight: 900;
   background: linear-gradient(90deg, var(--cyan), var(--green));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text; letter-spacing: -.3px;
@@ -82,526 +77,574 @@ body::after {
   font-size: 10px; font-family: 'JetBrains Mono', monospace;
   color: var(--muted); letter-spacing: .8px; margin-top: 2px;
 }
-
 .btn-theme {
-  width: 40px; height: 40px; border-radius: 12px;
+  width: 38px; height: 38px; border-radius: 11px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  cursor: pointer; transition: .2s;
+  border: 1px solid rgba(255,255,255,0.07);
+  cursor: pointer; transition: .18s;
   display: flex; align-items: center; justify-content: center;
 }
-.btn-theme img { width: 20px; height: 20px; }
-.btn-theme:active { transform: scale(.88); background: rgba(0,212,255,0.12); }
+.btn-theme img { width: 19px; height: 19px; }
+.btn-theme:active { transform: scale(.88); }
 
-/* ── STATUS ── */
-.status-bar {
-  margin: 0 16px 14px; padding: 8px 14px;
-  border-radius: 10px;
-  background: rgba(0,255,157,0.05);
-  border: 1px solid rgba(0,255,157,0.15);
-  display: flex; align-items: center; gap: 8px;
-  font-size: 11px; color: var(--green);
-  font-family: 'JetBrains Mono', monospace;
-  animation: fadeUp .45s ease both;
+/* ── STATUS CARD ── */
+.status-card {
+  margin: 0 16px 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: space-between;
+  animation: fadeUp .4s ease both;
+  position: relative; overflow: hidden;
 }
+.status-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: .5;
+}
+.status-left { display: flex; align-items: center; gap: 10px; }
 .status-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--green); box-shadow: 0 0 8px var(--green);
-  animation: blink 2s infinite; flex-shrink: 0;
+  width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+  transition: background .4s, box-shadow .4s;
 }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.status-dot.online {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,157,0.3);
+  animation: pulse 2s infinite;
+}
+.status-dot.offline {
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+  animation: none;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
+
+.status-info {}
+.status-label {
+  font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; letter-spacing: .6px;
+  transition: color .4s;
+}
+.status-label.online  { color: var(--green); }
+.status-label.offline { color: var(--red);   }
+.status-sub {
+  font-size: 10px; color: var(--muted); margin-top: 1px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.status-result {
+  font-size: 11px; font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan); max-width: 140px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  text-align: left;
+}
 
 /* ── CARD ── */
 .card {
-  margin: 0 16px 14px;
+  margin: 0 16px 12px;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 18px; padding: 14px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+  border-radius: 16px; padding: 13px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
   animation: fadeUp .5s ease both;
   position: relative; overflow: hidden;
 }
 .card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: .6;
+  opacity: .4;
 }
-.card-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-  text-transform: uppercase; color: var(--cyan);
-  display: flex; align-items: center; gap: 7px;
-  margin-bottom: 12px; font-family: 'JetBrains Mono', monospace;
+.card-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 11px;
 }
-.card-label::before { content: '//'; color: var(--muted); font-size: 11px; }
+.card-icon {
+  width: 28px; height: 28px; border-radius: 9px;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));
+}
+.card-icon img { width: 16px; height: 16px; }
+.card-title-wrap {}
+.card-title {
+  font-size: 12px; font-weight: 800; color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.card-desc { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
 /* ── INPUTS ── */
-input {
-  width: 100%; padding: 11px 14px;
-  border-radius: 11px; margin-bottom: 8px;
+input[type="text"], input[type="number"] {
+  width: 100%; padding: 10px 13px;
+  border-radius: 10px; margin-bottom: 8px;
   border: 1px solid rgba(255,255,255,0.07);
   background: rgba(255,255,255,0.04);
   color: var(--text); font-family: 'Tajawal', sans-serif; font-size: 14px;
-  outline: none; transition: .25s;
+  outline: none; transition: .22s;
+  -webkit-appearance: none;
 }
 input:focus {
-  border-color: var(--cyan); background: rgba(0,212,255,0.05);
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.1), 0 0 16px rgba(0,212,255,0.1);
+  border-color: var(--cyan);
+  background: rgba(0,212,255,0.05);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
 }
 input::placeholder { color: var(--muted); }
-input:last-child   { margin-bottom: 0; }
 
-/* ── TOOLS ── */
-.tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.tool-btn {
-  background: rgba(255,255,255,0.03);
+/* ── TYPE ROW ── */
+.type-row {
+  display: flex; gap: 5px; overflow-x: auto;
+  padding-bottom: 2px; margin-bottom: 8px;
+  scrollbar-width: none;
+}
+.type-row::-webkit-scrollbar { display: none; }
+.type-btn {
+  flex-shrink: 0; padding: 5px 11px;
+  border-radius: 8px; cursor: pointer; transition: .18s;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
   border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 13px; padding: 11px 6px 9px;
-  cursor: pointer; transition: .2s;
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  font-family: 'Tajawal', sans-serif; color: var(--text);
-  position: relative; overflow: hidden;
 }
-.tool-btn::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.15), transparent 70%);
-  opacity: 0; transition: .2s;
+.type-btn.active {
+  background: rgba(0,212,255,0.15);
+  color: var(--cyan);
+  border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 8px rgba(0,212,255,0.2);
 }
-.tool-btn:active { transform: scale(.93); border-color: var(--cyan); box-shadow: 0 0 14px var(--glow-c); }
-.tool-btn:active::after { opacity: 1; }
+.type-btn:active { transform: scale(.93); }
 
-.tool-icon {
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-  filter: drop-shadow(0 0 5px rgba(0,212,255,0.6));
-}
-.tool-icon img { width: 22px; height: 22px; display: block; }
-.tool-label { font-size: 11px; font-weight: 700; color: var(--text); }
-.tool-desc  { font-size: 9px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
-
-/* ── EDITOR ── */
-.editor-header {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
-}
-.tab {
-  font-size: 10px; font-family: 'JetBrains Mono', monospace;
-  padding: 4px 10px; border-radius: 6px;
-  background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3);
-  color: var(--cyan); font-weight: 700;
-}
-.tab-dot { display: flex; gap: 5px; align-items: center; }
-.dot-r { width:9px; height:9px; border-radius:50%; background:#ff5f57; }
-.dot-y { width:9px; height:9px; border-radius:50%; background:#ffbd2e; }
-.dot-g { width:9px; height:9px; border-radius:50%; background:#28c841; }
-
-textarea#editor {
-  width: 100%; height: 210px; resize: none;
-  font-family: 'JetBrains Mono', monospace;
-  direction: ltr; font-size: 12.5px; line-height: 1.7;
-  border-radius: 12px; border: 1px solid rgba(0,255,157,0.2);
-  background: #060a0e; color: #00ff9d; padding: 13px 14px;
-  outline: none; transition: .25s;
-  box-shadow: inset 0 0 30px rgba(0,255,157,0.03);
-  caret-color: var(--green); margin-bottom: 0;
-}
-textarea#editor:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(0,255,157,0.12), inset 0 0 30px rgba(0,255,157,0.05);
-}
-textarea#editor::placeholder { color: #2a4a3a; }
-
-/* ── BUTTONS ── */
-.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-
-.btn {
-  border: none; padding: 11px 14px; border-radius: 11px;
-  font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: .2s; width: 100%;
+/* ── EXECUTE BUTTON ── */
+.exec-btn {
+  width: 100%; padding: 11px;
+  border-radius: 11px; border: none; cursor: pointer; transition: .18s;
+  font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 800;
   display: flex; align-items: center; justify-content: center; gap: 7px;
+  letter-spacing: .2px;
 }
-.btn:active { transform: scale(.95); opacity: .85; }
-.btn img { width: 16px; height: 16px; flex-shrink: 0; }
+.exec-btn img { width: 16px; height: 16px; }
+.exec-btn:active { transform: scale(.95); opacity: .85; }
 
-.btn-red  { background: rgba(255,64,96,0.12); color: var(--red);  border: 1px solid rgba(255,64,96,0.3); }
-.btn-red:active  { box-shadow: 0 0 16px var(--glow-r); }
-.btn-save { background: rgba(0,212,255,0.1);  color: var(--cyan); border: 1px solid rgba(0,212,255,0.25); }
-.btn-save:active { box-shadow: 0 0 14px var(--glow-c); }
-
-/* ── SEND ── */
-.btn-send-wrap {
-  margin: 6px 16px 0; animation: fadeUp .65s ease both; position: relative;
+.btn-cyan {
+  background: rgba(0,212,255,0.13);
+  color: var(--cyan);
+  border: 1px solid rgba(0,212,255,0.3);
 }
-.btn-send-wrap::before {
-  content: '';
-  position: absolute; inset: -1px; border-radius: 17px;
-  background: linear-gradient(135deg, var(--cyan), var(--green), var(--cyan));
-  background-size: 200%;
-  animation: borderRun 3s linear infinite;
-  z-index: 0; filter: blur(2px); opacity: .7;
-}
-@keyframes borderRun { 0%{background-position:0%} 100%{background-position:200%} }
+.btn-cyan:active { box-shadow: 0 0 16px var(--glow-c); }
 
-.btn-send {
-  position: relative; z-index: 1; width: 100%;
-  background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,255,157,0.12));
-  color: #fff; border: 1px solid rgba(0,255,157,0.3);
-  border-radius: 15px; padding: 15px;
-  font-family: 'Tajawal', sans-serif; font-size: 15px; font-weight: 800;
-  cursor: pointer; transition: .2s;
-  display: flex; align-items: center; justify-content: center; gap: 9px;
-  backdrop-filter: blur(8px); letter-spacing: .3px;
+.btn-green {
+  background: rgba(0,255,157,0.12);
+  color: var(--green);
+  border: 1px solid rgba(0,255,157,0.3);
 }
-.btn-send img { width: 20px; height: 20px; }
-.btn-send:active { transform: scale(.97); box-shadow: 0 0 30px rgba(0,212,255,0.4); }
+.btn-green:active { box-shadow: 0 0 16px var(--glow-g); }
 
-@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 4px; }
+.btn-red {
+  background: rgba(255,64,96,0.12);
+  color: var(--red);
+  border: 1px solid rgba(255,64,96,0.3);
+}
+.btn-red:active { box-shadow: 0 0 14px var(--glow-r); }
+
+.btn-yellow {
+  background: rgba(255,215,0,0.1);
+  color: var(--yellow);
+  border: 1px solid rgba(255,215,0,0.25);
+}
+.btn-yellow:active { box-shadow: 0 0 12px rgba(255,215,0,0.3); }
+
+/* ── QUICK ROW ── */
+.quick-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.quick-btn {
+  padding: 10px 6px;
+  border-radius: 11px; border: none; cursor: pointer; transition: .18s;
+  font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 800;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.quick-btn img { width: 18px; height: 18px; }
+.quick-btn:active { transform: scale(.92); opacity: .85; }
+
+/* ── RANGES GRID ── */
+.ranges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.range-btn {
+  padding: 9px;
+  border-radius: 10px; cursor: pointer; transition: .18s;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  color: var(--text);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.range-btn span { font-size: 9px; color: var(--muted); font-weight: 400; }
+.range-btn:active {
+  transform: scale(.93);
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px var(--glow-c);
+  color: var(--cyan);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+  z-index: 100;
+  background: rgba(13,18,32,0.95);
+  border: 1px solid var(--border);
+  color: var(--text); font-size: 13px; font-weight: 700;
+  padding: 10px 18px; border-radius: 12px;
+  backdrop-filter: blur(16px);
+  transition: transform .3s ease, opacity .3s;
+  opacity: 0; white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.15); border-radius: 4px; }
 </style>
 </head>
 <body>
 <div class="scanline"></div>
 <div class="content">
 
-<!-- HEADER -->
+<!-- ── HEADER ── -->
 <div class="header">
-  <div class="header-left">
-    <div class="title" id="el_title">GG Script Maker</div>
-    <div class="title-sub">PRO EDITION — LUA ENGINE</div>
+  <div>
+    <div class="title">GG Control Panel</div>
+    <div class="title-sub">GAME GUARDIAN REMOTE</div>
   </div>
-  <button class="btn-theme" id="themeBtn" onclick="toggleTheme()">
-    <img id="themeIcon"
-      src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0"
-      alt="theme">
+  <button class="btn-theme" onclick="toggleTheme()">
+    <img id="themeIcon" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
   </button>
 </div>
 
-<!-- STATUS -->
-<div class="status-bar" style="animation-delay:.02s">
-  <div class="status-dot"></div>
-  <span id="el_status">SYSTEM READY — GG Script Engine v2.0</span>
-</div>
-
-<!-- SETTINGS -->
-<div class="card" style="animation-delay:.06s">
-  <span class="card-label" id="el_lblSettings">إعدادات السكربت</span>
-  <input id="scriptName"   placeholder="اسم السكربت (مثال: Sayed_Hack)">
-  <input id="scriptPass"   placeholder="كلمة مرور (اختياري)">
-  <input id="scriptAuthor" placeholder="اسم المطور (اختياري)">
-</div>
-
-<!-- TOOLS -->
-<div class="card" style="animation-delay:.12s">
-  <span class="card-label" id="el_lblTools">أدوات البرمجة</span>
-  <div class="tools-grid" id="toolsGrid"></div>
-</div>
-
-<!-- EDITOR -->
-<div class="card" style="animation-delay:.18s">
-  <span class="card-label" id="el_lblEditor">محرر الكود</span>
-  <div class="editor-header">
-    <div class="tab-dot">
-      <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+<!-- ── STATUS CARD ── -->
+<div class="status-card" style="animation-delay:.04s">
+  <div class="status-left">
+    <div class="status-dot offline" id="statusDot"></div>
+    <div class="status-info">
+      <div class="status-label offline" id="statusLabel">OFFLINE</div>
+      <div class="status-sub" id="statusSub">جارٍ الاتصال...</div>
     </div>
-    <div class="tab">script.lua</div>
   </div>
-  <textarea id="editor" placeholder="-- اكتب كود Lua هنا..."></textarea>
-  <div class="action-row">
-    <button class="btn btn-red"  id="el_btnClear" onclick="clearEditor()">
-      <img src="https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060" alt="">
-      <span id="el_btnClearTxt">مسح</span>
-    </button>
-    <button class="btn btn-save" id="el_btnSave" onclick="downloadFile()">
-      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
-      <span id="el_btnSaveTxt">حفظ</span>
-    </button>
-  </div>
+  <div class="status-result" id="lastResult">—</div>
 </div>
 
-<!-- SEND -->
-<div class="btn-send-wrap">
-  <button class="btn-send" onclick="sendToBot()">
-    <img src="https://api.iconify.design/ph/rocket-launch-fill.svg?color=%23ffffff" alt="">
-    <span id="el_btnSendTxt">إرسال الملف للبوت</span>
+<!-- ── SEARCH ── -->
+<div class="card" style="animation-delay:.08s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">SEARCH</div>
+      <div class="card-desc">ابحث عن رقم في الذاكرة — يمكن أكثر من قيمة مفصولة بـ ;</div>
+    </div>
+  </div>
+  <input type="text" id="searchVal" placeholder="100  أو  100;200;300">
+  <div class="type-row" id="searchTypeRow">
+    <button class="type-btn active" onclick="selectType('search',this,4)">DWORD</button>
+    <button class="type-btn" onclick="selectType('search',this,16)">FLOAT</button>
+    <button class="type-btn" onclick="selectType('search',this,32)">QWORD</button>
+    <button class="type-btn" onclick="selectType('search',this,1)">BYTE</button>
+    <button class="type-btn" onclick="selectType('search',this,2)">WORD</button>
+  </div>
+  <button class="exec-btn btn-cyan" onclick="doSearch()">
+    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
+    بحث
   </button>
 </div>
 
+<!-- ── REFINE ── -->
+<div class="card" style="animation-delay:.11s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">REFINE</div>
+      <div class="card-desc">صقل النتائج الحالية بقيمة جديدة</div>
+    </div>
+  </div>
+  <input type="text" id="refineVal" placeholder="200  أو  200;300">
+  <div class="type-row" id="refineTypeRow">
+    <button class="type-btn active" onclick="selectType('refine',this,4)">DWORD</button>
+    <button class="type-btn" onclick="selectType('refine',this,16)">FLOAT</button>
+    <button class="type-btn" onclick="selectType('refine',this,32)">QWORD</button>
+    <button class="type-btn" onclick="selectType('refine',this,1)">BYTE</button>
+    <button class="type-btn" onclick="selectType('refine',this,2)">WORD</button>
+  </div>
+  <button class="exec-btn btn-cyan" onclick="doRefine()">
+    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
+    صقل
+  </button>
 </div>
+
+<!-- ── EDIT ── -->
+<div class="card" style="animation-delay:.14s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">EDIT ALL</div>
+      <div class="card-desc">تعديل كل النتائج الحالية بقيمة واحدة</div>
+    </div>
+  </div>
+  <input type="text" id="editVal" placeholder="9999999">
+  <div class="type-row" id="editTypeRow">
+    <button class="type-btn active" onclick="selectType('edit',this,4)">DWORD</button>
+    <button class="type-btn" onclick="selectType('edit',this,16)">FLOAT</button>
+    <button class="type-btn" onclick="selectType('edit',this,32)">QWORD</button>
+    <button class="type-btn" onclick="selectType('edit',this,1)">BYTE</button>
+    <button class="type-btn" onclick="selectType('edit',this,2)">WORD</button>
+  </div>
+  <button class="exec-btn btn-green" onclick="doEdit()">
+    <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
+    تعديل الكل
+  </button>
+</div>
+
+<!-- ── FREEZE ── -->
+<div class="card" style="animation-delay:.17s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">FREEZE</div>
+      <div class="card-desc">تجميد النتائج على قيمة ثابتة</div>
+    </div>
+  </div>
+  <input type="text" id="freezeVal" placeholder="9999999">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+    <button class="exec-btn btn-yellow" onclick="doFreeze()">
+      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
+      تجميد نتائج
+    </button>
+    <button class="exec-btn btn-yellow" onclick="doFreezeList()">
+      <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
+      تجميد قائمة
+    </button>
+  </div>
+</div>
+
+<!-- ── QUICK ACTIONS ── -->
+<div class="card" style="animation-delay:.2s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">QUICK ACTIONS</div>
+      <div class="card-desc">أوامر سريعة بضغطة واحدة</div>
+    </div>
+  </div>
+  <div class="quick-row">
+    <button class="quick-btn btn-red" onclick="doClear()">
+      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      مسح
+    </button>
+    <button class="quick-btn btn-cyan" onclick="doCount()">
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
+      عدد
+    </button>
+    <button class="quick-btn btn-green" onclick="doUnfreeze()">
+      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
+      رفع
+    </button>
+    <button class="quick-btn btn-cyan" onclick="doGoto()">
+      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt="">
+      فتح GG
+    </button>
+    <button class="quick-btn btn-yellow" onclick="doGetResults()">
+      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt="">
+      نتائج
+    </button>
+    <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doHide()">
+      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt="">
+      إخفاء
+    </button>
+  </div>
+</div>
+
+<!-- ── RANGES ── -->
+<div class="card" style="animation-delay:.23s">
+  <div class="card-header">
+    <div class="card-icon">
+      <img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt="">
+    </div>
+    <div class="card-title-wrap">
+      <div class="card-title">MEMORY RANGES</div>
+      <div class="card-desc">تحديد نطاق الذاكرة للبحث</div>
+    </div>
+  </div>
+  <div class="ranges-grid">
+    <button class="range-btn" onclick="doRanges(2147483712)">
+      ANON + ALLOC
+      <span>الأشيع استخداماً</span>
+    </button>
+    <button class="range-btn" onclick="doRanges(536870912)">
+      JAVA
+      <span>ذاكرة Java</span>
+    </button>
+    <button class="range-btn" onclick="doRanges(8)">
+      CODE APP
+      <span>كود التطبيق</span>
+    </button>
+    <button class="range-btn" onclick="doRanges(4294967295)">
+      ALL REGIONS
+      <span>كل النطاقات</span>
+    </button>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 const BOT_TOKEN = "ضع_التوكن_هنا";
-
-/* ── ICON MAP ── */
-const ICONS = {
-  search: "https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff",
-  edit:   "https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff",
-  alert:  "https://api.iconify.design/ph/chat-circle-text-fill.svg?color=%2300d4ff",
-  toast:  "https://api.iconify.design/ph/bell-ringing-fill.svg?color=%2300d4ff",
-  prompt: "https://api.iconify.design/ph/clipboard-text-fill.svg?color=%2300d4ff",
-  menu:   "https://api.iconify.design/ph/check-square-fill.svg?color=%2300d4ff",
-  ranges: "https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff",
-  clear:  "https://api.iconify.design/ph/trash-fill.svg?color=%2300d4ff",
-  sleep:  "https://api.iconify.design/ph/clock-countdown-fill.svg?color=%2300d4ff",
-  lock:   "https://api.iconify.design/ph/lock-fill.svg?color=%2300d4ff",
-  loop:   "https://api.iconify.design/ph/arrows-clockwise-bold.svg?color=%2300d4ff",
-  exit:   "https://api.iconify.design/ph/door-open-fill.svg?color=%2300d4ff",
-};
-
-/* ── TRANSLATIONS ── */
-const T = {
-  ar: {
-    title:       "GG Script Maker",
-    status:      "SYSTEM READY — GG Script Engine v2.0",
-    lblSettings: "إعدادات السكربت",
-    lblTools:    "أدوات البرمجة",
-    lblEditor:   "محرر الكود",
-    phName:      "اسم السكربت (مثال: Sayed_Hack)",
-    phPass:      "كلمة مرور (اختياري)",
-    phAuthor:    "اسم المطور (اختياري)",
-    phEditor:    "-- اكتب كود Lua هنا...",
-    btnClear:    "مسح",
-    btnSave:     "حفظ",
-    btnSend:     "إرسال الملف للبوت",
-    confirmClear:"هل تريد مسح كل الكود؟",
-    alertSaved:  "تم حفظ الملف!",
-    alertSent:   "تم إرسال السكربت بنجاح!",
-    alertFail:   "فشل الإرسال. تأكد أنك بدأت محادثة مع البوت.",
-    alertErr:    "خطأ في الاتصال.",
-    alertEmpty:  "الكود فارغ!",
-    alertNoUser: "افتح التطبيق من داخل تيليجرام.",
-    pSearch:  "الرقم للبحث عنه:",
-    pType:    "نوع البيانات (4=DWORD, 16=FLOAT):",
-    pEditVal: "القيمة الجديدة:",
-    pAlertMsg:"نص التنبيه:",
-    pToastMsg:"نص الإشعار:",
-    pSleep:   "مدة الانتظار (ثانية):",
-    okBtn:    "موافق",
-    wrongPass:"رمز خاطئ",
-    passLabel:"كلمة المرور:",
-    tools: [
-      {icon:"search", label:"بحث",    desc:"searchNumber", fn:"askSearch"},
-      {icon:"edit",   label:"تعديل",  desc:"editAll",      fn:"askEdit"},
-      {icon:"alert",  label:"Alert",  desc:"رسالة",        fn:"askAlert"},
-      {icon:"toast",  label:"Toast",  desc:"إشعار",        fn:"askToast"},
-      {icon:"prompt", label:"Prompt", desc:"إدخال",        fn:"askPrompt"},
-      {icon:"menu",   label:"قائمة",  desc:"multiChoice",  fn:"askMulti"},
-      {icon:"ranges", label:"نطاق",   desc:"setRanges",    fn:"askRanges"},
-      {icon:"clear",  label:"مسح",    desc:"clearResults", fn:"addClear"},
-      {icon:"sleep",  label:"Sleep",  desc:"تأخير",        fn:"askSleep"},
-      {icon:"lock",   label:"حماية",  desc:"password",     fn:"addPass"},
-      {icon:"loop",   label:"Loop",   desc:"while",        fn:"addWhile"},
-      {icon:"exit",   label:"خروج",   desc:"os.exit",      fn:"addExit"},
-    ]
-  },
-  en: {
-    title:       "GG Script Maker",
-    status:      "SYSTEM READY — GG Script Engine v2.0",
-    lblSettings: "Script Settings",
-    lblTools:    "Smart Tools",
-    lblEditor:   "Code Editor",
-    phName:      "Script Name (e.g. Sayed_Hack)",
-    phPass:      "Password (optional)",
-    phAuthor:    "Developer Name (optional)",
-    phEditor:    "-- Write Lua code here...",
-    btnClear:    "Clear",
-    btnSave:     "Save",
-    btnSend:     "Send File to Bot",
-    confirmClear:"Clear all code?",
-    alertSaved:  "File saved!",
-    alertSent:   "Script sent successfully!",
-    alertFail:   "Send failed. Start a chat with the bot first.",
-    alertErr:    "Connection error.",
-    alertEmpty:  "Code is empty!",
-    alertNoUser: "Open the app from inside Telegram.",
-    pSearch:  "Number to search:",
-    pType:    "Data type (4=DWORD, 16=FLOAT):",
-    pEditVal: "New value:",
-    pAlertMsg:"Alert message:",
-    pToastMsg:"Toast text:",
-    pSleep:   "Delay (seconds):",
-    okBtn:    "OK",
-    wrongPass:"Wrong code",
-    passLabel:"Password:",
-    tools: [
-      {icon:"search", label:"Search",   desc:"searchNumber", fn:"askSearch"},
-      {icon:"edit",   label:"Edit All", desc:"editAll",      fn:"askEdit"},
-      {icon:"alert",  label:"Alert",    desc:"message",      fn:"askAlert"},
-      {icon:"toast",  label:"Toast",    desc:"notification", fn:"askToast"},
-      {icon:"prompt", label:"Prompt",   desc:"input",        fn:"askPrompt"},
-      {icon:"menu",   label:"Menu",     desc:"multiChoice",  fn:"askMulti"},
-      {icon:"ranges", label:"Ranges",   desc:"setRanges",    fn:"askRanges"},
-      {icon:"clear",  label:"Clear",    desc:"clearResults", fn:"addClear"},
-      {icon:"sleep",  label:"Sleep",    desc:"delay",        fn:"askSleep"},
-      {icon:"lock",   label:"Protect",  desc:"password",     fn:"addPass"},
-      {icon:"loop",   label:"Loop",     desc:"while",        fn:"addWhile"},
-      {icon:"exit",   label:"Exit",     desc:"os.exit",      fn:"addExit"},
-    ]
-  }
-};
-
-/* ── GLOBALS ── */
 const tg = window.Telegram?.WebApp;
-let lang = "ar", tr = T.ar, isDark = true;
 
-/* ── INIT ── */
-function init() {
-  if (tg) { tg.ready(); tg.expand(); }
-  const code = navigator.language || navigator.userLanguage || "ar";
-  lang = code.startsWith("ar") ? "ar" : "en";
-  tr   = T[lang];
-  document.documentElement.dir  = lang === "ar" ? "rtl" : "ltr";
-  document.documentElement.lang = lang;
-  applyUI();
-  renderTools();
+// ── TYPE STATE ──
+const types = { search: 4, refine: 4, edit: 4 };
+function selectType(group, btn, val) {
+    const row = document.getElementById(group + "TypeRow");
+    row.querySelectorAll(".type-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    types[group] = val;
 }
 
+// ── STATUS ──
+let connected = false;
+let lastCheck = 0;
 
-
-function applyUI() {
-  document.getElementById("el_title").textContent       = tr.title;
-  document.getElementById("el_status").textContent      = tr.status;
-  document.getElementById("el_lblSettings").textContent = tr.lblSettings;
-  document.getElementById("el_lblTools").textContent    = tr.lblTools;
-  document.getElementById("el_lblEditor").textContent   = tr.lblEditor;
-  document.getElementById("el_btnClearTxt").textContent = tr.btnClear;
-  document.getElementById("el_btnSaveTxt").textContent  = tr.btnSave;
-  document.getElementById("el_btnSendTxt").textContent  = tr.btnSend;
-  document.getElementById("scriptName").placeholder     = tr.phName;
-  document.getElementById("scriptPass").placeholder     = tr.phPass;
-  document.getElementById("scriptAuthor").placeholder   = tr.phAuthor;
-  document.getElementById("editor").placeholder         = tr.phEditor;
+async function checkStatus() {
+    try {
+        const r = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/getMyDescription`,
+            { cache: "no-store" }
+        );
+        const d = await r.json();
+        const desc = d?.result?.description || "";
+        const m = desc.match(/GG_ONLINE_(\d+)/);
+        if (m) {
+            const age = Math.floor(Date.now() / 1000) - parseInt(m[1]);
+            setStatus(age < 18);
+            lastCheck = Date.now();
+        } else {
+            setStatus(false);
+        }
+    } catch { setStatus(false); }
 }
 
-function renderTools() {
-  document.getElementById("toolsGrid").innerHTML = tr.tools.map(t => `
-    <button class="tool-btn" onclick="${t.fn}()">
-      <div class="tool-icon">
-        <img src="${ICONS[t.icon]}" alt="${t.label}" width="22" height="22">
-      </div>
-      <div class="tool-label">${t.label}</div>
-      <div class="tool-desc">${t.desc}</div>
-    </button>`).join("");
+async function getLastResult() {
+    try {
+        const r = await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/getMyShortDescription`,
+            { cache: "no-store" }
+        );
+        const d = await r.json();
+        const res = d?.result?.short_description;
+        if (res) document.getElementById("lastResult").textContent = res;
+    } catch {}
 }
 
-/* ── THEME ── */
+function setStatus(isOnline) {
+    connected = isOnline;
+    const dot   = document.getElementById("statusDot");
+    const label = document.getElementById("statusLabel");
+    const sub   = document.getElementById("statusSub");
+    if (isOnline) {
+        dot.className   = "status-dot online";
+        label.className = "status-label online";
+        label.textContent = "ONLINE";
+        sub.textContent   = "السكربت متصل بـ GG";
+    } else {
+        dot.className   = "status-dot offline";
+        label.className = "status-label offline";
+        label.textContent = "OFFLINE";
+        sub.textContent   = "السكربت غير متصل";
+    }
+}
+
+// ── SEND COMMAND ──
+function sendCmd(cmd) {
+    if (tg && tg.initData && tg.initData !== "") {
+        showToast("تم إرسال الأمر...");
+        setTimeout(() => tg.sendData(JSON.stringify(cmd)), 300);
+    } else {
+        showToast("[اختبار] " + JSON.stringify(cmd));
+    }
+}
+
+// ── COMMANDS ──
+function doSearch() {
+    const v = document.getElementById("searchVal").value.trim();
+    if (!v) { showToast("أدخل قيمة البحث"); return; }
+    sendCmd({ c: "search", v: v, t: types.search });
+}
+function doRefine() {
+    const v = document.getElementById("refineVal").value.trim();
+    if (!v) { showToast("أدخل قيمة الصقل"); return; }
+    sendCmd({ c: "refine", v: v, t: types.refine });
+}
+function doEdit() {
+    const v = document.getElementById("editVal").value.trim();
+    if (!v) { showToast("أدخل القيمة الجديدة"); return; }
+    sendCmd({ c: "edit", v: v, t: types.edit });
+}
+function doFreeze() {
+    const v = document.getElementById("freezeVal").value.trim();
+    if (!v) { showToast("أدخل قيمة التجميد"); return; }
+    sendCmd({ c: "freeze", v: v });
+}
+function doFreezeList() {
+    const v = document.getElementById("freezeVal").value.trim();
+    if (!v) { showToast("أدخل قيمة التجميد"); return; }
+    sendCmd({ c: "freezeList", v: v });
+}
+function doClear()      { sendCmd({ c: "clear"      }); }
+function doCount()      { sendCmd({ c: "count"      }); }
+function doUnfreeze()   { sendCmd({ c: "unfreeze"   }); }
+function doGoto()       { sendCmd({ c: "goto"       }); }
+function doHide()       { sendCmd({ c: "hide"       }); }
+function doGetResults() { sendCmd({ c: "getResults", v: "15" }); }
+function doRanges(val)  { sendCmd({ c: "ranges", v: String(val) }); }
+
+// ── TOAST ──
+let toastTimer = null;
+function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+// ── THEME ──
+let isDark = true;
 function toggleTheme() {
-  isDark = !isDark;
-  document.getElementById("themeIcon").src = isDark
-    ? "https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0"
-    : "https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700";
-  haptic("light");
+    isDark = !isDark;
+    document.getElementById("themeIcon").src = isDark
+        ? "https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0"
+        : "https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700";
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
 }
 
-/* ── CODE ── */
-function addCode(code) {
-  const ed = document.getElementById("editor");
-  ed.value += (ed.value.trim() ? "\n" : "") + code;
-  haptic("light");
-}
-
-function buildCode() {
-  const name   = document.getElementById("scriptName").value.trim() || "MyScript";
-  const pass   = document.getElementById("scriptPass").value.trim();
-  const author = document.getElementById("scriptAuthor").value.trim();
-  const body   = document.getElementById("editor").value.trim();
-  let c = `-- Script: ${name}\n`;
-  if (author) c += `-- Author: ${author}\n`;
-  c += `-- Built with GG Script Maker Pro\n\n`;
-  if (pass) {
-    c += `local _p = gg.prompt({'${tr.passLabel}'},{''}, {'text'})\n`;
-    c += `if _p == nil or _p[1] ~= '${pass}' then\n`;
-    c += `  gg.alert("${tr.wrongPass}")\n  os.exit()\nend\n\n`;
-  }
-  c += body;
-  return { code: c, name };
-}
-
-/* ── TOOLS ── */
-function askSearch() {
-  const v = prompt(tr.pSearch, "100"); if (!v) return;
-  const t = prompt(tr.pType, "4");     if (!t) return;
-  addCode(`gg.searchNumber("${v}", ${t})`);
-}
-function askEdit() {
-  const v = prompt(tr.pEditVal, "99999"); if (!v) return;
-  const t = prompt(tr.pType, "4");        if (!t) return;
-  addCode(`gg.editAll("${v}", ${t})`);
-}
-function askAlert() {
-  const m = prompt(tr.pAlertMsg, lang==="ar"?"أهلاً":"Hello");
-  if (m) addCode(`gg.alert("${m}", "${tr.okBtn}")`);
-}
-function askToast() {
-  const m = prompt(tr.pToastMsg, lang==="ar"?"تم التفعيل":"Activated");
-  if (m) addCode(`gg.toast("${m}")`);
-}
-function askPrompt() {
-  addCode(`local p = gg.prompt(\n  {'${lang==="ar"?"أدخل القيمة:":"Enter value:"}'},\n  {'100'}, {'number'}\n)\nif p == nil then return end\ngg.searchNumber(p[1], 4)`);
-}
-function askMulti() {
-  addCode(`local m = gg.multiChoice({\n  '${lang==="ar"?"خيار 1":"Option 1"}',\n  '${lang==="ar"?"خيار 2":"Option 2"}',\n  '${lang==="ar"?"خروج":"Exit"}'\n})\nif m == nil then return end\nif m[3] then os.exit() end`);
-}
-function askRanges() { addCode(`gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)`); }
-function addClear()  { addCode(`gg.clearResults()`); }
-function askSleep() {
-  const s = prompt(tr.pSleep, "1");
-  if (s) addCode(`gg.sleep(${Math.round(parseFloat(s) * 1000)})`);
-}
-function addPass() {
-  addCode(`local _p = gg.prompt({'${tr.passLabel}'},{''}, {'text'})\nif _p == nil or _p[1] ~= 'MyPass' then\n  gg.alert("${tr.wrongPass}")\n  os.exit()\nend`);
-}
-function addWhile() {
-  addCode(`while true do\n  -- ${lang==="ar"?"الكود هنا":"code here"}\n  gg.sleep(1000)\nend`);
-}
-function addExit() { addCode(`os.exit()`); }
-
-/* ── ACTIONS ── */
-function clearEditor() {
-  tgConfirm(tr.confirmClear, ok => {
-    if (ok) { document.getElementById("editor").value = ""; hapticNotif("warning"); }
-  });
-}
-function downloadFile() {
-  const { code, name } = buildCode();
-  if (!document.getElementById("editor").value.trim()) { tgAlert(tr.alertEmpty); return; }
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([code], { type: "text/lua" }));
-  a.download = `${name}.lua`;
-  a.click();
-  tgAlert(tr.alertSaved);
-  hapticNotif("success");
-}
-async function sendToBot() {
-  const user = tg?.initDataUnsafe?.user;
-  if (!user?.id) { tgAlert(tr.alertNoUser); return; }
-  if (!document.getElementById("editor").value.trim()) { tgAlert(tr.alertEmpty); return; }
-  const { code, name } = buildCode();
-  hapticNotif("success");
-  const file = new File([new Blob([code], { type: "text/plain" })], `${name}.lua`);
-  const fd = new FormData();
-  fd.append("chat_id", user.id);
-  fd.append("document", file);
-  fd.append("caption", `${name}.lua\n${user.first_name}`);
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, { method: "POST", body: fd });
-    tgAlert(res.ok ? tr.alertSent : tr.alertFail);
-    hapticNotif(res.ok ? "success" : "error");
-  } catch {
-    tgAlert(tr.alertErr);
-    hapticNotif("error");
-  }
-}
-
-/* ── TG HELPERS ── */
-function tgAlert(msg)       { tg?.showAlert   ? tg.showAlert(msg)      : alert(msg); }
-function tgConfirm(msg, cb) { tg?.showConfirm ? tg.showConfirm(msg,cb) : cb(confirm(msg)); }
-function haptic(t)          { tg?.HapticFeedback?.impactOccurred(t); }
-function hapticNotif(t)     { tg?.HapticFeedback?.notificationOccurred(t); }
-
-init();
+// ── INIT ──
+if (tg) { tg.ready(); tg.expand(); }
+checkStatus();
+getLastResult();
+setInterval(checkStatus,    6000);
+setInterval(getLastResult,  9000);
 </script>
 </body>
 </html>
