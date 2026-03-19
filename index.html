@@ -1,12 +1,3 @@
-
- 
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -548,10 +539,59 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <button class="rb" onclick="doCmd({c:'ranges',v:'32'},this)">HEAP<span data-ar="ذاكرة Heap" data-en="Heap memory">Heap</span></button>
   </div>
 </div>
+<!-- EXPORT DATA -->
+<div class="card" id="cExport">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/export-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">EXPORT</div><div class="cd" data-ar="تصدير البيانات إلى تيليجرام" data-en="Export data to Telegram">تصدير البيانات إلى تيليجرام</div></div>
+  </div>
+  <!-- detected chat id display -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.12);border-radius:10px;padding:9px 12px;margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <img src="https://api.iconify.design/ph/user-circle-fill.svg?color=%234a5568" style="width:15px;height:15px;flex-shrink:0">
+      <div>
+        <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace" data-ar="Chat ID المكتشف" data-en="Detected Chat ID">Chat ID المكتشف</div>
+        <div style="font-size:12px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace" id="detectedCid">—</div>
+      </div>
+    </div>
+    <button class="eb bc" style="width:auto;padding:6px 12px;font-size:11px" onclick="detectCid(this)">
+      <img src="https://api.iconify.design/ph/arrows-clockwise-fill.svg?color=%2300d4ff" alt="" style="width:13px;height:13px">
+      <span data-ar="كشف" data-en="Detect">كشف</span>
+    </button>
+  </div>
+  <!-- export buttons -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px">
+    <button class="eb bc" onclick="doExport('exportResults',this)">
+      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="نتائج البحث" data-en="Search results">نتائج البحث</span>
+    </button>
+    <button class="eb by" onclick="doExport('exportList',this)">
+      <img src="https://api.iconify.design/ph/list-star-fill.svg?color=%23ffd700" alt="">
+      <span data-ar="قائمة المحفوظات" data-en="Saved list">قائمة المحفوظات</span>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px">
+    <button class="eb bg" onclick="doExport('exportFrozen',this)">
+      <img src="https://api.iconify.design/ph/snowflake.svg?color=%2300ff9d" alt="">
+      <span data-ar="العناصر المجمدة" data-en="Frozen items">العناصر المجمدة</span>
+    </button>
+    <button class="eb bm" onclick="doExport('exportCount',this)">
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%234a5568" alt="">
+      <span data-ar="عدد النتائج فقط" data-en="Count only">عدد النتائج فقط</span>
+    </button>
+  </div>
+  <!-- custom count export -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center">
+    <input type="number" id="exportN" data-ph-ar="عدد النتائج للتصدير (مثلاً 50)" data-ph-en="Results count to export (e.g. 50)" placeholder="عدد النتائج للتصدير" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doExportN(this)">
+      <img src="https://api.iconify.design/ph/paper-plane-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="إرسال" data-en="Send">إرسال</span>
+    </button>
+  </div>
+</div>
 
 </div><!-- /mainWrap -->
 
-<!-- RESULT DETAIL SHEET -->
+<!-- RESULT DETAIL SHEET — dynamic contextual actions -->
 <div class="overlay" id="rdOverlay" onclick="closeSheet('rdOverlay',event)">
   <div class="sheet">
     <div class="sh-handle"></div>
@@ -561,15 +601,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     </div>
     <div class="sh-body">
       <div class="rd-val" id="rdVal">—</div>
-      <div class="rd-label" data-ar="إجراءات سريعة" data-en="Quick actions">إجراءات سريعة</div>
-      <div class="rd-qacts">
-        <button class="eb bc" onclick="doCmd({c:'count'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد" data-en="Count">عدد</span></button>
-        <button class="eb bg" onclick="doCmd({c:'getResults',v:'15'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%2300ff9d" alt=""><span data-ar="نتائج" data-en="Results">نتائج</span></button>
-        <button class="eb br" onclick="doCmd({c:'clear'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح" data-en="Clear">مسح</span></button>
-        <button class="eb by" onclick="doCmd({c:'unfreeze'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%23ffd700" alt=""><span data-ar="رفع تجميد" data-en="Unfreeze">رفع تجميد</span></button>
-        <button class="eb bc" onclick="doCmd({c:'goto'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
-        <button class="eb bm" onclick="doCmd({c:'hide'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء" data-en="Hide">إخفاء</span></button>
-      </div>
+      <div id="rdCtx"></div>
       <div class="rd-time" id="rdTime"></div>
     </div>
   </div>
@@ -704,13 +736,161 @@ document.getElementById('statusCard').addEventListener('pointerdown',()=>{lpT=se
 ['pointerup','pointercancel','pointermove'].forEach(e=>
   document.getElementById('statusCard').addEventListener(e,()=>clearTimeout(lpT)));
 
-// ── RESULT SHEET ──
-function openResultSheet(){
-  document.getElementById('rdVal').textContent = lastResultText||'—';
-  document.getElementById('rdTime').textContent = lastResultTime?(L==='ar'?`الوقت: ${lastResultTime}`:`Time: ${lastResultTime}`):'';
-  document.getElementById('rdTitle').textContent = L==='ar'?'آخر نتيجة':'Last Result';
-  document.querySelectorAll('#rdOverlay [data-ar]').forEach(el=>el.textContent=L==='ar'?el.dataset.ar:el.dataset.en);
+// ── SMART RESULT SHEET ──
+// Context detection: parse lastResultText to determine what happened
+function parseResultContext(txt) {
+  if (!txt || txt === '—') return 'empty';
+  // patterns (Arabic)
+  if (/نتائج البحث\s*[:：]?\s*(\d+)/.test(txt))   return 'searchDone';
+  if (/بعد الصقل\s*[:：]?\s*(\d+)/.test(txt))     return 'refineDone';
+  if (/عدد النتائج\s*[:：]?\s*(\d+)/.test(txt))   return 'countDone';
+  if (/تم التعديل/.test(txt))                      return 'editDone';
+  if (/تجميد.*على/.test(txt))                      return 'freezeDone';
+  if (/رفع التجميد/.test(txt))                     return 'unfreezeDone';
+  if (/تم مسح/.test(txt))                          return 'clearDone';
+  if (/أول.*نتيجة/.test(txt))                      return 'resultsList';
+  if (/تم تعيين النطاق/.test(txt))                 return 'rangeDone';
+  if (/انتظار/.test(txt))                          return 'sleepDone';
+  return 'generic';
+}
+
+// Define contextual action sets per context
+function getContextActions(ctx) {
+  const ar = L==='ar';
+  // each action: { label_ar, label_en, cls, icon, cmd }
+  const A = {
+    refine:    { ar:'صقل النتائج',   en:'Refine',       cls:'bc', ico:'ph/funnel-fill.svg?color=%2300d4ff',              cmd:{c:'refine',v:'',t:4},    needsVal:true  },
+    editAll:   { ar:'تعديل الكل',    en:'Edit All',     cls:'bg', ico:'ph/pencil-simple-fill.svg?color=%2300ff9d',       cmd:{c:'edit',v:'',t:4},      needsVal:true  },
+    freeze:    { ar:'تجميد',         en:'Freeze',       cls:'by', ico:'ph/lock-fill.svg?color=%23ffd700',                cmd:{c:'freeze',v:''},        needsVal:true  },
+    clear:     { ar:'مسح',           en:'Clear',        cls:'br', ico:'ph/trash-fill.svg?color=%23ff4060',               cmd:{c:'clear'}               },
+    count:     { ar:'عدد النتائج',   en:'Count',        cls:'bc', ico:'ph/hash-fill.svg?color=%2300d4ff',                cmd:{c:'count'}               },
+    getRes15:  { ar:'أول 15 نتيجة',  en:'Get 15',       cls:'bg', ico:'ph/list-numbers-fill.svg?color=%2300ff9d',        cmd:{c:'getResults',v:'15'}   },
+    getRes50:  { ar:'أول 50 نتيجة',  en:'Get 50',       cls:'bm', ico:'ph/list-numbers-fill.svg?color=%234a5568',        cmd:{c:'getResults',v:'50'}   },
+    unfreeze:  { ar:'رفع التجميد',   en:'Unfreeze',     cls:'bg', ico:'ph/lock-open-fill.svg?color=%2300ff9d',           cmd:{c:'unfreeze'}            },
+    search:    { ar:'بحث جديد',      en:'New search',   cls:'bc', ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff',    cmd:{c:'search',v:'',t:4},    needsVal:true  },
+    goto:      { ar:'فتح GG',        en:'Open GG',      cls:'bc', ico:'ph/arrow-up-right-fill.svg?color=%2300d4ff',      cmd:{c:'goto'}                },
+    exportR:   { ar:'تصدير النتائج', en:'Export',       cls:'bm', ico:'ph/export-fill.svg?color=%234a5568',              cmd:{c:'exportResults'}       },
+    freezeList:{ ar:'تجميد القائمة', en:'Freeze list',  cls:'by', ico:'ph/list-fill.svg?color=%23ffd700',                cmd:{c:'freezeList',v:''},    needsVal:true  },
+  };
+  const sets = {
+    searchDone:  [A.refine, A.count, A.getRes15, A.editAll, A.freeze, A.clear, A.exportR],
+    refineDone:  [A.refine, A.count, A.getRes15, A.editAll, A.freeze, A.clear, A.exportR],
+    countDone:   [A.search, A.refine, A.getRes15, A.getRes50, A.clear, A.exportR],
+    editDone:    [A.freeze, A.freezeList, A.count, A.getRes15, A.unfreeze, A.exportR],
+    freezeDone:  [A.unfreeze, A.count, A.getRes15, A.exportR, A.clear],
+    unfreezeDone:[A.editAll, A.freeze, A.count, A.clear],
+    clearDone:   [A.search, A.goto],
+    resultsList: [A.refine, A.editAll, A.freeze, A.count, A.clear, A.exportR],
+    rangeDone:   [A.search, A.count, A.goto],
+    sleepDone:   [A.count, A.getRes15, A.goto],
+    generic:     [A.count, A.getRes15, A.refine, A.clear, A.goto],
+    empty:       [A.search, A.goto],
+  };
+  return sets[ctx] || sets.generic;
+}
+
+function openResultSheet() {
+  const txt = lastResultText || '—';
+  document.getElementById('rdVal').textContent = txt;
+  document.getElementById('rdTime').textContent = lastResultTime ? (L==='ar'?`الوقت: ${lastResultTime}`:`Time: ${lastResultTime}`) : '';
+  const ctx = parseResultContext(txt);
+  const actions = getContextActions(ctx);
+
+  // ctx label
+  const ctxLabels = {
+    searchDone:'نتائج بحث',refineDone:'بعد الصقل',countDone:'عدد النتائج',
+    editDone:'تم التعديل',freezeDone:'تجميد',unfreezeDone:'رفع تجميد',
+    clearDone:'تم المسح',resultsList:'قائمة نتائج',rangeDone:'نطاق',
+    sleepDone:'انتظار',generic:'نتيجة',empty:'لا توجد نتيجة'
+  };
+  const ctxLabelsEn = {
+    searchDone:'Search result',refineDone:'After refine',countDone:'Count',
+    editDone:'Edited',freezeDone:'Frozen',unfreezeDone:'Unfrozen',
+    clearDone:'Cleared',resultsList:'Results list',rangeDone:'Range set',
+    sleepDone:'Sleep done',generic:'Result',empty:'No result'
+  };
+  document.getElementById('rdTitle').textContent = L==='ar' ? (ctxLabels[ctx]||'نتيجة') : (ctxLabelsEn[ctx]||'Result');
+
+  // Build contextual buttons - actions that need value show an inline input
+  const ctx_el = document.getElementById('rdCtx');
+  ctx_el.innerHTML = `
+    <div class="rd-label" style="margin-bottom:8px">${L==='ar'?'إجراءات مقترحة':'Suggested actions'}</div>
+    <div id="rdActsGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
+    <div id="rdValInput" style="display:none;margin-top:10px">
+      <div class="cd" style="margin-bottom:5px" id="rdValLbl"></div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center">
+        <input type="text" id="rdValInp" placeholder="" style="margin-bottom:0">
+        <button class="eb bc" style="width:auto;padding:10px 14px" id="rdValExec">
+          <img src="https://api.iconify.design/ph/play-fill.svg?color=%2300d4ff" alt="">
+        </button>
+      </div>
+    </div>`;
+
+  const grid = document.getElementById('rdActsGrid');
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = `eb ${a.cls}`;
+    btn.innerHTML = `<img src="https://api.iconify.design/ph/${a.ico.replace('ph/','')}" style="width:15px;height:15px"><span>${L==='ar'?a.ar:a.en}</span>`;
+    btn.onclick = () => {
+      if (a.needsVal) {
+        // show inline input
+        const vi = document.getElementById('rdValInput');
+        vi.style.display = 'block';
+        document.getElementById('rdValLbl').textContent = L==='ar'?a.ar:a.en;
+        document.getElementById('rdValInp').value = '';
+        document.getElementById('rdValInp').placeholder = a.cmd.v !== undefined ? (L==='ar'?'أدخل القيمة':'Enter value') : '';
+        document.getElementById('rdValExec').onclick = () => {
+          const v = document.getElementById('rdValInp').value.trim();
+          if (!v) return;
+          const cmd = {...a.cmd, v};
+          doCmd(cmd, null);
+          vi.style.display = 'none';
+          closeSheet('rdOverlay');
+        };
+        hap('light');
+      } else {
+        doCmd({...a.cmd}, null);
+        closeSheet('rdOverlay');
+      }
+    };
+    grid.appendChild(btn);
+  });
+
   openSheet('rdOverlay');
+  hap('light');
+}
+
+// ── CHAT ID DETECTION ──
+// Lua stores: "GG_ONLINE_timestamp_CID_chatid" in description
+let detectedChatId = '';
+async function detectCid(btn) {
+  if(btn)bump(btn);
+  try {
+    const r = await fetch(`${API}/getMyDescription`,{cache:'no-store'});
+    const d = await r.json();
+    const desc = d?.result?.description||'';
+    const m = desc.match(/CID_(\d+)/);
+    if(m) {
+      detectedChatId = m[1];
+      document.getElementById('detectedCid').textContent = detectedChatId;
+      hap('success');
+    } else {
+      document.getElementById('detectedCid').textContent = L==='ar'?'غير مكتشف — أرسل /start للبوت':'Not found — send /start to bot';
+    }
+  } catch { document.getElementById('detectedCid').textContent = L==='ar'?'خطأ في الاتصال':'Connection error'; }
+}
+
+// ── EXPORT COMMANDS ──
+function doExport(type, btn) {
+  if(!detectedChatId){ showToast(L==='ar'?'اضغط كشف أولاً':'Detect Chat ID first','warn'); return; }
+  hap('light');
+  sendCmd({c:type, cid:detectedChatId}, btn);
+}
+function doExportN(btn) {
+  if(!detectedChatId){ showToast(L==='ar'?'اضغط كشف أولاً':'Detect Chat ID first','warn'); return; }
+  const v = document.getElementById('exportN').value.trim() || '30';
+  hap('light');
+  sendCmd({c:'exportResults', v, cid:detectedChatId}, btn);
 }
 
 // ── LOG SHEET ──
