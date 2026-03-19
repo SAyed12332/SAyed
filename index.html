@@ -4,12 +4,14 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>GG Control Panel By SAyed</title>
+<title>GG Control Panel</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -234,8 +236,6 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 .sh-body::-webkit-scrollbar{width:3px}
 .sh-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:2px}
 
-
-
 /* Result detail sheet */
 .rd-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
   color:var(--cyan);background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
@@ -310,7 +310,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   <div><div class="title">GG Control</div><div class="title-sub">GAME GUARDIAN REMOTE</div></div>
   <div class="hdr-acts">
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
-      <span id="lgFlag"></span><span id="lgCode">change lang</span>
+      <span id="lgFlag">🇸🇦</span><span id="lgCode">AR</span>
     </button>
     <button class="hdr-btn" onclick="toggleTheme(this)">
       <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
@@ -634,9 +634,8 @@ if(tg){ tg.ready(); tg.expand(); }
 const DEFAULT_CID = '6108279690';
 let detectedChatId = String(tg?.initDataUnsafe?.user?.id || DEFAULT_CID);
 
-// ── LANG — كشف تلقائي من تيليجرام ──
-const tgLang = tg?.initDataUnsafe?.user?.language_code || 'ar';
-let L = (tgLang === 'ar') ? 'ar' : 'en';
+// ── LANG — كشف فوري من حساب تيليجرام في كل فتح ──
+let L = (tg?.initDataUnsafe?.user?.language_code === 'ar') ? 'ar' : 'en';
 function applyL(){
   const ar = L==='ar';
   document.documentElement.dir  = ar?'rtl':'ltr';
