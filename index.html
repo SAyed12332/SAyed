@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -281,7 +276,6 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 </style>
 </head>
 <body>
-<canvas id="pvc"></canvas>
 <div class="orb orb1"></div><div class="orb orb2"></div>
 <div class="scanline"></div>
 
@@ -421,61 +415,114 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   </div>
 </div>
 
-<!-- QUICK ACTIONS -->
+<!-- QUICK ACTIONS — all customizable -->
 <div class="card" id="cQuick">
   <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="ct">QUICK</div><div class="cd" data-ar="أوامر سريعة" data-en="Quick actions">أوامر سريعة</div></div>
+    <div><div class="ct">QUICK</div><div class="cd" data-ar="أوامر سريعة قابلة للتخصيص" data-en="Customizable quick actions">أوامر سريعة قابلة للتخصيص</div></div>
   </div>
-  <div class="qg">
-    <button class="qb br" onclick="doCmd({c:'clear'},this)"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح" data-en="Clear">مسح</span></button>
-    <button class="qb bc" onclick="doCmd({c:'count'},this)"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد" data-en="Count">عدد</span></button>
-    <button class="qb bc" onclick="doCmd({c:'goto'},this)"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
-    <button class="qb by" onclick="doCmd({c:'getResults',v:'15'},this)"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""><span data-ar="نتائج" data-en="Results">نتائج</span></button>
-    <button class="qb bm" onclick="doCmd({c:'hide'},this)"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء" data-en="Hide">إخفاء</span></button>
-    <button class="qb bg" onclick="doCmd({c:'unfreeze'},this)"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""><span data-ar="رفع" data-en="Unfrz">رفع</span></button>
+  <!-- Count + Clear row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+    <button class="eb bc" onclick="doCmd({c:'count'},this)"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد النتائج" data-en="Count">عدد النتائج</span></button>
+    <button class="eb br" onclick="doCmd({c:'clear'},this)"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح الكل" data-en="Clear all">مسح الكل</span></button>
   </div>
+  <!-- Get results — custom count -->
+  <div class="cd" style="margin-bottom:5px" data-ar="جلب نتائج (حدد العدد)" data-en="Get results (set count)">جلب نتائج (حدد العدد)</div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px;align-items:center">
+    <input type="number" id="qResN" data-ph-ar="عدد النتائج (مثلاً 20)" data-ph-en="Count (e.g. 20)" placeholder="عدد النتائج (مثلاً 20)" style="margin-bottom:0;min-width:0">
+    <button class="eb by" style="width:auto;padding:10px 14px;white-space:nowrap" onclick="doGetN(this)"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""><span data-ar="جلب" data-en="Fetch">جلب</span></button>
+  </div>
+  <!-- Open / Hide GG -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+    <button class="eb bc" onclick="doCmd({c:'goto'},this)"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
+    <button class="eb bm" onclick="doCmd({c:'hide'},this)"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء GG" data-en="Hide GG">إخفاء GG</span></button>
+  </div>
+  <!-- Unfreeze all -->
+  <button class="eb bg" onclick="doCmd({c:'unfreeze'},this)"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""><span data-ar="رفع تجميد الكل" data-en="Unfreeze all">رفع تجميد الكل</span></button>
 </div>
 
-<!-- ADVANCED COMMANDS -->
+<!-- ADVANCED COMMANDS — fully customizable -->
 <div class="card" id="cAdv">
   <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/cpu-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="ct">ADVANCED</div><div class="cd" data-ar="أوامر متقدمة" data-en="Advanced commands">أوامر متقدمة</div></div>
+    <div><div class="ct">ADVANCED</div><div class="cd" data-ar="أوامر متقدمة — كل شيء قابل للتخصيص" data-en="Advanced — fully customizable">أوامر متقدمة — كل شيء قابل للتخصيص</div></div>
   </div>
+
   <!-- Sleep -->
-  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center">
-    <input type="number" id="sleepVal" data-ph-ar="مدة الانتظار (ms)" data-ph-en="Sleep duration (ms)" placeholder="مدة الانتظار (ms)" style="margin-bottom:0">
-    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doSleep(this)">
-      <img src="https://api.iconify.design/ph/timer-fill.svg?color=%23ffd700" alt="">
-      <span data-ar="انتظار" data-en="Sleep">انتظار</span>
-    </button>
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/timer-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="انتظار (ms)" data-en="Sleep (ms)">انتظار (ms)</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="number" id="sleepVal" data-ph-ar="مثلاً 1000 = ثانية واحدة" data-ph-en="e.g. 1000 = 1 second" placeholder="مثلاً 1000 = ثانية واحدة" style="margin-bottom:0">
+    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doSleep(this)"><img src="https://api.iconify.design/ph/timer-fill.svg?color=%23ffd700" alt=""><span data-ar="تنفيذ" data-en="Run">تنفيذ</span></button>
   </div>
-  <!-- Get results count picker -->
-  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center">
-    <input type="number" id="gResN" data-ph-ar="عدد النتائج (افتراضي 30)" data-ph-en="Results count (default 30)" placeholder="عدد النتائج (افتراضي 30)" style="margin-bottom:0">
-    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doGetN(this)">
-      <img src="https://api.iconify.design/ph/list-bullets-fill.svg?color=%2300d4ff" alt="">
-      <span data-ar="جلب" data-en="Fetch">جلب</span>
-    </button>
+
+  <!-- Set Ranges custom value -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="نطاق مخصص (قيمة عددية)" data-en="Custom range (numeric value)">نطاق مخصص (قيمة عددية)</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="number" id="customRange" data-ph-ar="مثلاً 2147483712" data-ph-en="e.g. 2147483712" placeholder="مثلاً 2147483712" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doCustomRange(this)"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""><span data-ar="تعيين" data-en="Set">تعيين</span></button>
   </div>
-  <!-- Sort / snapshot quick row -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
-    <button class="eb bc" onclick="doCmd({c:'count'},this)">
-      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
-      <span data-ar="عدد النتائج" data-en="Count">عدد النتائج</span>
-    </button>
-    <button class="eb bm" onclick="doCmd({c:'getResults',v:'50'},this)">
-      <img src="https://api.iconify.design/ph/eye-fill.svg?color=%234a5568" alt="">
-      <span data-ar="أول 50" data-en="First 50">أول 50</span>
-    </button>
+
+  <!-- Search with group size -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="بحث مع حجم المجموعة (Group Size)" data-en="Search with group size">بحث مع حجم المجموعة (Group Size)</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="gsVal" data-ph-ar="القيم (100;200)" data-ph-en="Values (100;200)" placeholder="القيم (100;200)" style="margin-bottom:0">
+    <input type="number" id="gsSize" data-ph-ar="حجم المجموعة" data-ph-en="Group size" placeholder="حجم المجموعة" style="margin-bottom:0">
   </div>
-  <!-- Ranges shortcuts inline -->
-  <div class="cd" style="margin-bottom:7px" data-ar="نطاق سريع" data-en="Quick range">نطاق سريع</div>
-  <div class="qg" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
-    <button class="qb bc" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'2147483712'},this)"><img src="https://api.iconify.design/ph/database-fill.svg?color=%2300d4ff" alt="" style="width:15px;height:15px">ANON</button>
-    <button class="qb by" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'536870912'},this)"><img src="https://api.iconify.design/ph/coffee-fill.svg?color=%23ffd700" alt="" style="width:15px;height:15px">JAVA</button>
-    <button class="qb bm" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'8'},this)"><img src="https://api.iconify.design/ph/code-fill.svg?color=%234a5568" alt="" style="width:15px;height:15px">CODE</button>
-    <button class="qb bg" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'4294967295'},this)"><img src="https://api.iconify.design/ph/globe-fill.svg?color=%2300ff9d" alt="" style="width:15px;height:15px">ALL</button>
+  <div class="tr" id="gsTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('gs',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('gs',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('gs',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('gs',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('gs',this,2)">WORD</button>
   </div>
+  <button class="eb bc" style="margin-bottom:11px" onclick="doGS(this)"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""><span data-ar="بحث بمجموعة" data-en="Group search">بحث بمجموعة</span></button>
+
+  <!-- Refine with group size -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="صقل مع حجم المجموعة" data-en="Refine with group size">صقل مع حجم المجموعة</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="grVal" data-ph-ar="القيم" data-ph-en="Values" placeholder="القيم" style="margin-bottom:0">
+    <input type="number" id="grSize" data-ph-ar="حجم المجموعة" data-ph-en="Group size" placeholder="حجم المجموعة" style="margin-bottom:0">
+  </div>
+  <div class="tr" id="grTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('gr',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('gr',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('gr',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('gr',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('gr',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" style="margin-bottom:11px" onclick="doGR(this)"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""><span data-ar="صقل بمجموعة" data-en="Group refine">صقل بمجموعة</span></button>
+
+  <!-- Edit specific address -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="تعديل عنوان محدد (Address + Value)" data-en="Edit specific address">تعديل عنوان محدد (Address + Value)</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="addrVal" data-ph-ar="العنوان (hex)" data-ph-en="Address (hex)" placeholder="0x12345678" style="margin-bottom:0">
+    <input type="text" id="addrNew" data-ph-ar="القيمة الجديدة" data-ph-en="New value" placeholder="9999" style="margin-bottom:0">
+  </div>
+  <div class="tr" id="adTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('ad',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('ad',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('ad',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('ad',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('ad',this,2)">WORD</button>
+  </div>
+  <button class="eb bg" style="margin-bottom:11px" onclick="doEditAddr(this)"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt=""><span data-ar="تعديل العنوان" data-en="Edit address">تعديل العنوان</span></button>
+
+  <!-- Freeze specific value on list -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/snowflake.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="تجميد القائمة على قيمة محددة" data-en="Freeze list on specific value">تجميد القائمة على قيمة محددة</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="text" id="flVal" data-ph-ar="القيمة للتجميد عليها" data-ph-en="Value to freeze on" placeholder="9999999" style="margin-bottom:0">
+    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doFLV(this)"><img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt=""><span data-ar="تجميد" data-en="Freeze">تجميد</span></button>
+  </div>
+
+  <!-- Offset search -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/list-bullets-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="بحث بقيم متعددة (مفصولة بـ ;)" data-en="Multi-value search">بحث بقيم متعددة (مفصولة بـ ;)</span></div>
+  <input type="text" id="mvVal" data-ph-ar="مثلاً 100;200;300;400" data-ph-en="e.g. 100;200;300;400" placeholder="100;200;300;400">
+  <div class="tr" id="mvTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('mv',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('mv',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('mv',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('mv',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('mv',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" onclick="doMV(this)"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""><span data-ar="بحث متعدد" data-en="Multi search">بحث متعدد</span></button>
 </div>
 
 <!-- MEMORY RANGES (full) -->
@@ -501,7 +548,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <div class="sh-handle"></div>
     <div class="sh-head">
       <span class="sh-title" id="rdTitle">آخر نتيجة</span>
-      <button class="sh-close" onclick="closeSheet('rdOverlay')">✕</button>
+      <button class="sh-close" onclick="closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" style="width:13px;height:13px"></button>
     </div>
     <div class="sh-body">
       <div class="rd-val" id="rdVal">—</div>
@@ -525,13 +572,13 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <div class="sh-handle"></div>
     <div class="sh-head">
       <span class="sh-title" id="rlTitle">REQUEST LOG</span>
-      <button class="sh-close" onclick="closeSheet('rlOverlay')">✕</button>
+      <button class="sh-close" onclick="closeSheet('rlOverlay')"><img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" style="width:13px;height:13px"></button>
     </div>
     <div class="sh-body" id="rlBody"><div class="rl-empty" id="rlEmpty">—</div></div>
   </div>
 </div>
 
-<div class="toast" id="toast"><span id="tIco">⚡</span><span id="tMsg">—</span></div>
+<div class="toast" id="toast"><img id="tIco" style="width:15px;height:15px;flex-shrink:0" src="https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0" alt=""><span id="tMsg">—</span></div>
 
 <script>
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
@@ -555,7 +602,7 @@ function toggleLang(b){L=L==='ar'?'en':'ar';applyL();bump(b);hap('light')}
 function bump(el){el.style.transform='scale(.87)';setTimeout(()=>el.style.transform='',170)}
 
 // ── TYPES ──
-const T={s:4,r:4,e:4};
+const T={s:4,r:4,e:4,gs:4,gr:4,ad:4,mv:4};
 function selT(g,b,v){
   document.getElementById(g+'Tr').querySelectorAll('.tb').forEach(x=>x.classList.remove('on'));
   b.classList.add('on');T[g]=v;bump(b)
@@ -661,7 +708,7 @@ function openResultSheet(){
 const reqLog=[];
 const CLBL={search:'SEARCH',refine:'REFINE',edit:'EDIT',freeze:'FREEZE',
   freezeList:'FREEZE LIST',unfreeze:'UNFREEZE',clear:'CLEAR',count:'COUNT',
-  goto:'OPEN GG',hide:'HIDE',getResults:'GET RESULTS',ranges:'RANGES',sleep:'SLEEP'};
+  goto:'OPEN GG',hide:'HIDE',getResults:'GET RESULTS',ranges:'RANGES',sleep:'SLEEP',editAddr:'EDIT ADDR'};
 
 function openLog(){
   document.getElementById('rlTitle').textContent=L==='ar'?'سجل الطلبات':'REQUEST LOG';
@@ -680,7 +727,7 @@ function renderLog(){
         ${e.v?`<div class="rl-val">→ ${e.v}</div>`:''}
         <div class="rl-t">${e.t}</div>
       </div>
-      <div class="rl-st ${e.st}">${e.st==='ok'?'✓ OK':e.st==='err'?'✗ ERR':'...'} ${e.msg?`<br><small style="opacity:.6;font-size:9px">${e.msg}</small>`:''}</div>
+      <div class="rl-st ${e.st}">${e.st==='ok'?'<img src="https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d" style="width:12px;height:12px;vertical-align:middle"> OK':e.st==='err'?'<img src="https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060" style="width:12px;height:12px;vertical-align:middle"> ERR':'<img src="https://api.iconify.design/ph/dots-three-fill.svg?color=%23ffd700" style="width:12px;height:12px;vertical-align:middle">'} ${e.msg?`<br><small style="opacity:.6;font-size:9px">${e.msg}</small>`:''}</div>
     </div>`).join('');
 }
 
@@ -700,13 +747,12 @@ async function sendCmd(cmd,btn){
     const d=await r.json();
     if(d.ok){
       entry.st='ok';hap('success');
-      if(btn)spawnParts(btn);
       setTimeout(fetchResult,1800);setTimeout(fetchResult,3200);
     }else{
       entry.st='err';entry.msg=d.description||'fail';
-      showToast((L==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'❌');
+      showToast((L==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'err');
     }
-  }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','❌')}
+  }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','err')}
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
   if(btn)setTimeout(()=>btn.classList.remove('sp'),850);
 }
@@ -715,38 +761,71 @@ async function sendCmd(cmd,btn){
 function doCmd(cmd,btn){hap('light');sendCmd(cmd,btn)}
 function doSearch(btn){
   const v=document.getElementById('sVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل قيمة البحث':'Enter search value','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل قيمة البحث':'Enter search value','warn');return}
   hap('light');sendCmd({c:'search',v,t:T.s},btn);
 }
 function doRefine(btn){
   const v=document.getElementById('rVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل قيمة الصقل':'Enter refine value','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل قيمة الصقل':'Enter refine value','warn');return}
   hap('light');sendCmd({c:'refine',v,t:T.r},btn);
 }
 function doEdit(btn){
   const v=document.getElementById('eVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
   hap('light');sendCmd({c:'edit',v,t:T.e},btn);
   if(fzMode)setTimeout(()=>sendCmd({c:'freeze',v},null),950);
 }
 function doFreeze(btn){
   const v=document.getElementById('fVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
   hap('light');sendCmd({c:'freeze',v},btn);
 }
 function doFreezeList(btn){
   const v=document.getElementById('fVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
   hap('light');sendCmd({c:'freezeList',v},btn);
 }
 function doSleep(btn){
   const v=document.getElementById('sleepVal').value.trim();
-  if(!v){showToast(L==='ar'?'أدخل المدة':'Enter duration','⚠️');return}
+  if(!v){showToast(L==='ar'?'أدخل المدة':'Enter duration','warn');return}
   hap('light');sendCmd({c:'sleep',v},btn);
 }
 function doGetN(btn){
-  const v=document.getElementById('gResN').value.trim()||'30';
+  const v=document.getElementById('qResN').value.trim()||'30';
   hap('light');sendCmd({c:'getResults',v},btn);
+}
+function doCustomRange(btn){
+  const v=document.getElementById('customRange').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة النطاق':'Enter range value','warn');return}
+  hap('light');sendCmd({c:'ranges',v},btn);
+}
+function doGS(btn){ // group search
+  const v=document.getElementById('gsVal').value.trim();
+  const g=document.getElementById('gsSize').value.trim()||'0';
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'search',v,t:T.gs,g},btn);
+}
+function doGR(btn){ // group refine
+  const v=document.getElementById('grVal').value.trim();
+  const g=document.getElementById('grSize').value.trim()||'256';
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'refine',v,t:T.gr,g},btn);
+}
+function doEditAddr(btn){ // edit by address
+  const addr=document.getElementById('addrVal').value.trim();
+  const val =document.getElementById('addrNew').value.trim();
+  if(!addr||!val){showToast(L==='ar'?'أدخل العنوان والقيمة':'Enter address and value','warn');return}
+  hap('light');sendCmd({c:'editAddr',addr,v:val,t:T.ad},btn);
+}
+function doFLV(btn){ // freeze list on value
+  const v=document.getElementById('flVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
+  hap('light');sendCmd({c:'freezeList',v},btn);
+}
+function doMV(btn){ // multi-value search
+  const v=document.getElementById('mvVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'search',v,t:T.mv},btn);
 }
 
 // ── HAPTIC ──
@@ -757,28 +836,13 @@ function hap(t){
   else if(t==='selection')tg.HapticFeedback.selectionChanged();
 }
 
-// ── PARTICLES ──
-const pvc=document.getElementById('pvc'),px=pvc.getContext('2d');
-const rsz=()=>{pvc.width=innerWidth;pvc.height=innerHeight};rsz();window.addEventListener('resize',rsz);
-let parts=[];
-function spawnParts(el){
-  const rc=el.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
-  const cols=['#00d4ff','#00ff9d','#ffd700','#fff','#b57aff','#ff9d00'];
-  for(let i=0;i<24;i++){const a=Math.random()*Math.PI*2,sp=2+Math.random()*5;
-    parts.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,r:1.5+Math.random()*3,c:cols[~~(Math.random()*cols.length)],life:1,d:.022+Math.random()*.02})}
-}
-function animP(){
-  px.clearRect(0,0,pvc.width,pvc.height);parts=parts.filter(p=>p.life>0);
-  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.13;p.vx*=.97;p.life-=p.d;
-    px.globalAlpha=Math.max(0,p.life);px.beginPath();px.arc(p.x,p.y,p.r,0,Math.PI*2);
-    px.fillStyle=p.c;px.shadowColor=p.c;px.shadowBlur=7;px.fill()}
-  px.globalAlpha=1;px.shadowBlur=0;requestAnimationFrame(animP)
-}animP();
-
-// ── TOAST ──
+const TICONS={ok:'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d',
+  err:'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060',
+  warn:'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700',
+  info:'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0'};
 let toastT=null;
-function showToast(msg,ico='⚡'){
-  document.getElementById('tIco').textContent=ico;
+function showToast(msg,type='info'){
+  document.getElementById('tIco').src=TICONS[type]||TICONS.info;
   document.getElementById('tMsg').textContent=msg;
   const el=document.getElementById('toast');el.classList.add('show');
   clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
