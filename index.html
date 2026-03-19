@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -36,7 +37,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-.title{font-size:18px;font-weight:900;
+.title{font-size:15px;font-weight:900;
   background:linear-gradient(110deg,var(--cyan),var(--green) 60%,#fff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   filter:drop-shadow(0 0 10px rgba(0,212,255,0.28))}
@@ -303,7 +304,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 
 <!-- HEADER -->
 <div class="header">
-  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control fast </div></div>
+  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control </div></div>
   <div class="hdr-acts">
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
       <span id="lgFlag"></span><span id="lgCode">change lang</span>
