@@ -2,608 +2,419 @@
 
 
 
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>GG Control Panel</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:      #06090f;
-  --cyan:    #00d4ff;
-  --green:   #00ff9d;
-  --red:     #ff4060;
-  --yellow:  #ffd700;
-  --purple:  #b57aff;
-  --text:    #e2e8f0;
-  --muted:   #4a5568;
-  --border:  rgba(0,212,255,0.15);
-  --glow-c:  rgba(0,212,255,0.45);
-  --glow-g:  rgba(0,255,157,0.45);
-  --glow-r:  rgba(255,64,96,0.5);
-  --glow-y:  rgba(255,215,0,0.4);
-  --card-bg: rgba(10,15,28,0.92);
-  --radius:  16px;
+:root{
+  --bg:#06090f; --cyan:#00d4ff; --green:#00ff9d; --red:#ff4060;
+  --yellow:#ffd700; --purple:#b57aff; --text:#e2e8f0; --muted:#4a5568;
+  --border:rgba(0,212,255,0.14); --card-bg:rgba(10,15,28,0.93); --r:16px;
 }
-* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-body {
-  font-family:'Tajawal',sans-serif;
-  background:var(--bg); color:var(--text);
-  min-height:100vh; padding-bottom:70px;
-  overflow-x:hidden; position:relative;
-}
-.bg-orb { position:fixed; border-radius:50%; pointer-events:none; z-index:0; filter:blur(80px); }
-.orb1 { width:360px; height:360px; top:-90px; right:-80px;
-  background:radial-gradient(circle,rgba(0,212,255,0.12),transparent);
-  animation:orbA 11s ease-in-out infinite; }
-.orb2 { width:290px; height:290px; bottom:90px; left:-60px;
-  background:radial-gradient(circle,rgba(0,255,157,0.08),transparent);
-  animation:orbB 13s ease-in-out infinite; }
-@keyframes orbA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-18px,28px)} }
-@keyframes orbB { 0%,100%{transform:translate(0,0)} 50%{transform:translate(14px,-22px)} }
-body::after {
-  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,212,255,0.018) 1px,transparent 1px);
-  background-size:40px 40px;
-}
-.scanline {
-  position:fixed; inset:0; z-index:1; pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
-}
-.content { position:relative; z-index:2; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;overflow-x:hidden;position:relative}
+
+/* BG */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
+.orb1{width:360px;height:360px;top:-90px;right:-80px;background:radial-gradient(circle,rgba(0,212,255,0.11),transparent);animation:orbA 11s ease-in-out infinite}
+.orb2{width:290px;height:290px;bottom:90px;left:-60px;background:radial-gradient(circle,rgba(0,255,157,0.07),transparent);animation:orbB 13s ease-in-out infinite}
+@keyframes orbA{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,28px)}}
+@keyframes orbB{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-22px)}}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,212,255,0.016) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.016) 1px,transparent 1px);
+  background-size:40px 40px}
+.scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
+.wrap{position:relative;z-index:2}
 
 /* HEADER */
-.header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:18px 16px 12px;
-  opacity:0; animation:slideDown .5s cubic-bezier(.22,1,.36,1) .05s both;
-}
-@keyframes slideDown { to{opacity:1;transform:translateY(0)} from{opacity:0;transform:translateY(-12px)} }
-.title {
-  font-size:22px; font-weight:900;
-  background:linear-gradient(110deg,var(--cyan) 0%,var(--green) 60%,#fff 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  background-clip:text; filter:drop-shadow(0 0 12px rgba(0,212,255,0.3));
-}
-.title-sub { font-size:9px; font-family:'JetBrains Mono',monospace; color:var(--muted); letter-spacing:1.5px; margin-top:3px; }
-.header-actions { display:flex; gap:8px; align-items:center; }
-.hdr-btn {
-  height:36px; border-radius:10px;
-  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-  cursor:pointer; transition:all .2s cubic-bezier(.22,1,.36,1);
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text); font-family:'JetBrains Mono',monospace;
-  font-size:11px; font-weight:700; letter-spacing:.5px;
-  position:relative; overflow:hidden; padding:0 12px; gap:6px;
-}
-.hdr-btn img { width:15px; height:15px; }
-.hdr-btn:active { transform:scale(.88); background:rgba(255,255,255,0.08); }
-.lang-flag { font-size:14px; line-height:1; }
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
+  opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
+@keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.title{font-size:21px;font-weight:900;
+  background:linear-gradient(110deg,var(--cyan),var(--green) 60%,#fff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 10px rgba(0,212,255,0.28))}
+.title-sub{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1.4px;margin-top:2px}
+.hdr-acts{display:flex;gap:7px;align-items:center}
+.hdr-btn{height:35px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;transition:all .18s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;
+  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:0 11px;gap:5px}
+.hdr-btn img{width:15px;height:15px}
+.hdr-btn:active{transform:scale(.87);background:rgba(255,255,255,0.09)}
 
 /* STATUS CARD */
-.status-card {
-  margin:0 16px 14px; padding:13px 16px;
-  border-radius:var(--radius); background:var(--card-bg);
-  border:1px solid var(--border); backdrop-filter:blur(14px);
-  display:flex; align-items:center; justify-content:space-between;
-  position:relative; overflow:hidden;
-  opacity:0; animation:cardUp .5s cubic-bezier(.22,1,.36,1) .1s both;
-}
-.status-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent); opacity:.6;
-}
-.status-left { display:flex; align-items:center; gap:12px; }
-.status-dot {
-  width:12px; height:12px; border-radius:50%; flex-shrink:0;
-  transition:all .5s cubic-bezier(.22,1,.36,1); position:relative;
-}
-.status-dot::after {
-  content:''; position:absolute; inset:-5px; border-radius:50%;
-  opacity:0; transition:opacity .5s;
-}
-.status-dot.online {
-  background:var(--green);
-  box-shadow:0 0 12px var(--green),0 0 25px rgba(0,255,157,0.4);
-  animation:pulseOnline 2.2s infinite;
-}
-.status-dot.online::after {
-  background:radial-gradient(circle,rgba(0,255,157,0.3),transparent);
-  opacity:1; animation:pingRipple 2.2s infinite;
-}
-.status-dot.warning {
-  background:var(--yellow);
-  box-shadow:0 0 10px var(--yellow),0 0 20px rgba(255,215,0,0.35);
-  animation:pulseWarn 1.6s infinite;
-}
-.status-dot.warning::after {
-  background:radial-gradient(circle,rgba(255,215,0,0.25),transparent);
-  opacity:1; animation:pingRipple 1.6s infinite;
-}
-.status-dot.offline {
-  background:var(--red);
-  box-shadow:0 0 10px var(--red),0 0 20px rgba(255,64,96,0.35);
-  animation:pulseOff 1.8s infinite;
-}
-.status-dot.offline::after {
-  background:radial-gradient(circle,rgba(255,64,96,0.25),transparent);
-  opacity:1; animation:pingRipple 1.8s infinite;
-}
-@keyframes pulseOnline { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(.8)} }
-@keyframes pulseWarn   { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
-@keyframes pulseOff    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.82)} }
-@keyframes pingRipple  { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
-.status-label { font-size:12px; font-family:'JetBrains Mono',monospace; font-weight:700; letter-spacing:.8px; transition:color .4s; }
-.status-label.online   { color:var(--green); }
-.status-label.warning  { color:var(--yellow); }
-.status-label.offline  { color:var(--red); }
-.status-sub { font-size:10px; color:var(--muted); margin-top:2px; font-family:'JetBrains Mono',monospace; }
-.status-lastseen {
-  font-size:9px; color:var(--muted); margin-top:3px;
-  font-family:'JetBrains Mono',monospace; letter-spacing:.3px;
-  transition:color .4s;
-}
-.status-lastseen.fresh  { color:rgba(0,255,157,0.55); }
-.status-lastseen.stale  { color:rgba(255,215,0,0.6); }
-.status-lastseen.dead   { color:rgba(255,64,96,0.5); }
-.status-result {
-  font-size:11px; font-family:'JetBrains Mono',monospace;
-  color:var(--cyan); max-width:130px;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  background:rgba(0,212,255,0.06); border:1px solid rgba(0,212,255,0.15);
-  padding:4px 9px; border-radius:8px;
-}
+.status-card{margin:0 16px 13px;padding:12px 14px;border-radius:var(--r);background:var(--card-bg);
+  border:1px solid var(--border);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;cursor:pointer;user-select:none;
+  opacity:0;animation:cardUp .48s cubic-bezier(.22,1,.36,1) .1s both;
+  transition:border-color .2s}
+.status-card:active{transform:scale(.985)}
+.status-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);opacity:.55}
+.s-left{display:flex;align-items:center;gap:11px}
+.s-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;position:relative;transition:all .4s}
+.s-dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;opacity:0}
+/* ALL 3 states pulse */
+.s-dot.online{background:var(--green);box-shadow:0 0 10px var(--green),0 0 22px rgba(0,255,157,0.35);animation:pOn 2.2s infinite}
+.s-dot.online::after{background:radial-gradient(circle,rgba(0,255,157,0.25),transparent);opacity:1;animation:ping 2.2s infinite}
+.s-dot.warning{background:var(--yellow);box-shadow:0 0 9px var(--yellow),0 0 18px rgba(255,215,0,0.3);animation:pWarn 1.6s infinite}
+.s-dot.warning::after{background:radial-gradient(circle,rgba(255,215,0,0.22),transparent);opacity:1;animation:ping 1.6s infinite}
+.s-dot.offline{background:var(--red);box-shadow:0 0 9px var(--red),0 0 18px rgba(255,64,96,0.3);animation:pOff 1.9s infinite}
+.s-dot.offline::after{background:radial-gradient(circle,rgba(255,64,96,0.22),transparent);opacity:1;animation:ping 1.9s infinite}
+@keyframes pOn  {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.65;transform:scale(.8)}}
+@keyframes pWarn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+@keyframes pOff {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes ping {0%{transform:scale(1);opacity:.55}100%{transform:scale(3.2);opacity:0}}
+.s-label{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.7px;transition:color .35s}
+.s-label.online{color:var(--green)}.s-label.warning{color:var(--yellow)}.s-label.offline{color:var(--red)}
+.s-sub{font-size:9.5px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;transition:opacity .3s}
+.s-lastseen{font-size:9px;margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:.2px;transition:all .4s;display:none}
+.s-lastseen.show{display:block}
+.s-lastseen.fresh{color:rgba(0,255,157,0.5)}.s-lastseen.stale{color:rgba(255,215,0,0.55)}.s-lastseen.dead{color:rgba(255,64,96,0.45)}
+
+/* Last result chip — clickable */
+.s-result{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);max-width:130px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+  padding:5px 10px;border-radius:9px;cursor:pointer;transition:all .18s;flex-shrink:0}
+.s-result:active{background:rgba(0,212,255,0.16);transform:scale(.94)}
 
 /* CARD */
-.card {
-  margin:0 16px 14px; background:var(--card-bg);
-  border:1px solid var(--border); border-radius:var(--radius); padding:14px;
-  backdrop-filter:blur(14px);
-  box-shadow:0 6px 30px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.04);
-  position:relative; overflow:hidden;
-  opacity:0; transform:translateY(16px) scale(.98);
-}
-.card.revealed { animation:cardUp .55s cubic-bezier(.22,1,.36,1) both; }
-@keyframes cardUp { to{opacity:1;transform:translateY(0) scale(1)} }
-.card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent); opacity:.35;
-}
-.card-header { display:flex; align-items:center; gap:10px; margin-bottom:13px; }
-.card-icon {
-  width:32px; height:32px; border-radius:10px;
-  background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.18);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-  filter:drop-shadow(0 0 8px rgba(0,212,255,0.35)); transition:filter .3s;
-}
-.card:hover .card-icon { filter:drop-shadow(0 0 14px rgba(0,212,255,0.7)); }
-.card-icon img { width:17px; height:17px; }
-.card-title { font-size:12px; font-weight:800; color:var(--cyan); font-family:'JetBrains Mono',monospace; letter-spacing:.7px; text-transform:uppercase; }
-.card-desc { font-size:10px; color:var(--muted); margin-top:2px; }
+.card{margin:0 16px 13px;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;backdrop-filter:blur(14px);
+  box-shadow:0 5px 25px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.035);
+  position:relative;overflow:hidden;opacity:0;transform:translateY(14px) scale(.985)}
+.card.in{animation:cardUp .5s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardUp{to{opacity:1;transform:translateY(0) scale(1)}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.3}
+.ch{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ci{width:30px;height:30px;border-radius:9px;background:rgba(0,212,255,0.07);
+  border:1px solid rgba(0,212,255,0.16);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,212,255,0.3));transition:filter .25s}
+.card:hover .ci{filter:drop-shadow(0 0 12px rgba(0,212,255,0.55))}
+.ci img{width:16px;height:16px}
+.ct{font-size:11px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace;letter-spacing:.6px;text-transform:uppercase}
+.cd{font-size:10px;color:var(--muted);margin-top:1px}
 
 /* INPUT */
-input[type="text"],input[type="number"] {
-  width:100%; padding:11px 14px; border-radius:11px; margin-bottom:9px;
-  border:1px solid rgba(255,255,255,0.07);
-  background:rgba(255,255,255,0.03);
-  color:var(--text); font-family:'Tajawal',sans-serif; font-size:14px;
-  outline:none; transition:all .25s cubic-bezier(.22,1,.36,1); -webkit-appearance:none;
-}
-input:focus {
-  border-color:rgba(0,212,255,0.5); background:rgba(0,212,255,0.04);
-  box-shadow:0 0 0 3px rgba(0,212,255,0.1),0 0 20px rgba(0,212,255,0.08);
-  transform:translateY(-1px);
-}
-input::placeholder { color:var(--muted); }
+input[type=text],input[type=number]{
+  width:100%;padding:10px 13px;border-radius:10px;margin-bottom:8px;
+  border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;
+  outline:none;transition:all .22s cubic-bezier(.22,1,.36,1);-webkit-appearance:none}
+input:focus{border-color:rgba(0,212,255,0.45);background:rgba(0,212,255,0.04);
+  box-shadow:0 0 0 3px rgba(0,212,255,0.09),0 0 18px rgba(0,212,255,0.07);transform:translateY(-1px)}
+input::placeholder{color:var(--muted)}
 
-/* TYPE BTNS */
-.type-row { display:flex; gap:5px; overflow-x:auto; padding-bottom:2px; margin-bottom:10px; scrollbar-width:none; }
-.type-row::-webkit-scrollbar { display:none; }
-.type-btn {
-  flex-shrink:0; padding:6px 12px; border-radius:8px; cursor:pointer;
-  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
-  background:rgba(255,255,255,0.04); color:var(--muted);
-  border:1px solid rgba(255,255,255,0.07);
-  transition:all .2s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden;
-}
-.type-btn.active {
-  background:rgba(0,212,255,0.12); color:var(--cyan);
-  border-color:rgba(0,212,255,0.35); box-shadow:0 0 10px rgba(0,212,255,0.2);
-}
-.type-btn:active { transform:scale(.88); }
+/* TYPE ROW */
+.tr{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;margin-bottom:9px;scrollbar-width:none}
+.tr::-webkit-scrollbar{display:none}
+.tb{flex-shrink:0;padding:5px 11px;border-radius:7px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.06);
+  transition:all .18s cubic-bezier(.22,1,.36,1)}
+.tb.on{background:rgba(0,212,255,0.11);color:var(--cyan);border-color:rgba(0,212,255,0.32);
+  box-shadow:0 0 9px rgba(0,212,255,0.18)}
+.tb:active{transform:scale(.88)}
 
 /* EXEC BTN */
-.exec-btn {
-  width:100%; padding:12px; border-radius:12px; border:none; cursor:pointer;
-  font-family:'Tajawal',sans-serif; font-size:14px; font-weight:800;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  position:relative; overflow:hidden;
-  transition:all .2s cubic-bezier(.22,1,.36,1);
-  -webkit-tap-highlight-color:transparent;
-}
-.exec-btn img { width:17px; height:17px; transition:transform .25s; }
-.exec-btn:active img { transform:scale(1.2) rotate(-8deg); }
+.eb{width:100%;padding:11px;border-radius:11px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .18s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.eb img{width:16px;height:16px;transition:transform .2s}
+.eb:active{transform:scale(.96)}
+.eb:active img{transform:scale(1.18) rotate(-7deg)}
+.bc{background:linear-gradient(135deg,rgba(0,212,255,0.14),rgba(0,212,255,0.06));color:var(--cyan);border:1px solid rgba(0,212,255,0.28)}
+.bc:active{box-shadow:0 0 24px rgba(0,212,255,0.4),inset 0 0 14px rgba(0,212,255,0.08)}
+.bg{background:linear-gradient(135deg,rgba(0,255,157,0.13),rgba(0,255,157,0.05));color:var(--green);border:1px solid rgba(0,255,157,0.28)}
+.bg:active{box-shadow:0 0 24px rgba(0,255,157,0.4),inset 0 0 14px rgba(0,255,157,0.08)}
+.br{background:linear-gradient(135deg,rgba(255,64,96,0.14),rgba(255,64,96,0.05));color:var(--red);border:1px solid rgba(255,64,96,0.28)}
+.br:active{box-shadow:0 0 22px rgba(255,64,96,0.4),inset 0 0 14px rgba(255,64,96,0.08)}
+.by{background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,215,0,0.04));color:var(--yellow);border:1px solid rgba(255,215,0,0.26)}
+.by:active{box-shadow:0 0 20px rgba(255,215,0,0.35),inset 0 0 12px rgba(255,215,0,0.08)}
+.bm{background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));color:var(--muted);border:1px solid rgba(255,255,255,0.07)}
+.bm:active{box-shadow:0 0 14px rgba(255,255,255,0.1)}
 
-/* Ripple layer - removed */
+/* QUICK GRID */
+.qg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.qb{padding:10px 5px;border-radius:11px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:11px;font-weight:800;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .18s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.qb img{width:19px;height:19px;transition:transform .18s}
+.qb:active{transform:scale(.9)}
+.qb:active img{transform:scale(1.18) rotate(-5deg)}
 
-.btn-cyan   { background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.07)); color:var(--cyan);   border:1px solid rgba(0,212,255,0.3); }
-.btn-cyan:active   { box-shadow:0 0 28px var(--glow-c),inset 0 0 18px rgba(0,212,255,0.1); transform:scale(.97); }
-.btn-green  { background:linear-gradient(135deg,rgba(0,255,157,0.15),rgba(0,255,157,0.06)); color:var(--green);  border:1px solid rgba(0,255,157,0.3); }
-.btn-green:active  { box-shadow:0 0 28px var(--glow-g),inset 0 0 18px rgba(0,255,157,0.1); transform:scale(.97); }
-.btn-red    { background:linear-gradient(135deg,rgba(255,64,96,0.15),rgba(255,64,96,0.06)); color:var(--red);    border:1px solid rgba(255,64,96,0.3); }
-.btn-red:active    { box-shadow:0 0 26px var(--glow-r),inset 0 0 16px rgba(255,64,96,0.1); transform:scale(.97); }
-.btn-yellow { background:linear-gradient(135deg,rgba(255,215,0,0.13),rgba(255,215,0,0.05)); color:var(--yellow); border:1px solid rgba(255,215,0,0.28); }
-.btn-yellow:active { box-shadow:0 0 22px var(--glow-y),inset 0 0 15px rgba(255,215,0,0.1); transform:scale(.97); }
+/* EF TABS */
+.ef-tabs{display:flex;gap:4px;margin-bottom:11px;background:rgba(255,255,255,0.025);
+  border-radius:10px;padding:4px;border:1px solid rgba(255,255,255,0.05)}
+.ef-tab{flex:1;padding:7px;border-radius:7px;border:none;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  background:transparent;color:var(--muted);letter-spacing:.4px;
+  transition:all .2s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;gap:5px}
+.ef-tab img{width:12px;height:12px}
+.ef-tab.on{color:var(--cyan);background:rgba(0,212,255,0.11);box-shadow:0 0 10px rgba(0,212,255,0.18);border:1px solid rgba(0,212,255,0.22)}
+.ef-tab.on.ft{color:var(--yellow);background:rgba(255,215,0,0.09);box-shadow:0 0 10px rgba(255,215,0,0.18);border-color:rgba(255,215,0,0.22)}
+.ef-tab:active{transform:scale(.91)}
+.ef-panel{display:none}
+.ef-panel.on{display:block;animation:pi .28s cubic-bezier(.22,1,.36,1) both}
+@keyframes pi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ═══ REQUEST LOG MODAL ═══ */
-.req-overlay {
-  position:fixed; inset:0; z-index:600;
-  background:rgba(0,0,0,0.72); backdrop-filter:blur(8px);
-  display:none; align-items:flex-end; justify-content:center;
-}
-.req-overlay.open { display:flex; animation:overlayIn .22s ease both; }
-@keyframes overlayIn { from{opacity:0} to{opacity:1} }
-.req-sheet {
-  width:100%; max-width:480px;
-  background:rgba(8,13,24,0.99); border:1px solid rgba(0,212,255,0.12);
-  border-radius:22px 22px 0 0; padding:0 0 28px;
-  box-shadow:0 -10px 50px rgba(0,0,0,0.7);
-  animation:sheetUp .32s cubic-bezier(.22,1,.36,1) both;
-  max-height:68vh; display:flex; flex-direction:column;
-}
-@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.req-handle { width:40px; height:4px; border-radius:2px; background:rgba(255,255,255,0.13); margin:13px auto 0; flex-shrink:0; }
-.req-head {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:13px 18px 10px; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0;
-}
-.req-head-title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--cyan); letter-spacing:.8px; }
-.req-close {
-  width:28px; height:28px; border-radius:8px; border:none; cursor:pointer;
-  background:rgba(255,255,255,0.06); color:var(--muted); font-size:15px;
-  display:flex; align-items:center; justify-content:center; transition:.18s;
-}
-.req-close:active { transform:scale(.85); background:rgba(255,64,96,0.2); color:var(--red); }
-.req-list { overflow-y:auto; flex:1; padding:8px 12px; scrollbar-width:thin; scrollbar-color:rgba(0,212,255,0.15) transparent; }
-.req-list::-webkit-scrollbar { width:3px; }
-.req-list::-webkit-scrollbar-thumb { background:rgba(0,212,255,0.18); border-radius:2px; }
-.req-item {
-  display:grid; grid-template-columns:auto 1fr auto;
-  align-items:center; gap:10px;
-  padding:9px 11px; border-radius:11px; margin-bottom:5px;
-  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05);
-  animation:itemIn .22s cubic-bezier(.22,1,.36,1) both;
-}
-@keyframes itemIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
-.req-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-.req-dot.ok   { background:var(--green); box-shadow:0 0 6px var(--green); }
-.req-dot.err  { background:var(--red);   box-shadow:0 0 6px var(--red); }
-.req-dot.pend { background:var(--yellow); box-shadow:0 0 6px var(--yellow); animation:pulseWarn 1s infinite; }
-.req-info { min-width:0; }
-.req-cmd  { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--text); }
-.req-val  { font-size:10px; color:var(--cyan); margin-top:2px; font-family:'JetBrains Mono',monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.req-time { font-size:9px; color:var(--muted); margin-top:1px; font-family:'JetBrains Mono',monospace; }
-.req-st   { font-size:10px; font-weight:700; font-family:'JetBrains Mono',monospace; white-space:nowrap; text-align:left; }
-.req-st.ok   { color:var(--green); }
-.req-st.err  { color:var(--red); }
-.req-st.pend { color:var(--yellow); }
-.req-empty { text-align:center; padding:32px 0; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:11px; }
-
-/* ═══ EF CARD (EDIT + FREEZE MERGED) ═══ */
-.ef-tabs {
-  display:flex; gap:5px; margin-bottom:12px;
-  background:rgba(255,255,255,0.03); border-radius:11px; padding:4px;
-  border:1px solid rgba(255,255,255,0.06);
-}
-.ef-tab {
-  flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer;
-  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
-  background:transparent; color:var(--muted); letter-spacing:.5px;
-  transition:all .22s cubic-bezier(.22,1,.36,1);
-  display:flex; align-items:center; justify-content:center; gap:5px;
-  -webkit-tap-highlight-color:transparent;
-}
-.ef-tab img { width:13px; height:13px; }
-.ef-tab.active { color:var(--cyan); background:rgba(0,212,255,0.12); box-shadow:0 0 12px rgba(0,212,255,0.2); border:1px solid rgba(0,212,255,0.25); }
-.ef-tab.active.ftab { color:var(--yellow); background:rgba(255,215,0,0.1); box-shadow:0 0 12px rgba(255,215,0,0.2); border-color:rgba(255,215,0,0.25); }
-.ef-tab:active { transform:scale(.91); }
-
-.ef-panel { display:none; }
-.ef-panel.active { display:block; animation:panelIn .3s cubic-bezier(.22,1,.36,1) both; }
-@keyframes panelIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
-
-/* Freeze toggle — label always yellow, switch dims when off */
-.freeze-toggle {
-  display:flex; align-items:center; justify-content:space-between;
-  background:rgba(255,215,0,0.07); border:1px solid rgba(255,215,0,0.2);
-  border-radius:11px; padding:10px 13px; margin-bottom:9px;
-  cursor:pointer; transition:all .25s cubic-bezier(.22,1,.36,1); user-select:none;
-}
-.freeze-toggle:active { transform:scale(.98); }
-.freeze-toggle.on { background:rgba(255,215,0,0.13); border-color:rgba(255,215,0,0.45); box-shadow:0 0 18px rgba(255,215,0,0.18); }
-.freeze-toggle-label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--yellow); }
-.freeze-toggle-label img { width:15px; height:15px; }
-/* Switch: dim circle when off, bright when on */
-.tgl-sw {
-  width:44px; height:24px; border-radius:12px;
-  background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.2);
-  position:relative; transition:all .3s cubic-bezier(.22,1,.36,1); flex-shrink:0;
-}
-.tgl-sw::after {
-  content:''; position:absolute; top:3px;
-  width:16px; height:16px; border-radius:50%;
-  background:rgba(255,215,0,0.35);
-  transition:all .3s cubic-bezier(.22,1,.36,1);
-  box-shadow:0 1px 4px rgba(0,0,0,0.4);
-}
-html[dir="rtl"] .tgl-sw::after { right:3px; }
-html[dir="ltr"] .tgl-sw::after { left:3px; }
-.freeze-toggle.on .tgl-sw { background:rgba(255,215,0,0.3); border-color:rgba(255,215,0,0.6); box-shadow:0 0 12px rgba(255,215,0,0.35); }
-.freeze-toggle.on .tgl-sw::after {
-  background:var(--yellow); box-shadow:0 0 10px rgba(255,215,0,0.8);
-}
-html[dir="rtl"] .freeze-toggle.on .tgl-sw::after { right:auto; left:3px; }
-html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
-
-.freeze-btns { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:9px; }
-
-/* QUICK */
-.quick-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-.quick-btn {
-  padding:11px 6px; border-radius:12px; border:none; cursor:pointer;
-  font-family:'Tajawal',sans-serif; font-size:12px; font-weight:800;
-  display:flex; flex-direction:column; align-items:center; gap:6px;
-  position:relative; overflow:hidden;
-  transition:all .2s cubic-bezier(.22,1,.36,1);
-  -webkit-tap-highlight-color:transparent;
-}
-.quick-btn img { width:20px; height:20px; transition:transform .2s; }
-.quick-btn:active { transform:scale(.91); }
-.quick-btn:active img { transform:scale(1.2) rotate(-6deg); }
+/* FREEZE TOGGLE — label always yellow */
+.ftg{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.18);
+  border-radius:10px;padding:9px 12px;margin-bottom:8px;
+  cursor:pointer;transition:all .22s;user-select:none}
+.ftg:active{transform:scale(.98)}
+.ftg.on{background:rgba(255,215,0,0.12);border-color:rgba(255,215,0,0.42);box-shadow:0 0 15px rgba(255,215,0,0.15)}
+.ftg-lbl{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--yellow)}
+.ftg-lbl img{width:14px;height:14px}
+.sw{width:42px;height:22px;border-radius:11px;background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.18);position:relative;transition:all .28s cubic-bezier(.22,1,.36,1);flex-shrink:0}
+.sw::after{content:'';position:absolute;top:3px;width:14px;height:14px;border-radius:50%;
+  background:rgba(255,215,0,0.32);transition:all .28s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+html[dir=rtl] .sw::after{right:3px}
+html[dir=ltr] .sw::after{left:3px}
+.ftg.on .sw{background:rgba(255,215,0,0.28);border-color:rgba(255,215,0,0.55);box-shadow:0 0 10px rgba(255,215,0,0.3)}
+.ftg.on .sw::after{background:var(--yellow);box-shadow:0 0 8px rgba(255,215,0,0.75)}
+html[dir=rtl] .ftg.on .sw::after{right:auto;left:3px}
+html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 
 /* RANGES */
-.ranges-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.range-btn {
-  padding:11px; border-radius:11px; cursor:pointer;
-  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
-  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
-  color:var(--text); display:flex; flex-direction:column; align-items:center; gap:3px;
-  transition:all .22s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden;
-}
-.range-btn span { font-size:9px; color:var(--muted); font-weight:400; }
-.range-btn:active { transform:scale(.92); border-color:var(--cyan); box-shadow:0 0 14px var(--glow-c); color:var(--cyan); background:rgba(0,212,255,0.08); }
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.rb{padding:10px;border-radius:10px;cursor:pointer;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:700;color:var(--text);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:all .2s cubic-bezier(.22,1,.36,1)}
+.rb span{font-size:9px;color:var(--muted);font-weight:400}
+.rb:active{transform:scale(.92);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,0.3);color:var(--cyan);background:rgba(0,212,255,0.07)}
+
+/* FREEZE BTNS */
+.fb2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
 
 /* SKELETON */
-.skeleton {
-  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);
-  background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:10px;
-}
-@keyframes shimmer { to{background-position:-200% 0} }
-.sk-line { height:12px; margin-bottom:8px; }
-.sk-btn  { height:44px; border-radius:12px; }
-.sk-card {
-  margin:0 16px 14px; background:var(--card-bg);
-  border:1px solid var(--border); border-radius:var(--radius); padding:14px;
-  opacity:0; animation:cardUp .5s cubic-bezier(.22,1,.36,1) both;
-}
+.sk{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.085) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;animation:shim 1.6s infinite;border-radius:10px}
+@keyframes shim{to{background-position:-200% 0}}
+.skc{margin:0 16px 13px;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;opacity:0;animation:cardUp .5s cubic-bezier(.22,1,.36,1) both}
 
-/* PARTICLE CANVAS */
-#pcanvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+/* MODAL SHEET */
+.overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex;animation:ov .22s ease both}
+@keyframes ov{from{opacity:0}to{opacity:1}}
+.sheet{width:100%;max-width:500px;background:rgba(7,12,23,0.99);
+  border:1px solid rgba(0,212,255,0.1);border-radius:22px 22px 0 0;
+  padding:0 0 26px;box-shadow:0 -10px 50px rgba(0,0,0,0.7);
+  animation:su .3s cubic-bezier(.22,1,.36,1) both;
+  max-height:75vh;display:flex;flex-direction:column}
+@keyframes su{from{transform:translateY(100%)}to{transform:none}}
+.sh-handle{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:12px auto 0;flex-shrink:0}
+.sh-head{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 17px 10px;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0}
+.sh-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.7px}
+.sh-close{width:27px;height:27px;border-radius:7px;border:none;cursor:pointer;
+  background:rgba(255,255,255,0.05);color:var(--muted);font-size:14px;
+  display:flex;align-items:center;justify-content:center;transition:.18s}
+.sh-close:active{transform:scale(.85);background:rgba(255,64,96,0.18);color:var(--red)}
+.sh-body{overflow-y:auto;flex:1;padding:10px 13px;scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.12) transparent}
+.sh-body::-webkit-scrollbar{width:3px}
+.sh-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:2px}
+
+/* Result detail sheet */
+.rd-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+  color:var(--cyan);background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+  border-radius:10px;padding:12px 14px;margin-bottom:12px;word-break:break-all;
+  text-align:center;letter-spacing:.3px}
+.rd-label{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;
+  letter-spacing:.8px;margin-bottom:8px;text-transform:uppercase}
+.rd-qacts{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.rd-time{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;text-align:center;margin-top:8px}
+
+/* Request log items */
+.rl-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:10px;margin-bottom:5px;
+  background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.045);
+  animation:ii .2s cubic-bezier(.22,1,.36,1) both}
+@keyframes ii{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.rl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rl-dot.ok{background:var(--green);box-shadow:0 0 5px var(--green)}
+.rl-dot.err{background:var(--red);box-shadow:0 0 5px var(--red)}
+.rl-dot.pend{background:var(--yellow);box-shadow:0 0 5px var(--yellow);animation:pWarn 1s infinite}
+.rl-info{min-width:0}
+.rl-cmd{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text)}
+.rl-val{font-size:10px;color:var(--cyan);margin-top:1px;font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl-t{font-size:9px;color:var(--muted);margin-top:1px;font-family:'JetBrains Mono',monospace}
+.rl-st{font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;text-align:right}
+.rl-st.ok{color:var(--green)}.rl-st.err{color:var(--red)}.rl-st.pend{color:var(--yellow)}
+.rl-empty{text-align:center;padding:28px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px}
+
+/* CANVAS */
+#pvc{position:fixed;inset:0;pointer-events:none;z-index:999}
 
 /* TOAST */
-.toast {
-  position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px);
-  z-index:1000; background:rgba(8,14,26,0.97); border:1px solid var(--border);
-  color:var(--text); font-size:13px; font-weight:700;
-  padding:11px 20px; border-radius:14px; backdrop-filter:blur(20px);
-  transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s;
-  opacity:0; white-space:nowrap;
-  box-shadow:0 8px 32px rgba(0,0,0,0.6),0 0 0 1px rgba(0,212,255,0.07);
-  display:flex; align-items:center; gap:8px;
-}
-.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  z-index:1000;background:rgba(8,13,24,0.97);border:1px solid var(--border);
+  color:var(--text);font-size:13px;font-weight:700;padding:10px 18px;
+  border-radius:13px;backdrop-filter:blur(20px);
+  transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .32s;
+  opacity:0;white-space:nowrap;box-shadow:0 7px 28px rgba(0,0,0,0.55);
+  display:flex;align-items:center;gap:7px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-/* GLOW SEND PULSE */
-@keyframes sendGlow { 0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)} 70%{box-shadow:0 0 0 18px rgba(0,212,255,0)} 100%{box-shadow:0 0 0 0 rgba(0,212,255,0)} }
-.send-pulse { animation:sendGlow .75s ease; }
+/* SEND GLOW */
+@keyframes sg{0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}}
+.sp{animation:sg .7s ease}
 </style>
 </head>
 <body>
-<canvas id="pcanvas"></canvas>
-<div class="bg-orb orb1"></div>
-<div class="bg-orb orb2"></div>
+<canvas id="pvc"></canvas>
+<div class="orb orb1"></div><div class="orb orb2"></div>
 <div class="scanline"></div>
 
-<!-- ══ SKELETON ══ -->
-<div id="skeletonWrap">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 12px;opacity:0;animation:cardUp .4s ease .05s both">
-    <div>
-      <div class="skeleton sk-line" style="width:140px;height:22px;margin-bottom:5px"></div>
-      <div class="skeleton sk-line" style="width:90px;height:9px"></div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <div class="skeleton" style="width:72px;height:36px;border-radius:10px"></div>
-      <div class="skeleton" style="width:36px;height:36px;border-radius:10px"></div>
-    </div>
+<!-- SKELETON -->
+<div id="skWrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;opacity:0;animation:cardUp .4s ease .05s both">
+    <div><div class="sk" style="width:130px;height:20px;margin-bottom:5px"></div><div class="sk" style="width:85px;height:9px"></div></div>
+    <div style="display:flex;gap:7px"><div class="sk" style="width:68px;height:35px;border-radius:10px"></div><div class="sk" style="width:35px;height:35px;border-radius:10px"></div></div>
   </div>
-  <div class="sk-card" style="animation-delay:.09s">
-    <div class="skeleton sk-line" style="width:55%;height:14px;margin-bottom:10px"></div>
-    <div class="skeleton sk-btn"></div>
-  </div>
-  <div class="sk-card" style="animation-delay:.17s">
-    <div class="skeleton sk-line" style="width:75%"></div>
-    <div class="skeleton sk-line" style="width:50%"></div>
-    <div class="skeleton sk-btn"></div>
-  </div>
-  <div class="sk-card" style="animation-delay:.25s">
-    <div class="skeleton sk-line" style="width:65%"></div>
-    <div class="skeleton sk-line" style="width:40%"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="skeleton sk-btn"></div>
-      <div class="skeleton sk-btn"></div>
-    </div>
-  </div>
-  <div class="sk-card" style="animation-delay:.33s">
-    <div class="skeleton sk-line" style="width:50%"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-      <div class="skeleton" style="height:72px;border-radius:12px"></div>
-    </div>
-  </div>
+  <div class="skc" style="animation-delay:.09s"><div class="sk" style="width:55%;height:13px;margin-bottom:10px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style="animation-delay:.17s"><div class="sk" style="width:72%;height:13px;margin-bottom:8px"></div><div class="sk" style="width:48%;height:11px;margin-bottom:9px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style="animation-delay:.25s"><div class="sk" style="width:62%;height:13px;margin-bottom:8px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div class="sk" style="height:42px;border-radius:11px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div></div>
+  <div class="skc" style="animation-delay:.33s"><div class="sk" style="width:48%;height:13px;margin-bottom:9px"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+    <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
+    <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
+  </div></div>
 </div>
 
-<!-- ══ MAIN ══ -->
-<div class="content" id="mainWrap" style="display:none">
+<!-- MAIN -->
+<div class="wrap" id="mainWrap" style="display:none">
 
+<!-- HEADER -->
 <div class="header">
-  <div>
-    <div class="title">GG Control</div>
-    <div class="title-sub">GAME GUARDIAN REMOTE</div>
-  </div>
-  <div class="header-actions">
-    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:72px">
-      <span class="lang-flag" id="langFlag">🇸🇦</span>
-      <span id="langCode">AR</span>
+  <div><div class="title">GG Control</div><div class="title-sub">GAME GUARDIAN REMOTE</div></div>
+  <div class="hdr-acts">
+    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
+      <span id="lgFlag">🇸🇦</span><span id="lgCode">AR</span>
     </button>
     <button class="hdr-btn" onclick="toggleTheme(this)">
-      <img id="themeIcon" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
+      <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
     </button>
   </div>
 </div>
 
 <!-- STATUS -->
-<div class="status-card" id="statusCard" style="cursor:pointer" title="Hold to view request log">
-  <div class="status-left">
-    <div class="status-dot offline" id="statusDot"></div>
+<div class="status-card" id="statusCard">
+  <div class="s-left">
+    <div class="s-dot offline" id="sDot"></div>
     <div>
-      <div class="status-label offline" id="statusLabel">OFFLINE</div>
-      <div class="status-sub" id="statusSub">—</div>
-      <div class="status-lastseen dead" id="lastSeen">—</div>
+      <div class="s-label offline" id="sLabel">OFFLINE</div>
+      <div class="s-sub" id="sSub">—</div>
+      <div class="s-lastseen dead" id="sLastSeen"></div>
     </div>
   </div>
-  <div class="status-result" id="lastResult">—</div>
+  <div class="s-result" id="sResult" onclick="openResultSheet()">—</div>
 </div>
 
 <!-- SEARCH -->
-<div class="card" id="c-search">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""></div>
-    <div>
-      <div class="card-title">SEARCH</div>
-      <div class="card-desc" data-ar="ابحث عن رقم في الذاكرة" data-en="Search a value in memory">ابحث عن رقم في الذاكرة</div>
-    </div>
+<div class="card" id="cSearch">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">SEARCH</div><div class="cd" data-ar="ابحث عن رقم في الذاكرة" data-en="Search a value in memory">ابحث عن رقم في الذاكرة</div></div>
   </div>
-  <input type="text" id="searchVal" data-ph-ar="100  أو  100;200;300" data-ph-en="100  or  100;200;300" placeholder="100  أو  100;200;300">
-  <div class="type-row" id="searchTypeRow">
-    <button class="type-btn active" onclick="selType('search',this,4)">DWORD</button>
-    <button class="type-btn" onclick="selType('search',this,16)">FLOAT</button>
-    <button class="type-btn" onclick="selType('search',this,32)">QWORD</button>
-    <button class="type-btn" onclick="selType('search',this,1)">BYTE</button>
-    <button class="type-btn" onclick="selType('search',this,2)">WORD</button>
+  <input type="text" id="sVal" data-ph-ar="100  أو  100;200;300" data-ph-en="100  or  100;200;300" placeholder="100  أو  100;200;300">
+  <div class="tr" id="sTr">
+    <button class="tb on" onclick="selT('s',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('s',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('s',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('s',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('s',this,2)">WORD</button>
   </div>
-  <button class="exec-btn btn-cyan" onclick="doSearch(this)">
-    
+  <button class="eb bc" onclick="doSearch(this)">
     <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
     <span data-ar="بحث" data-en="Search">بحث</span>
   </button>
 </div>
 
 <!-- REFINE -->
-<div class="card" id="c-refine">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""></div>
-    <div>
-      <div class="card-title">REFINE</div>
-      <div class="card-desc" data-ar="صقل النتائج الحالية" data-en="Refine current results">صقل النتائج الحالية</div>
-    </div>
+<div class="card" id="cRefine">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">REFINE</div><div class="cd" data-ar="صقل النتائج الحالية" data-en="Refine current results">صقل النتائج الحالية</div></div>
   </div>
-  <input type="text" id="refineVal" data-ph-ar="200  أو  200;300" data-ph-en="200  or  200;300" placeholder="200  أو  200;300">
-  <div class="type-row" id="refineTypeRow">
-    <button class="type-btn active" onclick="selType('refine',this,4)">DWORD</button>
-    <button class="type-btn" onclick="selType('refine',this,16)">FLOAT</button>
-    <button class="type-btn" onclick="selType('refine',this,32)">QWORD</button>
-    <button class="type-btn" onclick="selType('refine',this,1)">BYTE</button>
-    <button class="type-btn" onclick="selType('refine',this,2)">WORD</button>
+  <input type="text" id="rVal" data-ph-ar="200  أو  200;300" data-ph-en="200  or  200;300" placeholder="200  أو  200;300">
+  <div class="tr" id="rTr">
+    <button class="tb on" onclick="selT('r',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('r',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('r',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('r',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('r',this,2)">WORD</button>
   </div>
-  <button class="exec-btn btn-cyan" onclick="doRefine(this)">
-    
+  <button class="eb bc" onclick="doRefine(this)">
     <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
     <span data-ar="صقل" data-en="Refine">صقل</span>
   </button>
 </div>
 
-<!-- ══ EDIT & FREEZE (MERGED) ══ -->
-<div class="card" id="c-ef">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="" id="efIcon"></div>
-    <div>
-      <div class="card-title" id="efTitle">EDIT & FREEZE</div>
-      <div class="card-desc" data-ar="تعديل وتجميد النتائج" data-en="Edit and freeze results">تعديل وتجميد النتائج</div>
-    </div>
+<!-- EDIT & FREEZE -->
+<div class="card" id="cEF">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">EDIT &amp; FREEZE</div><div class="cd" data-ar="تعديل وتجميد النتائج" data-en="Edit and freeze results">تعديل وتجميد النتائج</div></div>
   </div>
-  <!-- Tab switcher -->
   <div class="ef-tabs">
-    <button class="ef-tab active" id="etab-edit" onclick="switchTab('edit')">
+    <button class="ef-tab on" id="et-e" onclick="swTab('e')">
       <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="">
       <span data-ar="تعديل" data-en="Edit">تعديل</span>
     </button>
-    <button class="ef-tab ftab" id="etab-freeze" onclick="switchTab('freeze')">
+    <button class="ef-tab ft" id="et-f" onclick="swTab('f')">
       <img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt="">
       <span data-ar="تجميد" data-en="Freeze">تجميد</span>
     </button>
   </div>
-
   <!-- Edit panel -->
-  <div class="ef-panel active" id="epanel-edit">
-    <input type="text" id="editVal" data-ph-ar="9999999" data-ph-en="9999999" placeholder="9999999">
-    <div class="type-row" id="editTypeRow">
-      <button class="type-btn active" onclick="selType('edit',this,4)">DWORD</button>
-      <button class="type-btn" onclick="selType('edit',this,16)">FLOAT</button>
-      <button class="type-btn" onclick="selType('edit',this,32)">QWORD</button>
-      <button class="type-btn" onclick="selType('edit',this,1)">BYTE</button>
-      <button class="type-btn" onclick="selType('edit',this,2)">WORD</button>
+  <div class="ef-panel on" id="ep-e">
+    <input type="text" id="eVal" placeholder="9999999">
+    <div class="tr" id="eTr">
+      <button class="tb on" onclick="selT('e',this,4)">DWORD</button>
+      <button class="tb" onclick="selT('e',this,16)">FLOAT</button>
+      <button class="tb" onclick="selT('e',this,32)">QWORD</button>
+      <button class="tb" onclick="selT('e',this,1)">BYTE</button>
+      <button class="tb" onclick="selT('e',this,2)">WORD</button>
     </div>
-    <!-- Freeze-after-edit toggle -->
-    <div class="freeze-toggle" id="fToggle" onclick="toggleFreezeMode(this)">
-      <div class="freeze-toggle-label">
-        <img src="https://api.iconify.design/ph/snowflake.svg?color=%234a5568" id="fToggleIcon" alt="">
-        <span data-ar="تجميد بعد التعديل" data-en="Freeze after edit">تجميد بعد التعديل</span>
-      </div>
-      <div class="tgl-sw" id="tglSw"></div>
+    <div class="ftg" id="ftg" onclick="toggleFZ(this)">
+      <div class="ftg-lbl"><img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt=""><span data-ar="تجميد بعد التعديل" data-en="Freeze after edit">تجميد بعد التعديل</span></div>
+      <div class="sw"></div>
     </div>
-    <button class="exec-btn btn-green" onclick="doEdit(this)">
-      
+    <button class="eb bg" onclick="doEdit(this)">
       <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="تعديل الكل" data-en="Edit All">تعديل الكل</span>
     </button>
   </div>
-
   <!-- Freeze panel -->
-  <div class="ef-panel" id="epanel-freeze">
-    <input type="text" id="freezeVal" data-ph-ar="9999999" data-ph-en="9999999" placeholder="9999999">
-    <div class="freeze-btns">
-      <button class="exec-btn btn-yellow" onclick="doFreeze(this)">
-        
+  <div class="ef-panel" id="ep-f">
+    <input type="text" id="fVal" placeholder="9999999">
+    <div class="fb2">
+      <button class="eb by" onclick="doFreeze(this)">
         <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
         <span data-ar="نتائج" data-en="Results">نتائج</span>
       </button>
-      <button class="exec-btn btn-yellow" onclick="doFreezeList(this)">
-        
+      <button class="eb by" onclick="doFreezeList(this)">
         <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
         <span data-ar="قائمة" data-en="List">قائمة</span>
       </button>
     </div>
-    <button class="exec-btn" style="background:rgba(0,255,157,0.08);color:var(--green);border:1px solid rgba(0,255,157,0.25)" onclick="doUnfreeze(this)">
-      
+    <button class="eb bg" onclick="doCmd({c:'unfreeze'},this)">
       <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="رفع التجميد" data-en="Unfreeze">رفع التجميد</span>
     </button>
@@ -611,448 +422,395 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
 </div>
 
 <!-- QUICK ACTIONS -->
-<div class="card" id="c-quick">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
-    <div>
-      <div class="card-title">QUICK</div>
-      <div class="card-desc" data-ar="أوامر سريعة" data-en="Quick actions">أوامر سريعة</div>
-    </div>
+<div class="card" id="cQuick">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">QUICK</div><div class="cd" data-ar="أوامر سريعة" data-en="Quick actions">أوامر سريعة</div></div>
   </div>
-  <div class="quick-row">
-    <button class="quick-btn btn-red" onclick="doCmd({c:'clear'},this)">
-      
-      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
-      <span data-ar="مسح" data-en="Clear">مسح</span>
-    </button>
-    <button class="quick-btn btn-cyan" onclick="doCmd({c:'count'},this)">
-      
-      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
-      <span data-ar="عدد" data-en="Count">عدد</span>
-    </button>
-    <button class="quick-btn btn-cyan" onclick="doCmd({c:'goto'},this)">
-      
-      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt="">
-      <span data-ar="فتح GG" data-en="Open GG">فتح GG</span>
-    </button>
-    <button class="quick-btn btn-yellow" onclick="doCmd({c:'getResults',v:'15'},this)">
-      
-      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt="">
-      <span data-ar="نتائج" data-en="Results">نتائج</span>
-    </button>
-    <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doCmd({c:'hide'},this)">
-      
-      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt="">
-      <span data-ar="إخفاء" data-en="Hide">إخفاء</span>
-    </button>
-    <button class="quick-btn btn-green" onclick="doCmd({c:'unfreeze'},this)">
-      
-      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
-      <span data-ar="رفع" data-en="Unfrz">رفع</span>
-    </button>
+  <div class="qg">
+    <button class="qb br" onclick="doCmd({c:'clear'},this)"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح" data-en="Clear">مسح</span></button>
+    <button class="qb bc" onclick="doCmd({c:'count'},this)"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد" data-en="Count">عدد</span></button>
+    <button class="qb bc" onclick="doCmd({c:'goto'},this)"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
+    <button class="qb by" onclick="doCmd({c:'getResults',v:'15'},this)"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""><span data-ar="نتائج" data-en="Results">نتائج</span></button>
+    <button class="qb bm" onclick="doCmd({c:'hide'},this)"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء" data-en="Hide">إخفاء</span></button>
+    <button class="qb bg" onclick="doCmd({c:'unfreeze'},this)"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""><span data-ar="رفع" data-en="Unfrz">رفع</span></button>
   </div>
 </div>
 
-<!-- MEMORY RANGES -->
-<div class="card" id="c-ranges">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""></div>
-    <div>
-      <div class="card-title">MEMORY RANGES</div>
-      <div class="card-desc" data-ar="تحديد نطاق الذاكرة" data-en="Set memory region">تحديد نطاق الذاكرة</div>
-    </div>
+<!-- ADVANCED COMMANDS -->
+<div class="card" id="cAdv">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/cpu-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">ADVANCED</div><div class="cd" data-ar="أوامر متقدمة" data-en="Advanced commands">أوامر متقدمة</div></div>
   </div>
-  <div class="ranges-grid">
-    <button class="range-btn" onclick="doCmd({c:'ranges',v:'2147483712'},this)">ANON+ALLOC<span data-ar="الأشيع" data-en="Most common">الأشيع</span></button>
-    <button class="range-btn" onclick="doCmd({c:'ranges',v:'536870912'},this)">JAVA<span data-ar="ذاكرة Java" data-en="Java heap">ذاكرة Java</span></button>
-    <button class="range-btn" onclick="doCmd({c:'ranges',v:'8'},this)">CODE APP<span data-ar="كود التطبيق" data-en="App code">كود التطبيق</span></button>
-    <button class="range-btn" onclick="doCmd({c:'ranges',v:'4294967295'},this)">ALL<span data-ar="كل النطاقات" data-en="All regions">كل النطاقات</span></button>
+  <!-- Sleep -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center">
+    <input type="number" id="sleepVal" data-ph-ar="مدة الانتظار (ms)" data-ph-en="Sleep duration (ms)" placeholder="مدة الانتظار (ms)" style="margin-bottom:0">
+    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doSleep(this)">
+      <img src="https://api.iconify.design/ph/timer-fill.svg?color=%23ffd700" alt="">
+      <span data-ar="انتظار" data-en="Sleep">انتظار</span>
+    </button>
+  </div>
+  <!-- Get results count picker -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center">
+    <input type="number" id="gResN" data-ph-ar="عدد النتائج (افتراضي 30)" data-ph-en="Results count (default 30)" placeholder="عدد النتائج (افتراضي 30)" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doGetN(this)">
+      <img src="https://api.iconify.design/ph/list-bullets-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="جلب" data-en="Fetch">جلب</span>
+    </button>
+  </div>
+  <!-- Sort / snapshot quick row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+    <button class="eb bc" onclick="doCmd({c:'count'},this)">
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="عدد النتائج" data-en="Count">عدد النتائج</span>
+    </button>
+    <button class="eb bm" onclick="doCmd({c:'getResults',v:'50'},this)">
+      <img src="https://api.iconify.design/ph/eye-fill.svg?color=%234a5568" alt="">
+      <span data-ar="أول 50" data-en="First 50">أول 50</span>
+    </button>
+  </div>
+  <!-- Ranges shortcuts inline -->
+  <div class="cd" style="margin-bottom:7px" data-ar="نطاق سريع" data-en="Quick range">نطاق سريع</div>
+  <div class="qg" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+    <button class="qb bc" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'2147483712'},this)"><img src="https://api.iconify.design/ph/database-fill.svg?color=%2300d4ff" alt="" style="width:15px;height:15px">ANON</button>
+    <button class="qb by" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'536870912'},this)"><img src="https://api.iconify.design/ph/coffee-fill.svg?color=%23ffd700" alt="" style="width:15px;height:15px">JAVA</button>
+    <button class="qb bm" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'8'},this)"><img src="https://api.iconify.design/ph/code-fill.svg?color=%234a5568" alt="" style="width:15px;height:15px">CODE</button>
+    <button class="qb bg" style="font-size:9px;padding:8px 3px;border-radius:9px" onclick="doCmd({c:'ranges',v:'4294967295'},this)"><img src="https://api.iconify.design/ph/globe-fill.svg?color=%2300ff9d" alt="" style="width:15px;height:15px">ALL</button>
+  </div>
+</div>
+
+<!-- MEMORY RANGES (full) -->
+<div class="card" id="cRanges">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">MEMORY RANGES</div><div class="cd" data-ar="تحديد نطاق الذاكرة" data-en="Set memory region">تحديد نطاق الذاكرة</div></div>
+  </div>
+  <div class="rg">
+    <button class="rb" onclick="doCmd({c:'ranges',v:'2147483712'},this)">ANON+ALLOC<span data-ar="الأشيع" data-en="Most common">الأشيع</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'536870912'},this)">JAVA<span data-ar="ذاكرة Java" data-en="Java heap">ذاكرة Java</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'8'},this)">CODE APP<span data-ar="كود التطبيق" data-en="App code">كود التطبيق</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'4294967295'},this)">ALL<span data-ar="كل النطاقات" data-en="All regions">كل النطاقات</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'64'},this)">STACK<span data-ar="ذاكرة Stack" data-en="Stack memory">Stack</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'32'},this)">HEAP<span data-ar="ذاكرة Heap" data-en="Heap memory">Heap</span></button>
   </div>
 </div>
 
 </div><!-- /mainWrap -->
 
-<!-- REQUEST LOG MODAL -->
-<div class="req-overlay" id="reqOverlay" onclick="closeReqModal(event)">
-  <div class="req-sheet">
-    <div class="req-handle"></div>
-    <div class="req-head">
-      <span class="req-head-title" id="reqTitle">REQUEST LOG</span>
-      <button class="req-close" onclick="closeReqModal()">✕</button>
+<!-- RESULT DETAIL SHEET -->
+<div class="overlay" id="rdOverlay" onclick="closeSheet('rdOverlay',event)">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-head">
+      <span class="sh-title" id="rdTitle">آخر نتيجة</span>
+      <button class="sh-close" onclick="closeSheet('rdOverlay')">✕</button>
     </div>
-    <div class="req-list" id="reqList">
-      <div class="req-empty" id="reqEmpty">—</div>
+    <div class="sh-body">
+      <div class="rd-val" id="rdVal">—</div>
+      <div class="rd-label" data-ar="إجراءات سريعة" data-en="Quick actions">إجراءات سريعة</div>
+      <div class="rd-qacts">
+        <button class="eb bc" onclick="doCmd({c:'count'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد" data-en="Count">عدد</span></button>
+        <button class="eb bg" onclick="doCmd({c:'getResults',v:'15'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%2300ff9d" alt=""><span data-ar="نتائج" data-en="Results">نتائج</span></button>
+        <button class="eb br" onclick="doCmd({c:'clear'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح" data-en="Clear">مسح</span></button>
+        <button class="eb by" onclick="doCmd({c:'unfreeze'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%23ffd700" alt=""><span data-ar="رفع تجميد" data-en="Unfreeze">رفع تجميد</span></button>
+        <button class="eb bc" onclick="doCmd({c:'goto'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
+        <button class="eb bm" onclick="doCmd({c:'hide'},null);closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء" data-en="Hide">إخفاء</span></button>
+      </div>
+      <div class="rd-time" id="rdTime"></div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast">
-  <span id="toastIcon">⚡</span>
-  <span id="toastMsg">—</span>
+<!-- REQUEST LOG SHEET -->
+<div class="overlay" id="rlOverlay" onclick="closeSheet('rlOverlay',event)">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-head">
+      <span class="sh-title" id="rlTitle">REQUEST LOG</span>
+      <button class="sh-close" onclick="closeSheet('rlOverlay')">✕</button>
+    </div>
+    <div class="sh-body" id="rlBody"><div class="rl-empty" id="rlEmpty">—</div></div>
+  </div>
 </div>
 
+<div class="toast" id="toast"><span id="tIco">⚡</span><span id="tMsg">—</span></div>
+
 <script>
-const BOT_TOKEN = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
-const BASE = `https://api.telegram.org/bot${BOT_TOKEN}`;
-const tg   = window.Telegram?.WebApp;
+const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
+const API = `https://api.telegram.org/bot${BOT}`;
+const tg  = window.Telegram?.WebApp;
+if(tg){tg.ready();tg.expand()}
 
-// ═══ LANGUAGE ═══
-let lang = 'ar'; // Default Arabic (Telegram default language)
-function applyLang() {
-  const ar = lang === 'ar';
-  document.documentElement.dir  = ar ? 'rtl' : 'ltr';
-  document.documentElement.lang = lang;
-  document.getElementById('langFlag').textContent = ar ? '🇸🇦' : '🇺🇸';
-  document.getElementById('langCode').textContent = ar ? 'AR'   : 'EN';
-  document.querySelectorAll('[data-ar]').forEach(el => {
-    el.textContent = ar ? el.dataset.ar : el.dataset.en;
+// ── LANG ──
+let L = 'ar';
+function applyL(){
+  const ar = L==='ar';
+  document.documentElement.dir  = ar?'rtl':'ltr';
+  document.documentElement.lang = L;
+  document.getElementById('lgFlag').textContent = ar?'🇸🇦':'🇺🇸';
+  document.getElementById('lgCode').textContent = ar?'AR':'EN';
+  document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=ar?el.dataset.ar:el.dataset.en);
+  document.querySelectorAll('[data-ph-ar]').forEach(el=>el.placeholder=ar?el.dataset.phAr:el.dataset.phEn);
+  syncSub();
+}
+function toggleLang(b){L=L==='ar'?'en':'ar';applyL();bump(b);hap('light')}
+function bump(el){el.style.transform='scale(.87)';setTimeout(()=>el.style.transform='',170)}
+
+// ── TYPES ──
+const T={s:4,r:4,e:4};
+function selT(g,b,v){
+  document.getElementById(g+'Tr').querySelectorAll('.tb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');T[g]=v;bump(b)
+}
+
+// ── EF TABS ──
+function swTab(t){
+  ['e','f'].forEach(x=>{
+    document.getElementById('et-'+x).classList.toggle('on',x===t);
+    document.getElementById('ep-'+x).classList.toggle('on',x===t);
   });
-  document.querySelectorAll('[data-ph-ar]').forEach(el => {
-    el.placeholder = ar ? el.dataset.phAr : el.dataset.phEn;
-  });
-  refreshStatusSub_compat();
-}
-function toggleLang(btn) {
-  lang = lang === 'ar' ? 'en' : 'ar';
-  applyLang();
-  bumpBtn(btn);
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-}
-function bumpBtn(el) {
-  el.style.transform = 'scale(.87)';
-  setTimeout(() => el.style.transform = '', 180);
+  hap('selection')
 }
 
-// ═══ TYPES ═══
-const types = { search:4, refine:4, edit:4 };
-function selType(g, btn, val) {
-  document.getElementById(g+'TypeRow').querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active'); types[g] = val;
-  bumpBtn(btn);
+// ── FREEZE TOGGLE ──
+let fzMode=false;
+function toggleFZ(row){fzMode=!fzMode;row.classList.toggle('on',fzMode);hap(fzMode?'medium':'light')}
+
+// ── STATUS ──
+let lastTS=0,retrying=false,lastResultText='',lastResultTime='';
+
+async function fetchDesc(){
+  const r=await fetch(`${API}/getMyDescription`,{cache:'no-store'});
+  return ((await r.json())?.result?.description||'');
 }
-
-// ═══ EF TABS ═══
-function switchTab(tab) {
-  ['edit','freeze'].forEach(t => {
-    document.getElementById('etab-'+t).classList.toggle('active', t===tab);
-    document.getElementById('epanel-'+t).classList.toggle('active', t===tab);
-  });
-  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+async function checkStatus(){
+  try{
+    let d=await fetchDesc(),m=d.match(/GG_ONLINE_(\d+)/);
+    if(!m&&!retrying){retrying=true;await delay(2000);d=await fetchDesc();m=d.match(/GG_ONLINE_(\d+)/);retrying=false}
+    if(m){lastTS=parseInt(m[1]);setAge(Math.floor(Date.now()/1000)-lastTS)}
+    else setAge(Infinity);
+  }catch{setAge(Infinity)}
 }
-
-// ═══ FREEZE AFTER EDIT TOGGLE ═══
-let freezeMode = false;
-function toggleFreezeMode(row) {
-  freezeMode = !freezeMode;
-  row.classList.toggle('on', freezeMode);
-  document.getElementById('fToggleIcon').src = freezeMode
-    ? 'https://api.iconify.design/ph/snowflake.svg?color=%23ffd700'
-    : 'https://api.iconify.design/ph/snowflake.svg?color=%23ffd700';
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(freezeMode ? 'medium' : 'light');
-}
-
-// ═══ STATUS ═══
-let lastSeenTimestamp = 0;   // unix seconds of last known heartbeat
-let retryPending      = false;
-
-async function fetchDescription() {
-  const r = await fetch(`${BASE}/getMyDescription`, { cache:'no-store' });
-  const d = await r.json();
-  return (d?.result?.description || '');
-}
-
-async function checkStatus() {
-  try {
-    let desc = await fetchDescription();
-    let m    = desc.match(/GG_ONLINE_(\d+)/);
-
-    // ── Smart Retry: if no match, wait 2s and try once more ──
-    if (!m && !retryPending) {
-      retryPending = true;
-      await new Promise(res => setTimeout(res, 2000));
-      desc = await fetchDescription();
-      m    = desc.match(/GG_ONLINE_(\d+)/);
-      retryPending = false;
+async function fetchResult(){
+  try{
+    const r=await fetch(`${API}/getMyShortDescription`,{cache:'no-store'});
+    const sd=((await r.json())?.result?.short_description||'');
+    if(sd.startsWith('RES:')){
+      lastResultText=sd.slice(4);
+      lastResultTime=nowStr();
+      document.getElementById('sResult').textContent=lastResultText;
     }
-
-    if (m) {
-      const ts  = parseInt(m[1]);
-      lastSeenTimestamp = ts;
-      const age = Math.floor(Date.now() / 1000) - ts;
-      setStatusByAge(age);
-    } else {
-      setStatusByAge(Infinity);
-    }
-  } catch {
-    setStatusByAge(Infinity);
-  }
+  }catch{}
+}
+function setAge(age){
+  const dot=document.getElementById('sDot'),lbl=document.getElementById('sLabel');
+  let state;
+  if(age<10)      state='online';
+  else if(age<25) state='warning';
+  else            state='offline';
+  dot.className='s-dot '+state;
+  lbl.className='s-label '+state;
+  lbl.textContent=state==='online'?'ONLINE':state==='warning'?'WEAK':'OFFLINE';
+  syncSub(state);
+  syncLastSeen(state,age);
+}
+function syncSub(s){
+  s=s||curState();
+  const el=document.getElementById('sSub'),ar=L==='ar';
+  el.textContent=s==='online'?(ar?'السكربت متصل بـ GG':'Script connected to GG')
+    :s==='warning'?(ar?'إشارة ضعيفة — اتصال متأخر':'Weak signal — delayed')
+    :(ar?'السكربت غير متصل':'Script not connected');
+}
+function syncLastSeen(state,age){
+  const el=document.getElementById('sLastSeen');
+  // only show when offline
+  if(state!=='offline'){el.classList.remove('show');return}
+  if(!lastTS){el.classList.remove('show');return}
+  el.classList.add('show');
+  const ar=L==='ar';
+  let cls='dead',txt;
+  if(age<60)     txt=ar?`آخر اتصال: منذ ${age} ثانية`:`Last seen: ${age}s ago`;
+  else           txt=ar?`آخر اتصال: منذ ${Math.floor(age/60)} دقيقة`:`Last seen: ${Math.floor(age/60)}m ago`;
+  el.className='s-lastseen show '+cls;
+  el.textContent=txt;
+}
+function curState(){
+  const d=document.getElementById('sDot');
+  return d.classList.contains('online')?'online':d.classList.contains('warning')?'warning':'offline';
 }
 
-async function getLastResult() {
-  try {
-    const r = await fetch(`${BASE}/getMyShortDescription`, { cache:'no-store' });
-    const d = await r.json();
-    const sd = d?.result?.short_description||'';
-    if (sd.startsWith('RES:')) document.getElementById('lastResult').textContent = sd.slice(4);
-  } catch {}
+// update last-seen every second (no API)
+setInterval(()=>{
+  if(curState()==='offline'&&lastTS) syncLastSeen('offline',Math.floor(Date.now()/1000)-lastTS);
+},1000);
+
+// Long-press status card → log sheet
+let lpT=null;
+document.getElementById('statusCard').addEventListener('pointerdown',()=>{lpT=setTimeout(openLog,550)});
+['pointerup','pointercancel','pointermove'].forEach(e=>
+  document.getElementById('statusCard').addEventListener(e,()=>clearTimeout(lpT)));
+
+// ── RESULT SHEET ──
+function openResultSheet(){
+  document.getElementById('rdVal').textContent = lastResultText||'—';
+  document.getElementById('rdTime').textContent = lastResultTime?(L==='ar'?`الوقت: ${lastResultTime}`:`Time: ${lastResultTime}`):'';
+  document.getElementById('rdTitle').textContent = L==='ar'?'آخر نتيجة':'Last Result';
+  document.querySelectorAll('#rdOverlay [data-ar]').forEach(el=>el.textContent=L==='ar'?el.dataset.ar:el.dataset.en);
+  openSheet('rdOverlay');
 }
 
-// ── 3-color dynamic status ──
-function setStatusByAge(age) {
-  const dot   = document.getElementById('statusDot');
-  const label = document.getElementById('statusLabel');
+// ── LOG SHEET ──
+const reqLog=[];
+const CLBL={search:'SEARCH',refine:'REFINE',edit:'EDIT',freeze:'FREEZE',
+  freezeList:'FREEZE LIST',unfreeze:'UNFREEZE',clear:'CLEAR',count:'COUNT',
+  goto:'OPEN GG',hide:'HIDE',getResults:'GET RESULTS',ranges:'RANGES',sleep:'SLEEP'};
 
-  let state, text;
-  if      (age < 10)       { state = 'online';  text = 'ONLINE';  }
-  else if (age < 25)       { state = 'warning'; text = 'WEAK';    }
-  else                     { state = 'offline'; text = 'OFFLINE'; }
-
-  dot.className   = 'status-dot '   + state;
-  label.className = 'status-label ' + state;
-  label.textContent = text;
-  refreshStatusSub(state);
-  updateLastSeen();
+function openLog(){
+  document.getElementById('rlTitle').textContent=L==='ar'?'سجل الطلبات':'REQUEST LOG';
+  renderLog();openSheet('rlOverlay');hap('medium');
 }
-
-function refreshStatusSub(state) {
-  const el = document.getElementById('statusSub');
-  const ar = lang === 'ar';
-  if      (state === 'online')  el.textContent = ar ? 'السكربت متصل بـ GG'       : 'Script connected to GG';
-  else if (state === 'warning') el.textContent = ar ? 'اتصال ضعيف — إشارة متأخرة' : 'Weak connection — signal delayed';
-  else                          el.textContent = ar ? 'السكربت غير متصل'           : 'Script not connected';
-}
-
-// ── Last Seen updater (runs every second) ──
-function updateLastSeen() {
-  const el  = document.getElementById('lastSeen');
-  const ar  = lang === 'ar';
-  if (!lastSeenTimestamp) { el.textContent = '—'; el.className = 'status-lastseen dead'; return; }
-
-  const age = Math.floor(Date.now() / 1000) - lastSeenTimestamp;
-  let cls, txt;
-
-  if (age < 10) {
-    cls = 'fresh';
-    txt = ar ? `آخر اتصال: منذ ${age} ثواني` : `Last seen: ${age}s ago`;
-  } else if (age < 25) {
-    cls = 'stale';
-    txt = ar ? `آخر اتصال: منذ ${age} ثانية` : `Last seen: ${age}s ago`;
-  } else if (age < 60) {
-    cls = 'dead';
-    txt = ar ? `آخر اتصال: منذ ${age} ثانية` : `Last seen: ${age}s ago`;
-  } else {
-    const mins = Math.floor(age / 60);
-    cls = 'dead';
-    txt = ar ? `آخر اتصال: منذ ${mins} دقيقة` : `Last seen: ${mins}m ago`;
-  }
-
-  el.className    = 'status-lastseen ' + cls;
-  el.textContent  = txt;
-}
-
-// ── Refresh last-seen text every second (no extra API call) ──
-setInterval(updateLastSeen, 1000);
-
-// keep refreshStatusSub available for applyLang()
-function refreshStatusSub_compat() {
-  const state = document.getElementById('statusDot').className.includes('warning') ? 'warning'
-              : document.getElementById('statusDot').className.includes('online')  ? 'online'
-              : 'offline';
-  refreshStatusSub(state);
-}
-
-// ═══ REQUEST LOG ═══
-const reqLog = []; // { cmd, val, status:'pend'|'ok'|'err', msg, time }
-const CMD_LABELS = {
-  search:'SEARCH', refine:'REFINE', edit:'EDIT', freeze:'FREEZE',
-  freezeList:'FREEZE LIST', unfreeze:'UNFREEZE', clear:'CLEAR',
-  count:'COUNT', goto:'OPEN GG', hide:'HIDE', getResults:'GET RESULTS', ranges:'RANGES'
-};
-function addReqLog(entry) {
-  reqLog.unshift(entry);
-  if (reqLog.length > 30) reqLog.pop();
-  if (document.getElementById('reqOverlay').classList.contains('open')) renderReqList();
-}
-function renderReqList() {
-  const list  = document.getElementById('reqList');
-  const empty = document.getElementById('reqEmpty');
-  if (!reqLog.length) { empty.style.display='block'; list.innerHTML=''; list.appendChild(empty); return; }
-  empty.style.display = 'none';
-  list.innerHTML = reqLog.map((e,i) => `
-    <div class="req-item" style="animation-delay:${i*.04}s">
-      <div class="req-dot ${e.status}"></div>
-      <div class="req-info">
-        <div class="req-cmd">${CMD_LABELS[e.cmd]||e.cmd}</div>
-        ${e.val?`<div class="req-val">→ ${e.val}</div>`:''}
-        <div class="req-time">${e.time}</div>
+function renderLog(){
+  const b=document.getElementById('rlBody');
+  const empty=document.getElementById('rlEmpty');
+  if(!reqLog.length){empty.textContent=L==='ar'?'لا توجد طلبات بعد':'No requests yet';b.innerHTML='';b.appendChild(empty);return}
+  empty.style.display='none';
+  b.innerHTML=reqLog.map((e,i)=>`
+    <div class="rl-item" style="animation-delay:${i*.035}s">
+      <div class="rl-dot ${e.st}"></div>
+      <div class="rl-info">
+        <div class="rl-cmd">${CLBL[e.c]||e.c}</div>
+        ${e.v?`<div class="rl-val">→ ${e.v}</div>`:''}
+        <div class="rl-t">${e.t}</div>
       </div>
-      <div class="req-st ${e.status}">${e.status==='ok'?'✓ OK':e.status==='err'?'✗ ERR':'...'}
-        ${e.msg?`<br><span style="font-size:9px;opacity:.7">${e.msg}</span>`:''}
-      </div>
+      <div class="rl-st ${e.st}">${e.st==='ok'?'✓ OK':e.st==='err'?'✗ ERR':'...'} ${e.msg?`<br><small style="opacity:.6;font-size:9px">${e.msg}</small>`:''}</div>
     </div>`).join('');
 }
-function openReqModal() {
-  document.getElementById('reqTitle').textContent = lang==='ar' ? 'سجل الطلبات' : 'REQUEST LOG';
-  document.getElementById('reqEmpty').textContent = lang==='ar' ? 'لا توجد طلبات بعد' : 'No requests yet';
-  renderReqList();
-  document.getElementById('reqOverlay').classList.add('open');
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-}
-function closeReqModal(e) {
-  if (e && e.target !== document.getElementById('reqOverlay')) return;
-  document.getElementById('reqOverlay').classList.remove('open');
-}
 
-// Long-press on status card
-let lpTimer = null;
-document.getElementById('statusCard').addEventListener('pointerdown', () => {
-  lpTimer = setTimeout(openReqModal, 550);
-});
-['pointerup','pointercancel','pointermove'].forEach(ev =>
-  document.getElementById('statusCard').addEventListener(ev, () => clearTimeout(lpTimer))
-);
+// ── SHEETS ──
+function openSheet(id){document.getElementById(id).classList.add('open')}
+function closeSheet(id,ev){if(ev&&ev.target.id!==id)return;document.getElementById(id).classList.remove('open')}
 
-// ═══ SEND CMD ═══
-async function sendCmd(cmd, btn) {
-  if (btn) btn.classList.add('send-pulse');
-  const t = new Date(); const timeStr = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0')+':'+t.getSeconds().toString().padStart(2,'0');
-  const logEntry = { cmd:cmd.c, val:cmd.v||'', status:'pend', msg:'', time:timeStr };
-  addReqLog(logEntry);
-  try {
-    const text = 'CMD:' + JSON.stringify(cmd);
-    const r = await fetch(`${BASE}/setMyShortDescription?short_description=${encodeURIComponent(text)}`, { cache:'no-store' });
-    const d = await r.json();
-    if (d.ok) {
-      logEntry.status = 'ok';
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      if (btn) spawnParticles(btn);
-      setTimeout(getLastResult, 1800);
-      setTimeout(getLastResult, 3200);
-    } else {
-      logEntry.status = 'err';
-      logEntry.msg    = d.description || 'fail';
-      showToast((lang==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'❌');
+// ── SEND CMD ──
+async function sendCmd(cmd,btn){
+  if(btn)btn.classList.add('sp');
+  const entry={c:cmd.c,v:cmd.v||'',st:'pend',msg:'',t:nowStr()};
+  reqLog.unshift(entry);if(reqLog.length>40)reqLog.pop();
+  if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
+  try{
+    const text='CMD:'+JSON.stringify(cmd);
+    const r=await fetch(`${API}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,{cache:'no-store'});
+    const d=await r.json();
+    if(d.ok){
+      entry.st='ok';hap('success');
+      if(btn)spawnParts(btn);
+      setTimeout(fetchResult,1800);setTimeout(fetchResult,3200);
+    }else{
+      entry.st='err';entry.msg=d.description||'fail';
+      showToast((L==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'❌');
     }
-  } catch(ex) {
-    logEntry.status = 'err';
-    logEntry.msg    = 'network';
-    showToast(lang==='ar'?'خطأ في الاتصال':'Connection error','❌');
-  }
-  if (document.getElementById('reqOverlay').classList.contains('open')) renderReqList();
-  if (btn) setTimeout(() => btn.classList.remove('send-pulse'), 900);
+  }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','❌')}
+  if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
+  if(btn)setTimeout(()=>btn.classList.remove('sp'),850);
 }
 
-// ═══ COMMANDS ═══
-function doCmd(cmd, btn) {
-  addRipple(btn); sendCmd(cmd, btn);
+// ── COMMANDS ──
+function doCmd(cmd,btn){hap('light');sendCmd(cmd,btn)}
+function doSearch(btn){
+  const v=document.getElementById('sVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة البحث':'Enter search value','⚠️');return}
+  hap('light');sendCmd({c:'search',v,t:T.s},btn);
 }
-function doSearch(btn) {
-  const v = document.getElementById('searchVal').value.trim();
-  if (!v) { showToast(lang==='ar'?'أدخل قيمة البحث':'Enter search value','⚠️'); return; }
-  addRipple(btn); sendCmd({c:'search',v,t:types.search}, btn);
+function doRefine(btn){
+  const v=document.getElementById('rVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة الصقل':'Enter refine value','⚠️');return}
+  hap('light');sendCmd({c:'refine',v,t:T.r},btn);
 }
-function doRefine(btn) {
-  const v = document.getElementById('refineVal').value.trim();
-  if (!v) { showToast(lang==='ar'?'أدخل قيمة الصقل':'Enter refine value','⚠️'); return; }
-  addRipple(btn); sendCmd({c:'refine',v,t:types.refine}, btn);
+function doEdit(btn){
+  const v=document.getElementById('eVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  hap('light');sendCmd({c:'edit',v,t:T.e},btn);
+  if(fzMode)setTimeout(()=>sendCmd({c:'freeze',v},null),950);
 }
-function doEdit(btn) {
-  const v = document.getElementById('editVal').value.trim();
-  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
-  addRipple(btn);
-  sendCmd({c:'edit',v,t:types.edit}, btn);
-  if (freezeMode) setTimeout(() => sendCmd({c:'freeze',v}, null), 1000);
+function doFreeze(btn){
+  const v=document.getElementById('fVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  hap('light');sendCmd({c:'freeze',v},btn);
 }
-function doFreeze(btn) {
-  const v = document.getElementById('freezeVal').value.trim();
-  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
-  addRipple(btn); sendCmd({c:'freeze',v}, btn);
+function doFreezeList(btn){
+  const v=document.getElementById('fVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','⚠️');return}
+  hap('light');sendCmd({c:'freezeList',v},btn);
 }
-function doFreezeList(btn) {
-  const v = document.getElementById('freezeVal').value.trim();
-  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
-  addRipple(btn); sendCmd({c:'freezeList',v}, btn);
+function doSleep(btn){
+  const v=document.getElementById('sleepVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل المدة':'Enter duration','⚠️');return}
+  hap('light');sendCmd({c:'sleep',v},btn);
 }
-function doUnfreeze(btn) { addRipple(btn); sendCmd({c:'unfreeze'}, btn); }
-
-// ═══ HAPTIC ON PRESS (ripple removed) ═══
-function addRipple(el, color) {
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-}
-
-// ═══ PARTICLES ═══
-const canvas = document.getElementById('pcanvas');
-const pctx   = canvas.getContext('2d');
-const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
-resize(); window.addEventListener('resize', resize);
-
-let parts = [];
-function spawnParticles(el) {
-  const r = el.getBoundingClientRect();
-  const cx = r.left + r.width/2, cy = r.top + r.height/2;
-  const cols = ['#00d4ff','#00ff9d','#ffd700','#ffffff','#b57aff','#ff9d00'];
-  for (let i=0;i<28;i++) {
-    const a = Math.random()*Math.PI*2, sp = 2+Math.random()*5;
-    parts.push({ x:cx, y:cy, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp,
-      r:1.5+Math.random()*3.5, c:cols[Math.floor(Math.random()*cols.length)],
-      life:1, d:0.02+Math.random()*0.02 });
-  }
-}
-function animParts() {
-  pctx.clearRect(0,0,canvas.width,canvas.height);
-  parts = parts.filter(p=>p.life>0);
-  for (const p of parts) {
-    p.x+=p.vx; p.y+=p.vy; p.vy+=0.13; p.vx*=0.97; p.life-=p.d;
-    pctx.globalAlpha=Math.max(0,p.life);
-    pctx.beginPath(); pctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    pctx.fillStyle=p.c; pctx.shadowColor=p.c; pctx.shadowBlur=7;
-    pctx.fill();
-  }
-  pctx.globalAlpha=1; pctx.shadowBlur=0;
-  requestAnimationFrame(animParts);
-}
-animParts();
-
-// ═══ TOAST ═══
-let toastT = null;
-function showToast(msg, icon='⚡') {
-  document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastMsg').textContent  = msg;
-  const el = document.getElementById('toast');
-  el.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => el.classList.remove('show'), 2700);
+function doGetN(btn){
+  const v=document.getElementById('gResN').value.trim()||'30';
+  hap('light');sendCmd({c:'getResults',v},btn);
 }
 
-// ═══ THEME ═══
-let dark = true;
-function toggleTheme(btn) {
-  dark = !dark;
-  document.getElementById('themeIcon').src = dark
-    ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
-    : 'https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700';
-  bumpBtn(btn);
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+// ── HAPTIC ──
+function hap(t){
+  if(!tg?.HapticFeedback)return;
+  if(t==='light'||t==='medium'||t==='heavy')tg.HapticFeedback.impactOccurred(t);
+  else if(t==='success'||t==='error'||t==='warning')tg.HapticFeedback.notificationOccurred(t);
+  else if(t==='selection')tg.HapticFeedback.selectionChanged();
 }
 
-// ═══ STAGGERED CARD REVEAL ═══
-function revealAll() {
-  document.getElementById('skeletonWrap').style.display = 'none';
-  const wrap = document.getElementById('mainWrap');
-  wrap.style.display = 'block';
-  wrap.querySelectorAll('.card').forEach((c,i) => {
-    c.style.animationDelay = (.08 + i*.09) + 's';
-    c.classList.add('revealed');
-  });
+// ── PARTICLES ──
+const pvc=document.getElementById('pvc'),px=pvc.getContext('2d');
+const rsz=()=>{pvc.width=innerWidth;pvc.height=innerHeight};rsz();window.addEventListener('resize',rsz);
+let parts=[];
+function spawnParts(el){
+  const rc=el.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2;
+  const cols=['#00d4ff','#00ff9d','#ffd700','#fff','#b57aff','#ff9d00'];
+  for(let i=0;i<24;i++){const a=Math.random()*Math.PI*2,sp=2+Math.random()*5;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,r:1.5+Math.random()*3,c:cols[~~(Math.random()*cols.length)],life:1,d:.022+Math.random()*.02})}
+}
+function animP(){
+  px.clearRect(0,0,pvc.width,pvc.height);parts=parts.filter(p=>p.life>0);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.13;p.vx*=.97;p.life-=p.d;
+    px.globalAlpha=Math.max(0,p.life);px.beginPath();px.arc(p.x,p.y,p.r,0,Math.PI*2);
+    px.fillStyle=p.c;px.shadowColor=p.c;px.shadowBlur=7;px.fill()}
+  px.globalAlpha=1;px.shadowBlur=0;requestAnimationFrame(animP)
+}animP();
+
+// ── TOAST ──
+let toastT=null;
+function showToast(msg,ico='⚡'){
+  document.getElementById('tIco').textContent=ico;
+  document.getElementById('tMsg').textContent=msg;
+  const el=document.getElementById('toast');el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
 }
 
-// ═══ INIT ═══
-if (tg) { tg.ready(); tg.expand(); }
-applyLang();
-setTimeout(revealAll, 1150);
-checkStatus(); getLastResult();
-setInterval(checkStatus,   6000);
-setInterval(getLastResult, 4000);
+// ── THEME ──
+let dark=true;
+function toggleTheme(b){
+  dark=!dark;
+  document.getElementById('themeIco').src=dark
+    ?'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
+    :'https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700';
+  bump(b);hap('light');
+}
+
+// ── HELPERS ──
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+function nowStr(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0')}
+
+// ── REVEAL ──
+function reveal(){
+  document.getElementById('skWrap').style.display='none';
+  const w=document.getElementById('mainWrap');w.style.display='block';
+  w.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(.07+i*.08)+'s';c.classList.add('in')});
+}
+
+// ── INIT ──
+applyL();
+setTimeout(reveal,1050);
+checkStatus();fetchResult();
+setInterval(checkStatus,6000);
+setInterval(fetchResult,4000);
 </script>
 </body>
 </html>
