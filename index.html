@@ -1,16 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -632,7 +621,10 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
 const API = `https://api.telegram.org/bot${BOT}`;
 const tg  = window.Telegram?.WebApp;
-if(tg){tg.expand()}
+if(tg){ tg.ready(); tg.expand(); }
+
+// ── CHAT ID — مباشرة بعد tg.ready() ──
+let detectedChatId = String(tg?.initDataUnsafe?.user?.id || '');
 
 // ── LANG ──
 let L = 'ar';
@@ -867,19 +859,6 @@ function openResultSheet() {
   hap('light');
 }
 
-// ── CHAT ID — نفس الطريقة المضمونة ──
-let detectedChatId = '';
-
-function initChatId() {
-  if (!tg) { return; }
-  tg.ready();
-  const user = tg.initDataUnsafe?.user;
-  if (user?.id) {
-    detectedChatId = String(user.id);
-    document.getElementById('detectedCid').textContent = detectedChatId;
-  }
-}
-
 // ── EXPORT COMMANDS ──
 function doExport(type, btn) {
   hap('light');
@@ -1061,9 +1040,12 @@ function reveal(){
 }
 
 // ── INIT ──
-initChatId();
 applyL();
 setTimeout(reveal,1050);
+// عرض الـ ID في الـ UI بعد التحميل
+setTimeout(()=>{
+  if(detectedChatId) document.getElementById('detectedCid').textContent = detectedChatId;
+},1100);
 checkStatus();fetchResult();
 setInterval(checkStatus,6000);
 setInterval(fetchResult,4000);
