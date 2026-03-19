@@ -2,9 +2,6 @@
 
 
 
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -119,13 +116,41 @@ body::after {
   background:radial-gradient(circle,rgba(0,255,157,0.3),transparent);
   opacity:1; animation:pingRipple 2.2s infinite;
 }
-.status-dot.offline { background:var(--red); box-shadow:0 0 10px var(--red); }
+.status-dot.warning {
+  background:var(--yellow);
+  box-shadow:0 0 10px var(--yellow),0 0 20px rgba(255,215,0,0.35);
+  animation:pulseWarn 1.6s infinite;
+}
+.status-dot.warning::after {
+  background:radial-gradient(circle,rgba(255,215,0,0.25),transparent);
+  opacity:1; animation:pingRipple 1.6s infinite;
+}
+.status-dot.offline {
+  background:var(--red);
+  box-shadow:0 0 10px var(--red),0 0 20px rgba(255,64,96,0.35);
+  animation:pulseOff 1.8s infinite;
+}
+.status-dot.offline::after {
+  background:radial-gradient(circle,rgba(255,64,96,0.25),transparent);
+  opacity:1; animation:pingRipple 1.8s infinite;
+}
 @keyframes pulseOnline { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(.8)} }
-@keyframes pingRipple { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
+@keyframes pulseWarn   { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
+@keyframes pulseOff    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.82)} }
+@keyframes pingRipple  { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
 .status-label { font-size:12px; font-family:'JetBrains Mono',monospace; font-weight:700; letter-spacing:.8px; transition:color .4s; }
-.status-label.online  { color:var(--green); }
-.status-label.offline { color:var(--red); }
+.status-label.online   { color:var(--green); }
+.status-label.warning  { color:var(--yellow); }
+.status-label.offline  { color:var(--red); }
 .status-sub { font-size:10px; color:var(--muted); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+.status-lastseen {
+  font-size:9px; color:var(--muted); margin-top:3px;
+  font-family:'JetBrains Mono',monospace; letter-spacing:.3px;
+  transition:color .4s;
+}
+.status-lastseen.fresh  { color:rgba(0,255,157,0.55); }
+.status-lastseen.stale  { color:rgba(255,215,0,0.6); }
+.status-lastseen.dead   { color:rgba(255,64,96,0.5); }
 .status-result {
   font-size:11px; font-family:'JetBrains Mono',monospace;
   color:var(--cyan); max-width:130px;
@@ -204,15 +229,7 @@ input::placeholder { color:var(--muted); }
 .exec-btn img { width:17px; height:17px; transition:transform .25s; }
 .exec-btn:active img { transform:scale(1.2) rotate(-8deg); }
 
-/* Ripple layer */
-.exec-btn .ripple-layer {
-  position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none;
-}
-.exec-btn .ripple-layer span {
-  position:absolute; border-radius:50%; transform:scale(0); opacity:.3;
-  background:rgba(255,255,255,0.5); animation:rippleAnim .55s cubic-bezier(.22,1,.36,1) forwards;
-}
-@keyframes rippleAnim { to{transform:scale(4.5);opacity:0} }
+/* Ripple layer - removed */
 
 .btn-cyan   { background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.07)); color:var(--cyan);   border:1px solid rgba(0,212,255,0.3); }
 .btn-cyan:active   { box-shadow:0 0 28px var(--glow-c),inset 0 0 18px rgba(0,212,255,0.1); transform:scale(.97); }
@@ -222,6 +239,60 @@ input::placeholder { color:var(--muted); }
 .btn-red:active    { box-shadow:0 0 26px var(--glow-r),inset 0 0 16px rgba(255,64,96,0.1); transform:scale(.97); }
 .btn-yellow { background:linear-gradient(135deg,rgba(255,215,0,0.13),rgba(255,215,0,0.05)); color:var(--yellow); border:1px solid rgba(255,215,0,0.28); }
 .btn-yellow:active { box-shadow:0 0 22px var(--glow-y),inset 0 0 15px rgba(255,215,0,0.1); transform:scale(.97); }
+
+/* ═══ REQUEST LOG MODAL ═══ */
+.req-overlay {
+  position:fixed; inset:0; z-index:600;
+  background:rgba(0,0,0,0.72); backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+.req-overlay.open { display:flex; animation:overlayIn .22s ease both; }
+@keyframes overlayIn { from{opacity:0} to{opacity:1} }
+.req-sheet {
+  width:100%; max-width:480px;
+  background:rgba(8,13,24,0.99); border:1px solid rgba(0,212,255,0.12);
+  border-radius:22px 22px 0 0; padding:0 0 28px;
+  box-shadow:0 -10px 50px rgba(0,0,0,0.7);
+  animation:sheetUp .32s cubic-bezier(.22,1,.36,1) both;
+  max-height:68vh; display:flex; flex-direction:column;
+}
+@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.req-handle { width:40px; height:4px; border-radius:2px; background:rgba(255,255,255,0.13); margin:13px auto 0; flex-shrink:0; }
+.req-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 18px 10px; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0;
+}
+.req-head-title { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--cyan); letter-spacing:.8px; }
+.req-close {
+  width:28px; height:28px; border-radius:8px; border:none; cursor:pointer;
+  background:rgba(255,255,255,0.06); color:var(--muted); font-size:15px;
+  display:flex; align-items:center; justify-content:center; transition:.18s;
+}
+.req-close:active { transform:scale(.85); background:rgba(255,64,96,0.2); color:var(--red); }
+.req-list { overflow-y:auto; flex:1; padding:8px 12px; scrollbar-width:thin; scrollbar-color:rgba(0,212,255,0.15) transparent; }
+.req-list::-webkit-scrollbar { width:3px; }
+.req-list::-webkit-scrollbar-thumb { background:rgba(0,212,255,0.18); border-radius:2px; }
+.req-item {
+  display:grid; grid-template-columns:auto 1fr auto;
+  align-items:center; gap:10px;
+  padding:9px 11px; border-radius:11px; margin-bottom:5px;
+  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05);
+  animation:itemIn .22s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes itemIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+.req-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.req-dot.ok   { background:var(--green); box-shadow:0 0 6px var(--green); }
+.req-dot.err  { background:var(--red);   box-shadow:0 0 6px var(--red); }
+.req-dot.pend { background:var(--yellow); box-shadow:0 0 6px var(--yellow); animation:pulseWarn 1s infinite; }
+.req-info { min-width:0; }
+.req-cmd  { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:var(--text); }
+.req-val  { font-size:10px; color:var(--cyan); margin-top:2px; font-family:'JetBrains Mono',monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.req-time { font-size:9px; color:var(--muted); margin-top:1px; font-family:'JetBrains Mono',monospace; }
+.req-st   { font-size:10px; font-weight:700; font-family:'JetBrains Mono',monospace; white-space:nowrap; text-align:left; }
+.req-st.ok   { color:var(--green); }
+.req-st.err  { color:var(--red); }
+.req-st.pend { color:var(--yellow); }
+.req-empty { text-align:center; padding:32px 0; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:11px; }
 
 /* ═══ EF CARD (EDIT + FREEZE MERGED) ═══ */
 .ef-tabs {
@@ -246,34 +317,35 @@ input::placeholder { color:var(--muted); }
 .ef-panel.active { display:block; animation:panelIn .3s cubic-bezier(.22,1,.36,1) both; }
 @keyframes panelIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 
-/* Freeze toggle */
+/* Freeze toggle — label always yellow, switch dims when off */
 .freeze-toggle {
   display:flex; align-items:center; justify-content:space-between;
-  background:rgba(255,215,0,0.04); border:1px solid rgba(255,215,0,0.1);
+  background:rgba(255,215,0,0.07); border:1px solid rgba(255,215,0,0.2);
   border-radius:11px; padding:10px 13px; margin-bottom:9px;
   cursor:pointer; transition:all .25s cubic-bezier(.22,1,.36,1); user-select:none;
 }
 .freeze-toggle:active { transform:scale(.98); }
-.freeze-toggle.on { background:rgba(255,215,0,0.1); border-color:rgba(255,215,0,0.35); box-shadow:0 0 16px rgba(255,215,0,0.15); }
-.freeze-toggle-label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--muted); transition:color .25s; }
-.freeze-toggle.on .freeze-toggle-label { color:var(--yellow); }
+.freeze-toggle.on { background:rgba(255,215,0,0.13); border-color:rgba(255,215,0,0.45); box-shadow:0 0 18px rgba(255,215,0,0.18); }
+.freeze-toggle-label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--yellow); }
 .freeze-toggle-label img { width:15px; height:15px; }
+/* Switch: dim circle when off, bright when on */
 .tgl-sw {
   width:44px; height:24px; border-radius:12px;
-  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.2);
   position:relative; transition:all .3s cubic-bezier(.22,1,.36,1); flex-shrink:0;
 }
 .tgl-sw::after {
   content:''; position:absolute; top:3px;
   width:16px; height:16px; border-radius:50%;
-  background:var(--muted); transition:all .3s cubic-bezier(.22,1,.36,1);
+  background:rgba(255,215,0,0.35);
+  transition:all .3s cubic-bezier(.22,1,.36,1);
   box-shadow:0 1px 4px rgba(0,0,0,0.4);
 }
 html[dir="rtl"] .tgl-sw::after { right:3px; }
 html[dir="ltr"] .tgl-sw::after { left:3px; }
-.freeze-toggle.on .tgl-sw { background:rgba(255,215,0,0.3); border-color:rgba(255,215,0,0.5); box-shadow:0 0 10px rgba(255,215,0,0.3); }
+.freeze-toggle.on .tgl-sw { background:rgba(255,215,0,0.3); border-color:rgba(255,215,0,0.6); box-shadow:0 0 12px rgba(255,215,0,0.35); }
 .freeze-toggle.on .tgl-sw::after {
-  background:var(--yellow); box-shadow:0 0 8px rgba(255,215,0,0.7);
+  background:var(--yellow); box-shadow:0 0 10px rgba(255,215,0,0.8);
 }
 html[dir="rtl"] .freeze-toggle.on .tgl-sw::after { right:auto; left:3px; }
 html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
@@ -409,12 +481,13 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
 </div>
 
 <!-- STATUS -->
-<div class="status-card">
+<div class="status-card" id="statusCard" style="cursor:pointer" title="Hold to view request log">
   <div class="status-left">
     <div class="status-dot offline" id="statusDot"></div>
     <div>
       <div class="status-label offline" id="statusLabel">OFFLINE</div>
       <div class="status-sub" id="statusSub">—</div>
+      <div class="status-lastseen dead" id="lastSeen">—</div>
     </div>
   </div>
   <div class="status-result" id="lastResult">—</div>
@@ -438,7 +511,7 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
     <button class="type-btn" onclick="selType('search',this,2)">WORD</button>
   </div>
   <button class="exec-btn btn-cyan" onclick="doSearch(this)">
-    <div class="ripple-layer"></div>
+    
     <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
     <span data-ar="بحث" data-en="Search">بحث</span>
   </button>
@@ -462,7 +535,7 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
     <button class="type-btn" onclick="selType('refine',this,2)">WORD</button>
   </div>
   <button class="exec-btn btn-cyan" onclick="doRefine(this)">
-    <div class="ripple-layer"></div>
+    
     <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
     <span data-ar="صقل" data-en="Refine">صقل</span>
   </button>
@@ -508,7 +581,7 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
       <div class="tgl-sw" id="tglSw"></div>
     </div>
     <button class="exec-btn btn-green" onclick="doEdit(this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="تعديل الكل" data-en="Edit All">تعديل الكل</span>
     </button>
@@ -519,18 +592,18 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
     <input type="text" id="freezeVal" data-ph-ar="9999999" data-ph-en="9999999" placeholder="9999999">
     <div class="freeze-btns">
       <button class="exec-btn btn-yellow" onclick="doFreeze(this)">
-        <div class="ripple-layer"></div>
+        
         <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
         <span data-ar="نتائج" data-en="Results">نتائج</span>
       </button>
       <button class="exec-btn btn-yellow" onclick="doFreezeList(this)">
-        <div class="ripple-layer"></div>
+        
         <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
         <span data-ar="قائمة" data-en="List">قائمة</span>
       </button>
     </div>
     <button class="exec-btn" style="background:rgba(0,255,157,0.08);color:var(--green);border:1px solid rgba(0,255,157,0.25)" onclick="doUnfreeze(this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="رفع التجميد" data-en="Unfreeze">رفع التجميد</span>
     </button>
@@ -548,32 +621,32 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
   </div>
   <div class="quick-row">
     <button class="quick-btn btn-red" onclick="doCmd({c:'clear'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
       <span data-ar="مسح" data-en="Clear">مسح</span>
     </button>
     <button class="quick-btn btn-cyan" onclick="doCmd({c:'count'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
       <span data-ar="عدد" data-en="Count">عدد</span>
     </button>
     <button class="quick-btn btn-cyan" onclick="doCmd({c:'goto'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt="">
       <span data-ar="فتح GG" data-en="Open GG">فتح GG</span>
     </button>
     <button class="quick-btn btn-yellow" onclick="doCmd({c:'getResults',v:'15'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt="">
       <span data-ar="نتائج" data-en="Results">نتائج</span>
     </button>
     <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doCmd({c:'hide'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt="">
       <span data-ar="إخفاء" data-en="Hide">إخفاء</span>
     </button>
     <button class="quick-btn btn-green" onclick="doCmd({c:'unfreeze'},this)">
-      <div class="ripple-layer"></div>
+      
       <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="رفع" data-en="Unfrz">رفع</span>
     </button>
@@ -599,6 +672,20 @@ html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
 
 </div><!-- /mainWrap -->
 
+<!-- REQUEST LOG MODAL -->
+<div class="req-overlay" id="reqOverlay" onclick="closeReqModal(event)">
+  <div class="req-sheet">
+    <div class="req-handle"></div>
+    <div class="req-head">
+      <span class="req-head-title" id="reqTitle">REQUEST LOG</span>
+      <button class="req-close" onclick="closeReqModal()">✕</button>
+    </div>
+    <div class="req-list" id="reqList">
+      <div class="req-empty" id="reqEmpty">—</div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast">
   <span id="toastIcon">⚡</span>
   <span id="toastMsg">—</span>
@@ -623,7 +710,7 @@ function applyLang() {
   document.querySelectorAll('[data-ph-ar]').forEach(el => {
     el.placeholder = ar ? el.dataset.phAr : el.dataset.phEn;
   });
-  refreshStatusSub();
+  refreshStatusSub_compat();
 }
 function toggleLang(btn) {
   lang = lang === 'ar' ? 'en' : 'ar';
@@ -660,20 +747,47 @@ function toggleFreezeMode(row) {
   row.classList.toggle('on', freezeMode);
   document.getElementById('fToggleIcon').src = freezeMode
     ? 'https://api.iconify.design/ph/snowflake.svg?color=%23ffd700'
-    : 'https://api.iconify.design/ph/snowflake.svg?color=%234a5568';
-  addRipple(row, freezeMode ? '#ffd700' : '#ffffff');
+    : 'https://api.iconify.design/ph/snowflake.svg?color=%23ffd700';
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(freezeMode ? 'medium' : 'light');
 }
 
 // ═══ STATUS ═══
+let lastSeenTimestamp = 0;   // unix seconds of last known heartbeat
+let retryPending      = false;
+
+async function fetchDescription() {
+  const r = await fetch(`${BASE}/getMyDescription`, { cache:'no-store' });
+  const d = await r.json();
+  return (d?.result?.description || '');
+}
+
 async function checkStatus() {
   try {
-    const r = await fetch(`${BASE}/getMyDescription`, { cache:'no-store' });
-    const d = await r.json();
-    const m = (d?.result?.description||'').match(/GG_ONLINE_(\d+)/);
-    setStatus(m && (Math.floor(Date.now()/1000) - parseInt(m[1])) < 18);
-  } catch { setStatus(false); }
+    let desc = await fetchDescription();
+    let m    = desc.match(/GG_ONLINE_(\d+)/);
+
+    // ── Smart Retry: if no match, wait 2s and try once more ──
+    if (!m && !retryPending) {
+      retryPending = true;
+      await new Promise(res => setTimeout(res, 2000));
+      desc = await fetchDescription();
+      m    = desc.match(/GG_ONLINE_(\d+)/);
+      retryPending = false;
+    }
+
+    if (m) {
+      const ts  = parseInt(m[1]);
+      lastSeenTimestamp = ts;
+      const age = Math.floor(Date.now() / 1000) - ts;
+      setStatusByAge(age);
+    } else {
+      setStatusByAge(Infinity);
+    }
+  } catch {
+    setStatusByAge(Infinity);
+  }
 }
+
 async function getLastResult() {
   try {
     const r = await fetch(`${BASE}/getMyShortDescription`, { cache:'no-store' });
@@ -682,41 +796,149 @@ async function getLastResult() {
     if (sd.startsWith('RES:')) document.getElementById('lastResult').textContent = sd.slice(4);
   } catch {}
 }
-function setStatus(online) {
+
+// ── 3-color dynamic status ──
+function setStatusByAge(age) {
   const dot   = document.getElementById('statusDot');
   const label = document.getElementById('statusLabel');
-  dot.className   = 'status-dot '   + (online?'online':'offline');
-  label.className = 'status-label ' + (online?'online':'offline');
-  label.textContent = online ? 'ONLINE' : 'OFFLINE';
-  refreshStatusSub();
+
+  let state, text;
+  if      (age < 10)       { state = 'online';  text = 'ONLINE';  }
+  else if (age < 25)       { state = 'warning'; text = 'WEAK';    }
+  else                     { state = 'offline'; text = 'OFFLINE'; }
+
+  dot.className   = 'status-dot '   + state;
+  label.className = 'status-label ' + state;
+  label.textContent = text;
+  refreshStatusSub(state);
+  updateLastSeen();
 }
-function refreshStatusSub() {
-  const online = document.getElementById('statusLabel').textContent === 'ONLINE';
-  document.getElementById('statusSub').textContent = lang==='ar'
-    ? (online ? 'السكربت متصل بـ GG' : 'السكربت غير متصل')
-    : (online ? 'Script connected to GG' : 'Script not connected');
+
+function refreshStatusSub(state) {
+  const el = document.getElementById('statusSub');
+  const ar = lang === 'ar';
+  if      (state === 'online')  el.textContent = ar ? 'السكربت متصل بـ GG'       : 'Script connected to GG';
+  else if (state === 'warning') el.textContent = ar ? 'اتصال ضعيف — إشارة متأخرة' : 'Weak connection — signal delayed';
+  else                          el.textContent = ar ? 'السكربت غير متصل'           : 'Script not connected';
 }
+
+// ── Last Seen updater (runs every second) ──
+function updateLastSeen() {
+  const el  = document.getElementById('lastSeen');
+  const ar  = lang === 'ar';
+  if (!lastSeenTimestamp) { el.textContent = '—'; el.className = 'status-lastseen dead'; return; }
+
+  const age = Math.floor(Date.now() / 1000) - lastSeenTimestamp;
+  let cls, txt;
+
+  if (age < 10) {
+    cls = 'fresh';
+    txt = ar ? `آخر اتصال: منذ ${age} ثواني` : `Last seen: ${age}s ago`;
+  } else if (age < 25) {
+    cls = 'stale';
+    txt = ar ? `آخر اتصال: منذ ${age} ثانية` : `Last seen: ${age}s ago`;
+  } else if (age < 60) {
+    cls = 'dead';
+    txt = ar ? `آخر اتصال: منذ ${age} ثانية` : `Last seen: ${age}s ago`;
+  } else {
+    const mins = Math.floor(age / 60);
+    cls = 'dead';
+    txt = ar ? `آخر اتصال: منذ ${mins} دقيقة` : `Last seen: ${mins}m ago`;
+  }
+
+  el.className    = 'status-lastseen ' + cls;
+  el.textContent  = txt;
+}
+
+// ── Refresh last-seen text every second (no extra API call) ──
+setInterval(updateLastSeen, 1000);
+
+// keep refreshStatusSub available for applyLang()
+function refreshStatusSub_compat() {
+  const state = document.getElementById('statusDot').className.includes('warning') ? 'warning'
+              : document.getElementById('statusDot').className.includes('online')  ? 'online'
+              : 'offline';
+  refreshStatusSub(state);
+}
+
+// ═══ REQUEST LOG ═══
+const reqLog = []; // { cmd, val, status:'pend'|'ok'|'err', msg, time }
+const CMD_LABELS = {
+  search:'SEARCH', refine:'REFINE', edit:'EDIT', freeze:'FREEZE',
+  freezeList:'FREEZE LIST', unfreeze:'UNFREEZE', clear:'CLEAR',
+  count:'COUNT', goto:'OPEN GG', hide:'HIDE', getResults:'GET RESULTS', ranges:'RANGES'
+};
+function addReqLog(entry) {
+  reqLog.unshift(entry);
+  if (reqLog.length > 30) reqLog.pop();
+  if (document.getElementById('reqOverlay').classList.contains('open')) renderReqList();
+}
+function renderReqList() {
+  const list  = document.getElementById('reqList');
+  const empty = document.getElementById('reqEmpty');
+  if (!reqLog.length) { empty.style.display='block'; list.innerHTML=''; list.appendChild(empty); return; }
+  empty.style.display = 'none';
+  list.innerHTML = reqLog.map((e,i) => `
+    <div class="req-item" style="animation-delay:${i*.04}s">
+      <div class="req-dot ${e.status}"></div>
+      <div class="req-info">
+        <div class="req-cmd">${CMD_LABELS[e.cmd]||e.cmd}</div>
+        ${e.val?`<div class="req-val">→ ${e.val}</div>`:''}
+        <div class="req-time">${e.time}</div>
+      </div>
+      <div class="req-st ${e.status}">${e.status==='ok'?'✓ OK':e.status==='err'?'✗ ERR':'...'}
+        ${e.msg?`<br><span style="font-size:9px;opacity:.7">${e.msg}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+function openReqModal() {
+  document.getElementById('reqTitle').textContent = lang==='ar' ? 'سجل الطلبات' : 'REQUEST LOG';
+  document.getElementById('reqEmpty').textContent = lang==='ar' ? 'لا توجد طلبات بعد' : 'No requests yet';
+  renderReqList();
+  document.getElementById('reqOverlay').classList.add('open');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+}
+function closeReqModal(e) {
+  if (e && e.target !== document.getElementById('reqOverlay')) return;
+  document.getElementById('reqOverlay').classList.remove('open');
+}
+
+// Long-press on status card
+let lpTimer = null;
+document.getElementById('statusCard').addEventListener('pointerdown', () => {
+  lpTimer = setTimeout(openReqModal, 550);
+});
+['pointerup','pointercancel','pointermove'].forEach(ev =>
+  document.getElementById('statusCard').addEventListener(ev, () => clearTimeout(lpTimer))
+);
 
 // ═══ SEND CMD ═══
 async function sendCmd(cmd, btn) {
-  showToast(lang==='ar'?'جارٍ الإرسال...':'Sending...','⚡');
   if (btn) btn.classList.add('send-pulse');
+  const t = new Date(); const timeStr = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0')+':'+t.getSeconds().toString().padStart(2,'0');
+  const logEntry = { cmd:cmd.c, val:cmd.v||'', status:'pend', msg:'', time:timeStr };
+  addReqLog(logEntry);
   try {
     const text = 'CMD:' + JSON.stringify(cmd);
     const r = await fetch(`${BASE}/setMyShortDescription?short_description=${encodeURIComponent(text)}`, { cache:'no-store' });
     const d = await r.json();
     if (d.ok) {
-      showToast(lang==='ar'?'✓ تم الإرسال':'✓ Sent','✅');
+      logEntry.status = 'ok';
       if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
       if (btn) spawnParticles(btn);
       setTimeout(getLastResult, 1800);
       setTimeout(getLastResult, 3200);
     } else {
+      logEntry.status = 'err';
+      logEntry.msg    = d.description || 'fail';
       showToast((lang==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'❌');
     }
-  } catch {
+  } catch(ex) {
+    logEntry.status = 'err';
+    logEntry.msg    = 'network';
     showToast(lang==='ar'?'خطأ في الاتصال':'Connection error','❌');
   }
+  if (document.getElementById('reqOverlay').classList.contains('open')) renderReqList();
   if (btn) setTimeout(() => btn.classList.remove('send-pulse'), 900);
 }
 
@@ -753,17 +975,8 @@ function doFreezeList(btn) {
 }
 function doUnfreeze(btn) { addRipple(btn); sendCmd({c:'unfreeze'}, btn); }
 
-// ═══ RIPPLE EFFECT ═══
+// ═══ HAPTIC ON PRESS (ripple removed) ═══
 function addRipple(el, color) {
-  if (!el) return;
-  const layer = el.querySelector('.ripple-layer');
-  if (!layer) return;
-  const rect = el.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height) * 2;
-  const s = document.createElement('span');
-  s.style.cssText = `width:${size}px;height:${size}px;top:50%;left:50%;margin-top:${-size/2}px;margin-left:${-size/2}px;${color?'background:'+color+';opacity:.25;':''}`;
-  layer.appendChild(s);
-  setTimeout(() => s.remove(), 600);
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
