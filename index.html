@@ -1,3 +1,16 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -619,7 +632,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
 const API = `https://api.telegram.org/bot${BOT}`;
 const tg  = window.Telegram?.WebApp;
-if(tg){tg.ready();tg.expand()}
+if(tg){tg.expand()}
 
 // ── LANG ──
 let L = 'ar';
@@ -854,32 +867,32 @@ function openResultSheet() {
   hap('light');
 }
 
-// ── CHAT ID — جلب تلقائي من Telegram WebApp ──
+// ── CHAT ID — نفس الطريقة المضمونة ──
 let detectedChatId = '';
 
 function initChatId() {
-  // المصدر الأول والأصح: tg.initDataUnsafe.user.id
-  const uid = tg?.initDataUnsafe?.user?.id;
-  if (uid) {
-    detectedChatId = String(uid);
+  if (!tg) { return; }
+  tg.ready();
+  const user = tg.initDataUnsafe?.user;
+  if (user?.id) {
+    detectedChatId = String(user.id);
     document.getElementById('detectedCid').textContent = detectedChatId;
-    return;
   }
-  // fallback: لو فُتح خارج تيليجرام (للاختبار)
-  document.getElementById('detectedCid').textContent = L==='ar'?'افتح من تيليجرام':'Open via Telegram';
 }
 
 // ── EXPORT COMMANDS ──
 function doExport(type, btn) {
-  if (!detectedChatId) { showToast(L==='ar'?'افتح الميني اب من تيليجرام':'Open via Telegram','warn'); return; }
   hap('light');
-  sendCmd({c:type, cid:detectedChatId}, btn);
+  const cid = detectedChatId || tg?.initDataUnsafe?.user?.id;
+  if (!cid) { showToast(L==='ar'?'لم يُكتشف Chat ID بعد':'Chat ID not ready yet','warn'); return; }
+  sendCmd({c:type, cid:String(cid)}, btn);
 }
 function doExportN(btn) {
-  if (!detectedChatId) { showToast(L==='ar'?'افتح الميني اب من تيليجرام':'Open via Telegram','warn'); return; }
-  const v = document.getElementById('exportN').value.trim() || '30';
   hap('light');
-  sendCmd({c:'exportResults', v, cid:detectedChatId}, btn);
+  const cid = detectedChatId || tg?.initDataUnsafe?.user?.id;
+  if (!cid) { showToast(L==='ar'?'لم يُكتشف Chat ID بعد':'Chat ID not ready yet','warn'); return; }
+  const v = document.getElementById('exportN').value.trim() || '30';
+  sendCmd({c:'exportResults', v, cid:String(cid)}, btn);
 }
 
 // ── LOG SHEET ──
@@ -1048,8 +1061,8 @@ function reveal(){
 }
 
 // ── INIT ──
-applyL();
 initChatId();
+applyL();
 setTimeout(reveal,1050);
 checkStatus();fetchResult();
 setInterval(checkStatus,6000);
