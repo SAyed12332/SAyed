@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -27,493 +13,824 @@
   --green:   #00ff9d;
   --red:     #ff4060;
   --yellow:  #ffd700;
+  --purple:  #b57aff;
   --text:    #e2e8f0;
   --muted:   #4a5568;
   --border:  rgba(0,212,255,0.15);
-  --glow-c:  rgba(0,212,255,0.35);
-  --glow-g:  rgba(0,255,157,0.35);
-  --glow-r:  rgba(255,64,96,0.4);
-  --card-bg: rgba(13,18,32,0.9);
+  --glow-c:  rgba(0,212,255,0.45);
+  --glow-g:  rgba(0,255,157,0.45);
+  --glow-r:  rgba(255,64,96,0.5);
+  --glow-y:  rgba(255,215,0,0.4);
+  --card-bg: rgba(10,15,28,0.92);
+  --radius:  16px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 body {
-  font-family: 'Tajawal', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding-bottom: 60px;
-  overflow-x: hidden;
-  position: relative;
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; padding-bottom:70px;
+  overflow-x:hidden; position:relative;
 }
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,212,255,0.1), transparent),
-    radial-gradient(ellipse 60% 50% at 100% 90%, rgba(0,255,157,0.06), transparent);
-  pointer-events: none;
-}
+.bg-orb { position:fixed; border-radius:50%; pointer-events:none; z-index:0; filter:blur(80px); }
+.orb1 { width:360px; height:360px; top:-90px; right:-80px;
+  background:radial-gradient(circle,rgba(0,212,255,0.12),transparent);
+  animation:orbA 11s ease-in-out infinite; }
+.orb2 { width:290px; height:290px; bottom:90px; left:-60px;
+  background:radial-gradient(circle,rgba(0,255,157,0.08),transparent);
+  animation:orbB 13s ease-in-out infinite; }
+@keyframes orbA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-18px,28px)} }
+@keyframes orbB { 0%,100%{transform:translate(0,0)} 50%{transform:translate(14px,-22px)} }
 body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
   background-image:
-    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
-  background-size: 36px 36px;
-  pointer-events: none;
+    linear-gradient(rgba(0,212,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,0.018) 1px,transparent 1px);
+  background-size:40px 40px;
 }
 .scanline {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
-  );
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
 }
-.content { position: relative; z-index: 2; }
+.content { position:relative; z-index:2; }
+
+/* HEADER */
 .header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 16px 10px;
-  animation: fadeUp .35s ease both;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 16px 12px;
+  opacity:0; animation:slideDown .5s cubic-bezier(.22,1,.36,1) .05s both;
 }
+@keyframes slideDown { to{opacity:1;transform:translateY(0)} from{opacity:0;transform:translateY(-12px)} }
 .title {
-  font-size: 21px; font-weight: 900;
-  background: linear-gradient(90deg, var(--cyan), var(--green));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; letter-spacing: -.3px;
+  font-size:22px; font-weight:900;
+  background:linear-gradient(110deg,var(--cyan) 0%,var(--green) 60%,#fff 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; filter:drop-shadow(0 0 12px rgba(0,212,255,0.3));
 }
-.title-sub {
-  font-size: 10px; font-family: 'JetBrains Mono', monospace;
-  color: var(--muted); letter-spacing: .8px; margin-top: 2px;
+.title-sub { font-size:9px; font-family:'JetBrains Mono',monospace; color:var(--muted); letter-spacing:1.5px; margin-top:3px; }
+.header-actions { display:flex; gap:8px; align-items:center; }
+.hdr-btn {
+  height:36px; border-radius:10px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer; transition:all .2s cubic-bezier(.22,1,.36,1);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text); font-family:'JetBrains Mono',monospace;
+  font-size:11px; font-weight:700; letter-spacing:.5px;
+  position:relative; overflow:hidden; padding:0 12px; gap:6px;
 }
-.btn-theme {
-  width: 38px; height: 38px; border-radius: 11px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  cursor: pointer; transition: .18s;
-  display: flex; align-items: center; justify-content: center;
-}
-.btn-theme img { width: 19px; height: 19px; }
-.btn-theme:active { transform: scale(.88); }
+.hdr-btn img { width:15px; height:15px; }
+.hdr-btn:active { transform:scale(.88); background:rgba(255,255,255,0.08); }
+.lang-flag { font-size:14px; line-height:1; }
+
+/* STATUS CARD */
 .status-card {
-  margin: 0 16px 12px; padding: 12px 14px;
-  border-radius: 16px; background: var(--card-bg);
-  border: 1px solid var(--border); backdrop-filter: blur(10px);
-  display: flex; align-items: center; justify-content: space-between;
-  animation: fadeUp .4s ease both; position: relative; overflow: hidden;
+  margin:0 16px 14px; padding:13px 16px;
+  border-radius:var(--radius); background:var(--card-bg);
+  border:1px solid var(--border); backdrop-filter:blur(14px);
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; overflow:hidden;
+  opacity:0; animation:cardUp .5s cubic-bezier(.22,1,.36,1) .1s both;
 }
 .status-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: .5;
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent); opacity:.6;
 }
-.status-left { display: flex; align-items: center; gap: 10px; }
+.status-left { display:flex; align-items:center; gap:12px; }
 .status-dot {
-  width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
-  transition: background .4s, box-shadow .4s;
+  width:12px; height:12px; border-radius:50%; flex-shrink:0;
+  transition:all .5s cubic-bezier(.22,1,.36,1); position:relative;
+}
+.status-dot::after {
+  content:''; position:absolute; inset:-5px; border-radius:50%;
+  opacity:0; transition:opacity .5s;
 }
 .status-dot.online {
-  background: var(--green);
-  box-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,157,0.3);
-  animation: pulse 2s infinite;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green),0 0 25px rgba(0,255,157,0.4);
+  animation:pulseOnline 2.2s infinite;
 }
-.status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
-.status-label {
-  font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; letter-spacing: .6px; transition: color .4s;
+.status-dot.online::after {
+  background:radial-gradient(circle,rgba(0,255,157,0.3),transparent);
+  opacity:1; animation:pingRipple 2.2s infinite;
 }
-.status-label.online  { color: var(--green); }
-.status-label.offline { color: var(--red);   }
-.status-sub { font-size: 10px; color: var(--muted); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+.status-dot.offline { background:var(--red); box-shadow:0 0 10px var(--red); }
+@keyframes pulseOnline { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(.8)} }
+@keyframes pingRipple { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(3);opacity:0} }
+.status-label { font-size:12px; font-family:'JetBrains Mono',monospace; font-weight:700; letter-spacing:.8px; transition:color .4s; }
+.status-label.online  { color:var(--green); }
+.status-label.offline { color:var(--red); }
+.status-sub { font-size:10px; color:var(--muted); margin-top:2px; font-family:'JetBrains Mono',monospace; }
 .status-result {
-  font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  color: var(--cyan); max-width: 140px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left;
+  font-size:11px; font-family:'JetBrains Mono',monospace;
+  color:var(--cyan); max-width:130px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  background:rgba(0,212,255,0.06); border:1px solid rgba(0,212,255,0.15);
+  padding:4px 9px; border-radius:8px;
 }
+
+/* CARD */
 .card {
-  margin: 0 16px 12px; background: var(--card-bg);
-  border: 1px solid var(--border); border-radius: 16px; padding: 13px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
-  animation: fadeUp .5s ease both; position: relative; overflow: hidden;
+  margin:0 16px 14px; background:var(--card-bg);
+  border:1px solid var(--border); border-radius:var(--radius); padding:14px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 6px 30px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.04);
+  position:relative; overflow:hidden;
+  opacity:0; transform:translateY(16px) scale(.98);
 }
+.card.revealed { animation:cardUp .55s cubic-bezier(.22,1,.36,1) both; }
+@keyframes cardUp { to{opacity:1;transform:translateY(0) scale(1)} }
 .card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .4;
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent); opacity:.35;
 }
-.card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
+.card-header { display:flex; align-items:center; gap:10px; margin-bottom:13px; }
 .card-icon {
-  width: 28px; height: 28px; border-radius: 9px;
-  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));
+  width:32px; height:32px; border-radius:10px;
+  background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.18);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  filter:drop-shadow(0 0 8px rgba(0,212,255,0.35)); transition:filter .3s;
 }
-.card-icon img { width: 16px; height: 16px; }
-.card-title {
-  font-size: 12px; font-weight: 800; color: var(--cyan);
-  font-family: 'JetBrains Mono', monospace; letter-spacing: .5px; text-transform: uppercase;
-}
-.card-desc { font-size: 10px; color: var(--muted); margin-top: 1px; }
-input[type="text"], input[type="number"] {
-  width: 100%; padding: 10px 13px; border-radius: 10px; margin-bottom: 8px;
-  border: 1px solid rgba(255,255,255,0.07);
-  background: rgba(255,255,255,0.04);
-  color: var(--text); font-family: 'Tajawal', sans-serif; font-size: 14px;
-  outline: none; transition: .22s; -webkit-appearance: none;
+.card:hover .card-icon { filter:drop-shadow(0 0 14px rgba(0,212,255,0.7)); }
+.card-icon img { width:17px; height:17px; }
+.card-title { font-size:12px; font-weight:800; color:var(--cyan); font-family:'JetBrains Mono',monospace; letter-spacing:.7px; text-transform:uppercase; }
+.card-desc { font-size:10px; color:var(--muted); margin-top:2px; }
+
+/* INPUT */
+input[type="text"],input[type="number"] {
+  width:100%; padding:11px 14px; border-radius:11px; margin-bottom:9px;
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.03);
+  color:var(--text); font-family:'Tajawal',sans-serif; font-size:14px;
+  outline:none; transition:all .25s cubic-bezier(.22,1,.36,1); -webkit-appearance:none;
 }
 input:focus {
-  border-color: var(--cyan); background: rgba(0,212,255,0.05);
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+  border-color:rgba(0,212,255,0.5); background:rgba(0,212,255,0.04);
+  box-shadow:0 0 0 3px rgba(0,212,255,0.1),0 0 20px rgba(0,212,255,0.08);
+  transform:translateY(-1px);
 }
-input::placeholder { color: var(--muted); }
-.type-row {
-  display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px;
-  margin-bottom: 8px; scrollbar-width: none;
-}
-.type-row::-webkit-scrollbar { display: none; }
+input::placeholder { color:var(--muted); }
+
+/* TYPE BTNS */
+.type-row { display:flex; gap:5px; overflow-x:auto; padding-bottom:2px; margin-bottom:10px; scrollbar-width:none; }
+.type-row::-webkit-scrollbar { display:none; }
 .type-btn {
-  flex-shrink: 0; padding: 5px 11px; border-radius: 8px; cursor: pointer; transition: .18s;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  background: rgba(255,255,255,0.04); color: var(--muted);
-  border: 1px solid rgba(255,255,255,0.07);
+  flex-shrink:0; padding:6px 12px; border-radius:8px; cursor:pointer;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  background:rgba(255,255,255,0.04); color:var(--muted);
+  border:1px solid rgba(255,255,255,0.07);
+  transition:all .2s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden;
 }
 .type-btn.active {
-  background: rgba(0,212,255,0.15); color: var(--cyan);
-  border-color: rgba(0,212,255,0.4); box-shadow: 0 0 8px rgba(0,212,255,0.2);
+  background:rgba(0,212,255,0.12); color:var(--cyan);
+  border-color:rgba(0,212,255,0.35); box-shadow:0 0 10px rgba(0,212,255,0.2);
 }
-.type-btn:active { transform: scale(.93); }
+.type-btn:active { transform:scale(.88); }
+
+/* EXEC BTN */
 .exec-btn {
-  width: 100%; padding: 11px; border-radius: 11px; border: none; cursor: pointer;
-  transition: .18s; font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center; gap: 7px; letter-spacing: .2px;
+  width:100%; padding:12px; border-radius:12px; border:none; cursor:pointer;
+  font-family:'Tajawal',sans-serif; font-size:14px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  position:relative; overflow:hidden;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+  -webkit-tap-highlight-color:transparent;
 }
-.exec-btn img { width: 16px; height: 16px; }
-.exec-btn:active { transform: scale(.95); opacity: .85; }
-.btn-cyan  { background: rgba(0,212,255,0.13); color: var(--cyan);   border: 1px solid rgba(0,212,255,0.3); }
-.btn-cyan:active  { box-shadow: 0 0 16px var(--glow-c); }
-.btn-green { background: rgba(0,255,157,0.12); color: var(--green);  border: 1px solid rgba(0,255,157,0.3); }
-.btn-green:active { box-shadow: 0 0 16px var(--glow-g); }
-.btn-red   { background: rgba(255,64,96,0.12); color: var(--red);    border: 1px solid rgba(255,64,96,0.3); }
-.btn-red:active   { box-shadow: 0 0 14px var(--glow-r); }
-.btn-yellow{ background: rgba(255,215,0,0.1);  color: var(--yellow); border: 1px solid rgba(255,215,0,0.25); }
-.btn-yellow:active{ box-shadow: 0 0 12px rgba(255,215,0,0.3); }
-.quick-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.exec-btn img { width:17px; height:17px; transition:transform .25s; }
+.exec-btn:active img { transform:scale(1.2) rotate(-8deg); }
+
+/* Ripple layer */
+.exec-btn .ripple-layer {
+  position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none;
+}
+.exec-btn .ripple-layer span {
+  position:absolute; border-radius:50%; transform:scale(0); opacity:.3;
+  background:rgba(255,255,255,0.5); animation:rippleAnim .55s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes rippleAnim { to{transform:scale(4.5);opacity:0} }
+
+.btn-cyan   { background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.07)); color:var(--cyan);   border:1px solid rgba(0,212,255,0.3); }
+.btn-cyan:active   { box-shadow:0 0 28px var(--glow-c),inset 0 0 18px rgba(0,212,255,0.1); transform:scale(.97); }
+.btn-green  { background:linear-gradient(135deg,rgba(0,255,157,0.15),rgba(0,255,157,0.06)); color:var(--green);  border:1px solid rgba(0,255,157,0.3); }
+.btn-green:active  { box-shadow:0 0 28px var(--glow-g),inset 0 0 18px rgba(0,255,157,0.1); transform:scale(.97); }
+.btn-red    { background:linear-gradient(135deg,rgba(255,64,96,0.15),rgba(255,64,96,0.06)); color:var(--red);    border:1px solid rgba(255,64,96,0.3); }
+.btn-red:active    { box-shadow:0 0 26px var(--glow-r),inset 0 0 16px rgba(255,64,96,0.1); transform:scale(.97); }
+.btn-yellow { background:linear-gradient(135deg,rgba(255,215,0,0.13),rgba(255,215,0,0.05)); color:var(--yellow); border:1px solid rgba(255,215,0,0.28); }
+.btn-yellow:active { box-shadow:0 0 22px var(--glow-y),inset 0 0 15px rgba(255,215,0,0.1); transform:scale(.97); }
+
+/* ═══ EF CARD (EDIT + FREEZE MERGED) ═══ */
+.ef-tabs {
+  display:flex; gap:5px; margin-bottom:12px;
+  background:rgba(255,255,255,0.03); border-radius:11px; padding:4px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.ef-tab {
+  flex:1; padding:8px; border-radius:8px; border:none; cursor:pointer;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  background:transparent; color:var(--muted); letter-spacing:.5px;
+  transition:all .22s cubic-bezier(.22,1,.36,1);
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  -webkit-tap-highlight-color:transparent;
+}
+.ef-tab img { width:13px; height:13px; }
+.ef-tab.active { color:var(--cyan); background:rgba(0,212,255,0.12); box-shadow:0 0 12px rgba(0,212,255,0.2); border:1px solid rgba(0,212,255,0.25); }
+.ef-tab.active.ftab { color:var(--yellow); background:rgba(255,215,0,0.1); box-shadow:0 0 12px rgba(255,215,0,0.2); border-color:rgba(255,215,0,0.25); }
+.ef-tab:active { transform:scale(.91); }
+
+.ef-panel { display:none; }
+.ef-panel.active { display:block; animation:panelIn .3s cubic-bezier(.22,1,.36,1) both; }
+@keyframes panelIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+
+/* Freeze toggle */
+.freeze-toggle {
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(255,215,0,0.04); border:1px solid rgba(255,215,0,0.1);
+  border-radius:11px; padding:10px 13px; margin-bottom:9px;
+  cursor:pointer; transition:all .25s cubic-bezier(.22,1,.36,1); user-select:none;
+}
+.freeze-toggle:active { transform:scale(.98); }
+.freeze-toggle.on { background:rgba(255,215,0,0.1); border-color:rgba(255,215,0,0.35); box-shadow:0 0 16px rgba(255,215,0,0.15); }
+.freeze-toggle-label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--muted); transition:color .25s; }
+.freeze-toggle.on .freeze-toggle-label { color:var(--yellow); }
+.freeze-toggle-label img { width:15px; height:15px; }
+.tgl-sw {
+  width:44px; height:24px; border-radius:12px;
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
+  position:relative; transition:all .3s cubic-bezier(.22,1,.36,1); flex-shrink:0;
+}
+.tgl-sw::after {
+  content:''; position:absolute; top:3px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--muted); transition:all .3s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);
+}
+html[dir="rtl"] .tgl-sw::after { right:3px; }
+html[dir="ltr"] .tgl-sw::after { left:3px; }
+.freeze-toggle.on .tgl-sw { background:rgba(255,215,0,0.3); border-color:rgba(255,215,0,0.5); box-shadow:0 0 10px rgba(255,215,0,0.3); }
+.freeze-toggle.on .tgl-sw::after {
+  background:var(--yellow); box-shadow:0 0 8px rgba(255,215,0,0.7);
+}
+html[dir="rtl"] .freeze-toggle.on .tgl-sw::after { right:auto; left:3px; }
+html[dir="ltr"] .freeze-toggle.on .tgl-sw::after { left:auto; right:3px; }
+
+.freeze-btns { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:9px; }
+
+/* QUICK */
+.quick-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
 .quick-btn {
-  padding: 10px 6px; border-radius: 11px; border: none; cursor: pointer; transition: .18s;
-  font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 800;
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding:11px 6px; border-radius:12px; border:none; cursor:pointer;
+  font-family:'Tajawal',sans-serif; font-size:12px; font-weight:800;
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  position:relative; overflow:hidden;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+  -webkit-tap-highlight-color:transparent;
 }
-.quick-btn img { width: 18px; height: 18px; }
-.quick-btn:active { transform: scale(.92); opacity: .85; }
-.ranges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.quick-btn img { width:20px; height:20px; transition:transform .2s; }
+.quick-btn:active { transform:scale(.91); }
+.quick-btn:active img { transform:scale(1.2) rotate(-6deg); }
+
+/* RANGES */
+.ranges-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .range-btn {
-  padding: 9px; border-radius: 10px; cursor: pointer; transition: .18s;
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding:11px; border-radius:11px; cursor:pointer;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  color:var(--text); display:flex; flex-direction:column; align-items:center; gap:3px;
+  transition:all .22s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden;
 }
-.range-btn span { font-size: 9px; color: var(--muted); font-weight: 400; }
-.range-btn:active { transform: scale(.93); border-color: var(--cyan); box-shadow: 0 0 10px var(--glow-c); color: var(--cyan); }
+.range-btn span { font-size:9px; color:var(--muted); font-weight:400; }
+.range-btn:active { transform:scale(.92); border-color:var(--cyan); box-shadow:0 0 14px var(--glow-c); color:var(--cyan); background:rgba(0,212,255,0.08); }
+
+/* SKELETON */
+.skeleton {
+  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.09) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:10px;
+}
+@keyframes shimmer { to{background-position:-200% 0} }
+.sk-line { height:12px; margin-bottom:8px; }
+.sk-btn  { height:44px; border-radius:12px; }
+.sk-card {
+  margin:0 16px 14px; background:var(--card-bg);
+  border:1px solid var(--border); border-radius:var(--radius); padding:14px;
+  opacity:0; animation:cardUp .5s cubic-bezier(.22,1,.36,1) both;
+}
+
+/* PARTICLE CANVAS */
+#pcanvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+
+/* TOAST */
 .toast {
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
-  z-index: 100; background: rgba(13,18,32,0.95); border: 1px solid var(--border);
-  color: var(--text); font-size: 13px; font-weight: 700;
-  padding: 10px 18px; border-radius: 12px; backdrop-filter: blur(16px);
-  transition: transform .3s ease, opacity .3s; opacity: 0; white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(90px);
+  z-index:1000; background:rgba(8,14,26,0.97); border:1px solid var(--border);
+  color:var(--text); font-size:13px; font-weight:700;
+  padding:11px 20px; border-radius:14px; backdrop-filter:blur(20px);
+  transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s;
+  opacity:0; white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6),0 0 0 1px rgba(0,212,255,0.07);
+  display:flex; align-items:center; gap:8px;
 }
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+/* GLOW SEND PULSE */
+@keyframes sendGlow { 0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)} 70%{box-shadow:0 0 0 18px rgba(0,212,255,0)} 100%{box-shadow:0 0 0 0 rgba(0,212,255,0)} }
+.send-pulse { animation:sendGlow .75s ease; }
 </style>
 </head>
 <body>
+<canvas id="pcanvas"></canvas>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
 <div class="scanline"></div>
-<div class="content">
+
+<!-- ══ SKELETON ══ -->
+<div id="skeletonWrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 12px;opacity:0;animation:cardUp .4s ease .05s both">
+    <div>
+      <div class="skeleton sk-line" style="width:140px;height:22px;margin-bottom:5px"></div>
+      <div class="skeleton sk-line" style="width:90px;height:9px"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div class="skeleton" style="width:72px;height:36px;border-radius:10px"></div>
+      <div class="skeleton" style="width:36px;height:36px;border-radius:10px"></div>
+    </div>
+  </div>
+  <div class="sk-card" style="animation-delay:.09s">
+    <div class="skeleton sk-line" style="width:55%;height:14px;margin-bottom:10px"></div>
+    <div class="skeleton sk-btn"></div>
+  </div>
+  <div class="sk-card" style="animation-delay:.17s">
+    <div class="skeleton sk-line" style="width:75%"></div>
+    <div class="skeleton sk-line" style="width:50%"></div>
+    <div class="skeleton sk-btn"></div>
+  </div>
+  <div class="sk-card" style="animation-delay:.25s">
+    <div class="skeleton sk-line" style="width:65%"></div>
+    <div class="skeleton sk-line" style="width:40%"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="skeleton sk-btn"></div>
+      <div class="skeleton sk-btn"></div>
+    </div>
+  </div>
+  <div class="sk-card" style="animation-delay:.33s">
+    <div class="skeleton sk-line" style="width:50%"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+      <div class="skeleton" style="height:72px;border-radius:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="content" id="mainWrap" style="display:none">
 
 <div class="header">
   <div>
-    <div class="title">GG Control Panel</div>
+    <div class="title">GG Control</div>
     <div class="title-sub">GAME GUARDIAN REMOTE</div>
   </div>
-  <button class="btn-theme" onclick="toggleTheme()">
-    <img id="themeIcon" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
-  </button>
+  <div class="header-actions">
+    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:72px">
+      <span class="lang-flag" id="langFlag">🇸🇦</span>
+      <span id="langCode">AR</span>
+    </button>
+    <button class="hdr-btn" onclick="toggleTheme(this)">
+      <img id="themeIcon" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
+    </button>
+  </div>
 </div>
 
-<div class="status-card" style="animation-delay:.04s">
+<!-- STATUS -->
+<div class="status-card">
   <div class="status-left">
     <div class="status-dot offline" id="statusDot"></div>
     <div>
       <div class="status-label offline" id="statusLabel">OFFLINE</div>
-      <div class="status-sub" id="statusSub">جارٍ الاتصال...</div>
+      <div class="status-sub" id="statusSub">—</div>
     </div>
   </div>
   <div class="status-result" id="lastResult">—</div>
 </div>
 
 <!-- SEARCH -->
-<div class="card" style="animation-delay:.08s">
+<div class="card" id="c-search">
   <div class="card-header">
     <div class="card-icon"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">SEARCH</div><div class="card-desc">ابحث عن رقم في الذاكرة</div></div>
+    <div>
+      <div class="card-title">SEARCH</div>
+      <div class="card-desc" data-ar="ابحث عن رقم في الذاكرة" data-en="Search a value in memory">ابحث عن رقم في الذاكرة</div>
+    </div>
   </div>
-  <input type="text" id="searchVal" placeholder="100  أو  100;200;300">
+  <input type="text" id="searchVal" data-ph-ar="100  أو  100;200;300" data-ph-en="100  or  100;200;300" placeholder="100  أو  100;200;300">
   <div class="type-row" id="searchTypeRow">
-    <button class="type-btn active" onclick="selectType('search',this,4)">DWORD</button>
-    <button class="type-btn" onclick="selectType('search',this,16)">FLOAT</button>
-    <button class="type-btn" onclick="selectType('search',this,32)">QWORD</button>
-    <button class="type-btn" onclick="selectType('search',this,1)">BYTE</button>
-    <button class="type-btn" onclick="selectType('search',this,2)">WORD</button>
+    <button class="type-btn active" onclick="selType('search',this,4)">DWORD</button>
+    <button class="type-btn" onclick="selType('search',this,16)">FLOAT</button>
+    <button class="type-btn" onclick="selType('search',this,32)">QWORD</button>
+    <button class="type-btn" onclick="selType('search',this,1)">BYTE</button>
+    <button class="type-btn" onclick="selType('search',this,2)">WORD</button>
   </div>
-  <button class="exec-btn btn-cyan" onclick="doSearch()">
-    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""> بحث
+  <button class="exec-btn btn-cyan" onclick="doSearch(this)">
+    <div class="ripple-layer"></div>
+    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
+    <span data-ar="بحث" data-en="Search">بحث</span>
   </button>
 </div>
 
 <!-- REFINE -->
-<div class="card" style="animation-delay:.11s">
+<div class="card" id="c-refine">
   <div class="card-header">
     <div class="card-icon"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">REFINE</div><div class="card-desc">صقل النتائج الحالية</div></div>
+    <div>
+      <div class="card-title">REFINE</div>
+      <div class="card-desc" data-ar="صقل النتائج الحالية" data-en="Refine current results">صقل النتائج الحالية</div>
+    </div>
   </div>
-  <input type="text" id="refineVal" placeholder="200  أو  200;300">
+  <input type="text" id="refineVal" data-ph-ar="200  أو  200;300" data-ph-en="200  or  200;300" placeholder="200  أو  200;300">
   <div class="type-row" id="refineTypeRow">
-    <button class="type-btn active" onclick="selectType('refine',this,4)">DWORD</button>
-    <button class="type-btn" onclick="selectType('refine',this,16)">FLOAT</button>
-    <button class="type-btn" onclick="selectType('refine',this,32)">QWORD</button>
-    <button class="type-btn" onclick="selectType('refine',this,1)">BYTE</button>
-    <button class="type-btn" onclick="selectType('refine',this,2)">WORD</button>
+    <button class="type-btn active" onclick="selType('refine',this,4)">DWORD</button>
+    <button class="type-btn" onclick="selType('refine',this,16)">FLOAT</button>
+    <button class="type-btn" onclick="selType('refine',this,32)">QWORD</button>
+    <button class="type-btn" onclick="selType('refine',this,1)">BYTE</button>
+    <button class="type-btn" onclick="selType('refine',this,2)">WORD</button>
   </div>
-  <button class="exec-btn btn-cyan" onclick="doRefine()">
-    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""> صقل
+  <button class="exec-btn btn-cyan" onclick="doRefine(this)">
+    <div class="ripple-layer"></div>
+    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
+    <span data-ar="صقل" data-en="Refine">صقل</span>
   </button>
 </div>
 
-<!-- EDIT -->
-<div class="card" style="animation-delay:.14s">
+<!-- ══ EDIT & FREEZE (MERGED) ══ -->
+<div class="card" id="c-ef">
   <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">EDIT ALL</div><div class="card-desc">تعديل كل النتائج</div></div>
+    <div class="card-icon"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="" id="efIcon"></div>
+    <div>
+      <div class="card-title" id="efTitle">EDIT & FREEZE</div>
+      <div class="card-desc" data-ar="تعديل وتجميد النتائج" data-en="Edit and freeze results">تعديل وتجميد النتائج</div>
+    </div>
   </div>
-  <input type="text" id="editVal" placeholder="9999999">
-  <div class="type-row" id="editTypeRow">
-    <button class="type-btn active" onclick="selectType('edit',this,4)">DWORD</button>
-    <button class="type-btn" onclick="selectType('edit',this,16)">FLOAT</button>
-    <button class="type-btn" onclick="selectType('edit',this,32)">QWORD</button>
-    <button class="type-btn" onclick="selectType('edit',this,1)">BYTE</button>
-    <button class="type-btn" onclick="selectType('edit',this,2)">WORD</button>
-  </div>
-  <button class="exec-btn btn-green" onclick="doEdit()">
-    <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt=""> تعديل الكل
-  </button>
-</div>
-
-<!-- FREEZE -->
-<div class="card" style="animation-delay:.17s">
-  <div class="card-header">
-    <div class="card-icon"><img src="https://api.iconify.design/ph/lock-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">FREEZE</div><div class="card-desc">تجميد النتائج على قيمة</div></div>
-  </div>
-  <input type="text" id="freezeVal" placeholder="9999999">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-    <button class="exec-btn btn-yellow" onclick="doFreeze()">
-      <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt=""> تجميد نتائج
+  <!-- Tab switcher -->
+  <div class="ef-tabs">
+    <button class="ef-tab active" id="etab-edit" onclick="switchTab('edit')">
+      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="تعديل" data-en="Edit">تعديل</span>
     </button>
-    <button class="exec-btn btn-yellow" onclick="doFreezeList()">
-      <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt=""> تجميد قائمة
+    <button class="ef-tab ftab" id="etab-freeze" onclick="switchTab('freeze')">
+      <img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt="">
+      <span data-ar="تجميد" data-en="Freeze">تجميد</span>
     </button>
   </div>
+
+  <!-- Edit panel -->
+  <div class="ef-panel active" id="epanel-edit">
+    <input type="text" id="editVal" data-ph-ar="9999999" data-ph-en="9999999" placeholder="9999999">
+    <div class="type-row" id="editTypeRow">
+      <button class="type-btn active" onclick="selType('edit',this,4)">DWORD</button>
+      <button class="type-btn" onclick="selType('edit',this,16)">FLOAT</button>
+      <button class="type-btn" onclick="selType('edit',this,32)">QWORD</button>
+      <button class="type-btn" onclick="selType('edit',this,1)">BYTE</button>
+      <button class="type-btn" onclick="selType('edit',this,2)">WORD</button>
+    </div>
+    <!-- Freeze-after-edit toggle -->
+    <div class="freeze-toggle" id="fToggle" onclick="toggleFreezeMode(this)">
+      <div class="freeze-toggle-label">
+        <img src="https://api.iconify.design/ph/snowflake.svg?color=%234a5568" id="fToggleIcon" alt="">
+        <span data-ar="تجميد بعد التعديل" data-en="Freeze after edit">تجميد بعد التعديل</span>
+      </div>
+      <div class="tgl-sw" id="tglSw"></div>
+    </div>
+    <button class="exec-btn btn-green" onclick="doEdit(this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="تعديل الكل" data-en="Edit All">تعديل الكل</span>
+    </button>
+  </div>
+
+  <!-- Freeze panel -->
+  <div class="ef-panel" id="epanel-freeze">
+    <input type="text" id="freezeVal" data-ph-ar="9999999" data-ph-en="9999999" placeholder="9999999">
+    <div class="freeze-btns">
+      <button class="exec-btn btn-yellow" onclick="doFreeze(this)">
+        <div class="ripple-layer"></div>
+        <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
+        <span data-ar="نتائج" data-en="Results">نتائج</span>
+      </button>
+      <button class="exec-btn btn-yellow" onclick="doFreezeList(this)">
+        <div class="ripple-layer"></div>
+        <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
+        <span data-ar="قائمة" data-en="List">قائمة</span>
+      </button>
+    </div>
+    <button class="exec-btn" style="background:rgba(0,255,157,0.08);color:var(--green);border:1px solid rgba(0,255,157,0.25)" onclick="doUnfreeze(this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="رفع التجميد" data-en="Unfreeze">رفع التجميد</span>
+    </button>
+  </div>
 </div>
 
-<!-- QUICK -->
-<div class="card" style="animation-delay:.2s">
+<!-- QUICK ACTIONS -->
+<div class="card" id="c-quick">
   <div class="card-header">
     <div class="card-icon"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">QUICK ACTIONS</div><div class="card-desc">أوامر سريعة</div></div>
+    <div>
+      <div class="card-title">QUICK</div>
+      <div class="card-desc" data-ar="أوامر سريعة" data-en="Quick actions">أوامر سريعة</div>
+    </div>
   </div>
   <div class="quick-row">
-    <button class="quick-btn btn-red" onclick="doClear()">
-      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""> مسح
+    <button class="quick-btn btn-red" onclick="doCmd({c:'clear'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      <span data-ar="مسح" data-en="Clear">مسح</span>
     </button>
-    <button class="quick-btn btn-cyan" onclick="doCount()">
-      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""> عدد
+    <button class="quick-btn btn-cyan" onclick="doCmd({c:'count'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="عدد" data-en="Count">عدد</span>
     </button>
-    <button class="quick-btn btn-green" onclick="doUnfreeze()">
-      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""> رفع
+    <button class="quick-btn btn-cyan" onclick="doCmd({c:'goto'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="فتح GG" data-en="Open GG">فتح GG</span>
     </button>
-    <button class="quick-btn btn-cyan" onclick="doGoto()">
-      <img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""> فتح GG
+    <button class="quick-btn btn-yellow" onclick="doCmd({c:'getResults',v:'15'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt="">
+      <span data-ar="نتائج" data-en="Results">نتائج</span>
     </button>
-    <button class="quick-btn btn-yellow" onclick="doGetResults()">
-      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""> نتائج
+    <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doCmd({c:'hide'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt="">
+      <span data-ar="إخفاء" data-en="Hide">إخفاء</span>
     </button>
-    <button class="quick-btn" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:var(--muted)" onclick="doHide()">
-      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""> إخفاء
+    <button class="quick-btn btn-green" onclick="doCmd({c:'unfreeze'},this)">
+      <div class="ripple-layer"></div>
+      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="رفع" data-en="Unfrz">رفع</span>
     </button>
   </div>
 </div>
 
-<!-- RANGES -->
-<div class="card" style="animation-delay:.23s">
+<!-- MEMORY RANGES -->
+<div class="card" id="c-ranges">
   <div class="card-header">
     <div class="card-icon"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""></div>
-    <div><div class="card-title">MEMORY RANGES</div><div class="card-desc">تحديد نطاق الذاكرة</div></div>
+    <div>
+      <div class="card-title">MEMORY RANGES</div>
+      <div class="card-desc" data-ar="تحديد نطاق الذاكرة" data-en="Set memory region">تحديد نطاق الذاكرة</div>
+    </div>
   </div>
   <div class="ranges-grid">
-    <button class="range-btn" onclick="doRanges(2147483712)">ANON + ALLOC<span>الأشيع</span></button>
-    <button class="range-btn" onclick="doRanges(536870912)">JAVA<span>ذاكرة Java</span></button>
-    <button class="range-btn" onclick="doRanges(8)">CODE APP<span>كود التطبيق</span></button>
-    <button class="range-btn" onclick="doRanges(4294967295)">ALL REGIONS<span>كل النطاقات</span></button>
+    <button class="range-btn" onclick="doCmd({c:'ranges',v:'2147483712'},this)">ANON+ALLOC<span data-ar="الأشيع" data-en="Most common">الأشيع</span></button>
+    <button class="range-btn" onclick="doCmd({c:'ranges',v:'536870912'},this)">JAVA<span data-ar="ذاكرة Java" data-en="Java heap">ذاكرة Java</span></button>
+    <button class="range-btn" onclick="doCmd({c:'ranges',v:'8'},this)">CODE APP<span data-ar="كود التطبيق" data-en="App code">كود التطبيق</span></button>
+    <button class="range-btn" onclick="doCmd({c:'ranges',v:'4294967295'},this)">ALL<span data-ar="كل النطاقات" data-en="All regions">كل النطاقات</span></button>
   </div>
 </div>
 
+</div><!-- /mainWrap -->
+
+<div class="toast" id="toast">
+  <span id="toastIcon">⚡</span>
+  <span id="toastMsg">—</span>
 </div>
-<div class="toast" id="toast"></div>
 
 <script>
-// ══ CONFIG ══
 const BOT_TOKEN = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
-const BASE      = `https://api.telegram.org/bot${BOT_TOKEN}`;
-const tg        = window.Telegram?.WebApp;
+const BASE = `https://api.telegram.org/bot${BOT_TOKEN}`;
+const tg   = window.Telegram?.WebApp;
 
-// ══ TYPE STATE ══
-const types = { search: 4, refine: 4, edit: 4 };
-function selectType(group, btn, val) {
-    document.getElementById(group + "TypeRow")
-        .querySelectorAll(".type-btn")
-        .forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    types[group] = val;
+// ═══ LANGUAGE ═══
+let lang = 'ar'; // Default Arabic (Telegram default language)
+function applyLang() {
+  const ar = lang === 'ar';
+  document.documentElement.dir  = ar ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  document.getElementById('langFlag').textContent = ar ? '🇸🇦' : '🇺🇸';
+  document.getElementById('langCode').textContent = ar ? 'AR'   : 'EN';
+  document.querySelectorAll('[data-ar]').forEach(el => {
+    el.textContent = ar ? el.dataset.ar : el.dataset.en;
+  });
+  document.querySelectorAll('[data-ph-ar]').forEach(el => {
+    el.placeholder = ar ? el.dataset.phAr : el.dataset.phEn;
+  });
+  refreshStatusSub();
+}
+function toggleLang(btn) {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  applyLang();
+  bumpBtn(btn);
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+function bumpBtn(el) {
+  el.style.transform = 'scale(.87)';
+  setTimeout(() => el.style.transform = '', 180);
 }
 
-// ══ STATUS CHECK — يقرأ description للـ heartbeat ══
+// ═══ TYPES ═══
+const types = { search:4, refine:4, edit:4 };
+function selType(g, btn, val) {
+  document.getElementById(g+'TypeRow').querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); types[g] = val;
+  bumpBtn(btn);
+}
+
+// ═══ EF TABS ═══
+function switchTab(tab) {
+  ['edit','freeze'].forEach(t => {
+    document.getElementById('etab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('epanel-'+t).classList.toggle('active', t===tab);
+  });
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+}
+
+// ═══ FREEZE AFTER EDIT TOGGLE ═══
+let freezeMode = false;
+function toggleFreezeMode(row) {
+  freezeMode = !freezeMode;
+  row.classList.toggle('on', freezeMode);
+  document.getElementById('fToggleIcon').src = freezeMode
+    ? 'https://api.iconify.design/ph/snowflake.svg?color=%23ffd700'
+    : 'https://api.iconify.design/ph/snowflake.svg?color=%234a5568';
+  addRipple(row, freezeMode ? '#ffd700' : '#ffffff');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(freezeMode ? 'medium' : 'light');
+}
+
+// ═══ STATUS ═══
 async function checkStatus() {
-    try {
-        const r = await fetch(`${BASE}/getMyDescription`, { cache: "no-store" });
-        const d = await r.json();
-        const desc = d?.result?.description || "";
-        const m = desc.match(/GG_ONLINE_(\d+)/);
-        if (m) {
-            const age = Math.floor(Date.now() / 1000) - parseInt(m[1]);
-            setStatus(age < 18);
-        } else {
-            setStatus(false);
-        }
-    } catch { setStatus(false); }
+  try {
+    const r = await fetch(`${BASE}/getMyDescription`, { cache:'no-store' });
+    const d = await r.json();
+    const m = (d?.result?.description||'').match(/GG_ONLINE_(\d+)/);
+    setStatus(m && (Math.floor(Date.now()/1000) - parseInt(m[1])) < 18);
+  } catch { setStatus(false); }
 }
-
-// ══ النتيجة — يقرأ short_description ويعرض فقط إذا يبدأ بـ RES: ══
 async function getLastResult() {
-    try {
-        const r = await fetch(`${BASE}/getMyShortDescription`, { cache: "no-store" });
-        const d = await r.json();
-        const sd = d?.result?.short_description || "";
-        if (sd.startsWith("RES:")) {
-            document.getElementById("lastResult").textContent = sd.slice(4);
-        }
-    } catch {}
+  try {
+    const r = await fetch(`${BASE}/getMyShortDescription`, { cache:'no-store' });
+    const d = await r.json();
+    const sd = d?.result?.short_description||'';
+    if (sd.startsWith('RES:')) document.getElementById('lastResult').textContent = sd.slice(4);
+  } catch {}
+}
+function setStatus(online) {
+  const dot   = document.getElementById('statusDot');
+  const label = document.getElementById('statusLabel');
+  dot.className   = 'status-dot '   + (online?'online':'offline');
+  label.className = 'status-label ' + (online?'online':'offline');
+  label.textContent = online ? 'ONLINE' : 'OFFLINE';
+  refreshStatusSub();
+}
+function refreshStatusSub() {
+  const online = document.getElementById('statusLabel').textContent === 'ONLINE';
+  document.getElementById('statusSub').textContent = lang==='ar'
+    ? (online ? 'السكربت متصل بـ GG' : 'السكربت غير متصل')
+    : (online ? 'Script connected to GG' : 'Script not connected');
 }
 
-function setStatus(isOnline) {
-    const dot   = document.getElementById("statusDot");
-    const label = document.getElementById("statusLabel");
-    const sub   = document.getElementById("statusSub");
-    if (isOnline) {
-        dot.className   = "status-dot online";
-        label.className = "status-label online";
-        label.textContent = "ONLINE";
-        sub.textContent   = "السكربت متصل بـ GG";
+// ═══ SEND CMD ═══
+async function sendCmd(cmd, btn) {
+  showToast(lang==='ar'?'جارٍ الإرسال...':'Sending...','⚡');
+  if (btn) btn.classList.add('send-pulse');
+  try {
+    const text = 'CMD:' + JSON.stringify(cmd);
+    const r = await fetch(`${BASE}/setMyShortDescription?short_description=${encodeURIComponent(text)}`, { cache:'no-store' });
+    const d = await r.json();
+    if (d.ok) {
+      showToast(lang==='ar'?'✓ تم الإرسال':'✓ Sent','✅');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      if (btn) spawnParticles(btn);
+      setTimeout(getLastResult, 1800);
+      setTimeout(getLastResult, 3200);
     } else {
-        dot.className   = "status-dot offline";
-        label.className = "status-label offline";
-        label.textContent = "OFFLINE";
-        sub.textContent   = "السكربت غير متصل";
+      showToast((lang==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'❌');
     }
+  } catch {
+    showToast(lang==='ar'?'خطأ في الاتصال':'Connection error','❌');
+  }
+  if (btn) setTimeout(() => btn.classList.remove('send-pulse'), 900);
 }
 
-// ══ ✅ الإصلاح الرئيسي — إرسال الأمر عبر setMyShortDescription ══
-// السكربت يقرأ short_description كل ثانية ويشغل أي أمر يبدأ بـ CMD:
-async function sendCmd(cmd) {
-    showToast("جارٍ الإرسال...");
-    try {
-        const text = "CMD:" + JSON.stringify(cmd);
-        const r = await fetch(
-            `${BASE}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,
-            { cache: "no-store" }
-        );
-        const d = await r.json();
-        if (d.ok) {
-            showToast("✓ تم الإرسال");
-            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
-            // انتظر النتيجة بعد ثانيتين
-            setTimeout(getLastResult, 2000);
-            setTimeout(getLastResult, 3500);
-        } else {
-            showToast("خطأ: " + (d.description || "فشل الإرسال"));
-        }
-    } catch(e) {
-        showToast("خطأ في الاتصال");
-    }
+// ═══ COMMANDS ═══
+function doCmd(cmd, btn) {
+  addRipple(btn); sendCmd(cmd, btn);
+}
+function doSearch(btn) {
+  const v = document.getElementById('searchVal').value.trim();
+  if (!v) { showToast(lang==='ar'?'أدخل قيمة البحث':'Enter search value','⚠️'); return; }
+  addRipple(btn); sendCmd({c:'search',v,t:types.search}, btn);
+}
+function doRefine(btn) {
+  const v = document.getElementById('refineVal').value.trim();
+  if (!v) { showToast(lang==='ar'?'أدخل قيمة الصقل':'Enter refine value','⚠️'); return; }
+  addRipple(btn); sendCmd({c:'refine',v,t:types.refine}, btn);
+}
+function doEdit(btn) {
+  const v = document.getElementById('editVal').value.trim();
+  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
+  addRipple(btn);
+  sendCmd({c:'edit',v,t:types.edit}, btn);
+  if (freezeMode) setTimeout(() => sendCmd({c:'freeze',v}, null), 1000);
+}
+function doFreeze(btn) {
+  const v = document.getElementById('freezeVal').value.trim();
+  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
+  addRipple(btn); sendCmd({c:'freeze',v}, btn);
+}
+function doFreezeList(btn) {
+  const v = document.getElementById('freezeVal').value.trim();
+  if (!v) { showToast(lang==='ar'?'أدخل القيمة':'Enter value','⚠️'); return; }
+  addRipple(btn); sendCmd({c:'freezeList',v}, btn);
+}
+function doUnfreeze(btn) { addRipple(btn); sendCmd({c:'unfreeze'}, btn); }
+
+// ═══ RIPPLE EFFECT ═══
+function addRipple(el, color) {
+  if (!el) return;
+  const layer = el.querySelector('.ripple-layer');
+  if (!layer) return;
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+  const s = document.createElement('span');
+  s.style.cssText = `width:${size}px;height:${size}px;top:50%;left:50%;margin-top:${-size/2}px;margin-left:${-size/2}px;${color?'background:'+color+';opacity:.25;':''}`;
+  layer.appendChild(s);
+  setTimeout(() => s.remove(), 600);
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
-// ══ COMMANDS ══
-function doSearch() {
-    const v = document.getElementById("searchVal").value.trim();
-    if (!v) { showToast("أدخل قيمة البحث"); return; }
-    sendCmd({ c: "search", v: v, t: types.search });
-}
-function doRefine() {
-    const v = document.getElementById("refineVal").value.trim();
-    if (!v) { showToast("أدخل قيمة الصقل"); return; }
-    sendCmd({ c: "refine", v: v, t: types.refine });
-}
-function doEdit() {
-    const v = document.getElementById("editVal").value.trim();
-    if (!v) { showToast("أدخل القيمة الجديدة"); return; }
-    sendCmd({ c: "edit", v: v, t: types.edit });
-}
-function doFreeze() {
-    const v = document.getElementById("freezeVal").value.trim();
-    if (!v) { showToast("أدخل قيمة التجميد"); return; }
-    sendCmd({ c: "freeze", v: v });
-}
-function doFreezeList() {
-    const v = document.getElementById("freezeVal").value.trim();
-    if (!v) { showToast("أدخل قيمة التجميد"); return; }
-    sendCmd({ c: "freezeList", v: v });
-}
-function doClear()      { sendCmd({ c: "clear"      }); }
-function doCount()      { sendCmd({ c: "count"      }); }
-function doUnfreeze()   { sendCmd({ c: "unfreeze"   }); }
-function doGoto()       { sendCmd({ c: "goto"       }); }
-function doHide()       { sendCmd({ c: "hide"       }); }
-function doGetResults() { sendCmd({ c: "getResults", v: "15" }); }
-function doRanges(val)  { sendCmd({ c: "ranges", v: String(val) }); }
+// ═══ PARTICLES ═══
+const canvas = document.getElementById('pcanvas');
+const pctx   = canvas.getContext('2d');
+const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+resize(); window.addEventListener('resize', resize);
 
-// ══ TOAST ══
-let toastTimer = null;
-function showToast(msg) {
-    const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.classList.add("show");
-    if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+let parts = [];
+function spawnParticles(el) {
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  const cols = ['#00d4ff','#00ff9d','#ffd700','#ffffff','#b57aff','#ff9d00'];
+  for (let i=0;i<28;i++) {
+    const a = Math.random()*Math.PI*2, sp = 2+Math.random()*5;
+    parts.push({ x:cx, y:cy, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp,
+      r:1.5+Math.random()*3.5, c:cols[Math.floor(Math.random()*cols.length)],
+      life:1, d:0.02+Math.random()*0.02 });
+  }
 }
+function animParts() {
+  pctx.clearRect(0,0,canvas.width,canvas.height);
+  parts = parts.filter(p=>p.life>0);
+  for (const p of parts) {
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.13; p.vx*=0.97; p.life-=p.d;
+    pctx.globalAlpha=Math.max(0,p.life);
+    pctx.beginPath(); pctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    pctx.fillStyle=p.c; pctx.shadowColor=p.c; pctx.shadowBlur=7;
+    pctx.fill();
+  }
+  pctx.globalAlpha=1; pctx.shadowBlur=0;
+  requestAnimationFrame(animParts);
+}
+animParts();
 
-// ══ THEME ══
-let isDark = true;
-function toggleTheme() {
-    isDark = !isDark;
-    document.getElementById("themeIcon").src = isDark
-        ? "https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0"
-        : "https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700";
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+// ═══ TOAST ═══
+let toastT = null;
+function showToast(msg, icon='⚡') {
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent  = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2700);
 }
 
-// ══ INIT ══
+// ═══ THEME ═══
+let dark = true;
+function toggleTheme(btn) {
+  dark = !dark;
+  document.getElementById('themeIcon').src = dark
+    ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
+    : 'https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700';
+  bumpBtn(btn);
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// ═══ STAGGERED CARD REVEAL ═══
+function revealAll() {
+  document.getElementById('skeletonWrap').style.display = 'none';
+  const wrap = document.getElementById('mainWrap');
+  wrap.style.display = 'block';
+  wrap.querySelectorAll('.card').forEach((c,i) => {
+    c.style.animationDelay = (.08 + i*.09) + 's';
+    c.classList.add('revealed');
+  });
+}
+
+// ═══ INIT ═══
 if (tg) { tg.ready(); tg.expand(); }
-checkStatus();
-getLastResult();
+applyLang();
+setTimeout(revealAll, 1150);
+checkStatus(); getLastResult();
 setInterval(checkStatus,   6000);
 setInterval(getLastResult, 4000);
 </script>
