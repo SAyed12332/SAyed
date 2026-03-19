@@ -1,17 +1,12 @@
 
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>GG Control Panel</title>
+<title>GG Control Panel By SAyed</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -265,9 +260,6 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 .rl-st.ok{color:var(--green)}.rl-st.err{color:var(--red)}.rl-st.pend{color:var(--yellow)}
 .rl-empty{text-align:center;padding:28px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px}
 
-/* CANVAS */
-#pvc{position:fixed;inset:0;pointer-events:none;z-index:999}
-
 /* TOAST */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
   z-index:1000;background:rgba(8,13,24,0.97);border:1px solid var(--border);
@@ -307,7 +299,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 
 <!-- HEADER -->
 <div class="header">
-  <div><div class="title">GG Control</div><div class="title-sub">GAME GUARDIAN REMOTE</div></div>
+  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Controler for Script</div></div>
   <div class="hdr-acts">
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
       <span id="lgFlag">🇸🇦</span><span id="lgCode">AR</span>
@@ -567,7 +559,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
       <span data-ar="نتائج البحث" data-en="Search results">نتائج البحث</span>
     </button>
     <button class="eb by" onclick="doExport('exportList',this)">
-      <img src="https://api.iconify.design/ph/list-star-fill.svg?color=%23ffd700" alt="">
+      <img src="https://api.iconify.design/ph/list-star.svg?color=%23ffd700" alt="">
       <span data-ar="قائمة المحفوظات" data-en="Saved list">قائمة المحفوظات</span>
     </button>
   </div>
@@ -634,8 +626,9 @@ if(tg){ tg.ready(); tg.expand(); }
 const DEFAULT_CID = '6108279690';
 let detectedChatId = String(tg?.initDataUnsafe?.user?.id || DEFAULT_CID);
 
-// ── LANG — كشف فوري من حساب تيليجرام في كل فتح ──
-let L = (tg?.initDataUnsafe?.user?.language_code === 'ar') ? 'ar' : 'en';
+// ── LANG — كشف فوري من navigator.language (يعكس لغة تيليجرام الحالية) ──
+const _navLang = navigator.language || navigator.userLanguage || 'ar';
+let L = _navLang.startsWith('ar') ? 'ar' : 'en';
 function applyL(){
   const ar = L==='ar';
   document.documentElement.dir  = ar?'rtl':'ltr';
@@ -776,7 +769,7 @@ function getContextActions(ctx) {
     unfreeze:  { ar:'رفع التجميد',   en:'Unfreeze',     cls:'bg', ico:'ph/lock-open-fill.svg?color=%2300ff9d',           cmd:{c:'unfreeze'}            },
     search:    { ar:'بحث جديد',      en:'New search',   cls:'bc', ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff',    cmd:{c:'search',v:'',t:4},    needsVal:true  },
     goto:      { ar:'فتح GG',        en:'Open GG',      cls:'bc', ico:'ph/arrow-up-right-fill.svg?color=%2300d4ff',      cmd:{c:'goto'}                },
-    exportR:   { ar:'تصدير النتائج', en:'Export',       cls:'bm', ico:'ph/export-fill.svg?color=%234a5568',              cmd:{c:'exportResults'}       },
+    exportR:   { ar:'تصدير النتائج', en:'Export',       cls:'bm', ico:'ph/export-fill.svg?color=%234a5568',              cmd:{c:'exportResults'}, addCid:true       },
     freezeList:{ ar:'تجميد القائمة', en:'Freeze list',  cls:'by', ico:'ph/list-fill.svg?color=%23ffd700',                cmd:{c:'freezeList',v:''},    needsVal:true  },
   };
   const sets = {
@@ -856,7 +849,8 @@ function openResultSheet() {
         };
         hap('light');
       } else {
-        doCmd({...a.cmd}, null);
+        const cmd = a.addCid ? {...a.cmd, cid: detectedChatId} : {...a.cmd};
+        doCmd(cmd, null);
         closeSheet('rdOverlay');
       }
     };
