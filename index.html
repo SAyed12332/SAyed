@@ -3,10 +3,6 @@
 
 
 
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -22,7 +18,8 @@
   --border:rgba(0,212,255,0.14); --card-bg:rgba(10,15,28,0.93); --r:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;overflow-x:hidden;position:relative}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;overflow-x:hidden;position:relative;
+  padding-top:env(safe-area-inset-top, 0px)}
 
 /* BG */
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
@@ -41,7 +38,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-.title{font-size:15px;font-weight:900;
+.title{font-size:16px;font-weight:900;
   background:linear-gradient(110deg,var(--cyan),var(--green) 60%,#fff);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   filter:drop-shadow(0 0 10px rgba(0,212,255,0.28))}
@@ -628,7 +625,13 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
 const API = `https://api.telegram.org/bot${BOT}`;
 const tg  = window.Telegram?.WebApp;
-if(tg){ tg.ready(); tg.expand(); }
+if(tg){
+  tg.ready();
+  tg.expand();
+  // مطابقة لون هيدر تيليجرام مع خلفية الموقع
+  if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
+  if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
+}
 
 // ── CHAT ID ──
 // القيمة الافتراضية في حالة عدم قدرة الجهاز على الكشف
@@ -1047,6 +1050,7 @@ function reveal(){
   document.getElementById('skWrap').style.display='none';
   const w=document.getElementById('mainWrap');w.style.display='block';
   w.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(.07+i*.08)+'s';c.classList.add('in')});
+  window.scrollTo(0,0);
 }
 
 // ── INIT ──
