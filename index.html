@@ -8,6 +8,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -36,10 +50,14 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-size:40px 40px}
 .scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
-.wrap{position:relative;z-index:2}
+.wrap{position:relative;z-index:2;padding-top:62px}
+.mini-bar{display:flex;gap:7px;justify-content:flex-end;padding:10px 16px 0;}
 
 /* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,9,15,0.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(0,212,255,0.08);
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .title{font-size:16px;font-weight:900;
@@ -307,17 +325,26 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 <!-- MAIN -->
 <div class="wrap" id="mainWrap" style="display:none">
 
-<!-- HEADER -->
-<div class="header">
-  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control </div></div>
+<!-- HEADER — يظهر فقط لما يُفتح من داخل البوت بدون هيدر تيليجرام -->
+<div class="header" id="appHeader">
+  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control</div></div>
   <div class="hdr-acts">
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
-      <span id="lgFlag"></span><span id="lgCode">change lang</span>
+      <span id="lgFlag"></span><span id="lgCode">AR</span>
     </button>
     <button class="hdr-btn" onclick="toggleTheme(this)">
       <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
     </button>
   </div>
+</div>
+<!-- شريط الأزرار البديل — يظهر فقط لما الهيدر مخفي -->
+<div class="mini-bar" id="miniBar" style="display:none">
+  <button class="hdr-btn" id="langBtn2" onclick="toggleLang(this)" style="min-width:70px">
+    <span id="lgFlag2"></span><span id="lgCode2">AR</span>
+  </button>
+  <button class="hdr-btn" onclick="toggleTheme(this)">
+    <img id="themeIco2" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
+  </button>
 </div>
 
 <!-- STATUS -->
@@ -634,21 +661,32 @@ if(tg){
   tg.expand();
   if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
   if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
-  // إخفاء زر الإغلاق الافتراضي ومنع الإغلاق بالخطأ
-  if(tg.enableClosingConfirmation) tg.enableClosingConfirmation();
 
-  // ── إصلاح الـ viewport ──
   function fixViewport(){
-    const vh = tg.viewportStableHeight || tg.viewportHeight || window.innerHeight;
-    document.documentElement.style.setProperty('--tg-vh', vh + 'px');
-    // لو الصفحة مش expanded بعد، نحاول مرة تانية
     if(!tg.isExpanded) tg.expand();
   }
   tg.onEvent('viewportChanged', fixViewport);
-  // نستنى ثانية بعد ready لضمان اكتمال الـ expand
   setTimeout(fixViewport, 300);
-  setTimeout(fixViewport, 800);
-  fixViewport();
+
+  // ── كشف إذا فُتح من زر خارجي ──
+  // لما يُفتح من خارج: تيليجرام بيضيف هيدر خاص بيه فالـ viewportHeight أصغر من الشاشة
+  setTimeout(()=>{
+    const screenH = window.screen.height;
+    const viewH   = tg.viewportHeight || window.innerHeight;
+    // لو الـ viewport أصغر بـ 50px أو أكثر = فيه هيدر تيليجرام فوقنا
+    const hasExtHeader = (screenH - viewH) > 80;
+    const appH = document.getElementById('appHeader');
+    const miniB = document.getElementById('miniBar');
+    const wrap  = document.getElementById('mainWrap');
+    if(hasExtHeader){
+      appH.style.display  = 'none';
+      miniB.style.display = 'flex';
+      wrap.style.paddingTop = '0';
+    } else {
+      appH.style.display  = '';
+      miniB.style.display = 'none';
+    }
+  }, 500);
 }
 
 // ── CHAT ID ──
@@ -663,8 +701,12 @@ function applyL(){
   const ar = L==='ar';
   document.documentElement.dir  = ar?'rtl':'ltr';
   document.documentElement.lang = L;
-  document.getElementById('lgFlag').textContent = ar?'🇸🇦':'🇺🇸';
-  document.getElementById('lgCode').textContent = ar?'AR':'EN';
+  // main header
+  const lf=document.getElementById('lgFlag'); if(lf) lf.textContent=ar?'🇸🇦':'🇺🇸';
+  const lc=document.getElementById('lgCode'); if(lc) lc.textContent=ar?'AR':'EN';
+  // mini bar
+  const lf2=document.getElementById('lgFlag2'); if(lf2) lf2.textContent=ar?'🇸🇦':'🇺🇸';
+  const lc2=document.getElementById('lgCode2'); if(lc2) lc2.textContent=ar?'AR':'EN';
   document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=ar?el.dataset.ar:el.dataset.en);
   document.querySelectorAll('[data-ph-ar]').forEach(el=>el.placeholder=ar?el.dataset.phAr:el.dataset.phEn);
   syncSub();
