@@ -6,6 +6,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -21,8 +23,7 @@
   --border:rgba(0,212,255,0.14); --card-bg:rgba(10,15,28,0.93); --r:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:72px;overflow-x:hidden;position:relative;
-  padding-top:env(safe-area-inset-top, 0px)}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:var(--tg-vh,100vh);padding-bottom:72px;overflow-x:hidden;position:relative}
 
 /* BG */
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
@@ -631,9 +632,23 @@ const tg  = window.Telegram?.WebApp;
 if(tg){
   tg.ready();
   tg.expand();
-  // مطابقة لون هيدر تيليجرام مع خلفية الموقع
   if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
   if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
+  // إخفاء زر الإغلاق الافتراضي ومنع الإغلاق بالخطأ
+  if(tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+
+  // ── إصلاح الـ viewport ──
+  function fixViewport(){
+    const vh = tg.viewportStableHeight || tg.viewportHeight || window.innerHeight;
+    document.documentElement.style.setProperty('--tg-vh', vh + 'px');
+    // لو الصفحة مش expanded بعد، نحاول مرة تانية
+    if(!tg.isExpanded) tg.expand();
+  }
+  tg.onEvent('viewportChanged', fixViewport);
+  // نستنى ثانية بعد ready لضمان اكتمال الـ expand
+  setTimeout(fixViewport, 300);
+  setTimeout(fixViewport, 800);
+  fixViewport();
 }
 
 // ── CHAT ID ──
