@@ -3,26 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -51,11 +31,8 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-size:40px 40px}
 .scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
-.tg-spacer{height:44px;background:#06090f;width:100%}
-.mini-bar{display:flex;gap:7px;justify-content:flex-end;padding:6px 16px 0;}
-
 /* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .title{font-size:16px;font-weight:900;
@@ -323,10 +300,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 <!-- MAIN -->
 <div class="wrap" id="mainWrap" style="display:none">
 
-<!-- SPACER يعوض هيدر تيليجرام عند الفتح من خارج -->
-<div class="tg-spacer" id="tgSpacer"></div>
-
-<!-- HEADER — يظهر فقط لما يُفتح من داخل البوت بدون هيدر تيليجرام -->
+<!-- HEADER -->
 <div class="header" id="appHeader">
   <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control</div></div>
   <div class="hdr-acts">
@@ -337,15 +311,6 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
       <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
     </button>
   </div>
-</div>
-<!-- شريط الأزرار البديل — يظهر فقط لما الهيدر مخفي -->
-<div class="mini-bar" id="miniBar" style="display:none">
-  <button class="hdr-btn" id="langBtn2" onclick="toggleLang(this)" style="min-width:70px">
-    <span id="lgFlag2"></span><span id="lgCode2">AR</span>
-  </button>
-  <button class="hdr-btn" onclick="toggleTheme(this)">
-    <img id="themeIco2" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
-  </button>
 </div>
 
 <!-- STATUS -->
@@ -657,40 +622,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
 const API = `https://api.telegram.org/bot${BOT}`;
 const tg  = window.Telegram?.WebApp;
-if(tg){
-  tg.ready();
-  tg.expand();
-  if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
-  if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
-
-  function fixViewport(){
-    if(!tg.isExpanded) tg.expand();
-  }
-  tg.onEvent('viewportChanged', fixViewport);
-  setTimeout(fixViewport, 300);
-
-  // ── كشف إذا فُتح من زر خارجي — يُظهر الـ spacer فقط ──
-  setTimeout(()=>{
-    const screenH = window.screen.height;
-    const viewH   = tg.viewportHeight || window.innerHeight;
-    const hasExtHeader = (screenH - viewH) > 80;
-    const spacer = document.getElementById('tgSpacer');
-    const appH   = document.getElementById('appHeader');
-    const miniB  = document.getElementById('miniBar');
-    const wrap   = document.getElementById('mainWrap');
-    if(hasExtHeader){
-      // فُتح من خارج: الـ spacer يظهر + هيدرنا يختفي + mini-bar بدله
-      if(spacer) spacer.style.display = 'block';
-      if(appH)   appH.style.display   = 'none';
-      if(miniB)  miniB.style.display  = 'flex';
-    } else {
-      // فُتح من داخل: لا spacer + هيدرنا يظهر كامل
-      if(spacer) spacer.style.display = 'none';
-      if(appH)   appH.style.display   = '';
-      if(miniB)  miniB.style.display  = 'none';
-    }
-  }, 500);
-}
+if(tg){ tg.ready(); tg.expand(); }
 
 // ── CHAT ID ──
 // القيمة الافتراضية في حالة عدم قدرة الجهاز على الكشف
@@ -704,12 +636,8 @@ function applyL(){
   const ar = L==='ar';
   document.documentElement.dir  = ar?'rtl':'ltr';
   document.documentElement.lang = L;
-  // main header
-  const lf=document.getElementById('lgFlag'); if(lf) lf.textContent=ar?'🇸🇦':'🇺🇸';
-  const lc=document.getElementById('lgCode'); if(lc) lc.textContent=ar?'AR':'EN';
-  // mini bar
-  const lf2=document.getElementById('lgFlag2'); if(lf2) lf2.textContent=ar?'🇸🇦':'🇺🇸';
-  const lc2=document.getElementById('lgCode2'); if(lc2) lc2.textContent=ar?'AR':'EN';
+  document.getElementById('lgFlag').textContent = ar?'🇸🇦':'🇺🇸';
+  document.getElementById('lgCode').textContent = ar?'AR':'EN';
   document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=ar?el.dataset.ar:el.dataset.en);
   document.querySelectorAll('[data-ph-ar]').forEach(el=>el.placeholder=ar?el.dataset.phAr:el.dataset.phEn);
   syncSub();
@@ -1113,7 +1041,6 @@ function reveal(){
   document.getElementById('skWrap').style.display='none';
   const w=document.getElementById('mainWrap');w.style.display='block';
   w.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(.07+i*.08)+'s';c.classList.add('in')});
-  window.scrollTo(0,0);
 }
 
 // ── INIT ──
