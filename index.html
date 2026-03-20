@@ -22,6 +22,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -50,14 +51,11 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-size:40px 40px}
 .scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
-.wrap{position:relative;z-index:2;padding-top:62px}
-.mini-bar{display:flex;gap:7px;justify-content:flex-end;padding:10px 16px 0;}
+.tg-spacer{height:44px;background:#06090f;width:100%}
+.mini-bar{display:flex;gap:7px;justify-content:flex-end;padding:6px 16px 0;}
 
 /* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:rgba(6,9,15,0.97);backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(0,212,255,0.08);
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .title{font-size:16px;font-weight:900;
@@ -324,6 +322,9 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 
 <!-- MAIN -->
 <div class="wrap" id="mainWrap" style="display:none">
+
+<!-- SPACER يعوض هيدر تيليجرام عند الفتح من خارج -->
+<div class="tg-spacer" id="tgSpacer"></div>
 
 <!-- HEADER — يظهر فقط لما يُفتح من داخل البوت بدون هيدر تيليجرام -->
 <div class="header" id="appHeader">
@@ -668,23 +669,25 @@ if(tg){
   tg.onEvent('viewportChanged', fixViewport);
   setTimeout(fixViewport, 300);
 
-  // ── كشف إذا فُتح من زر خارجي ──
-  // لما يُفتح من خارج: تيليجرام بيضيف هيدر خاص بيه فالـ viewportHeight أصغر من الشاشة
+  // ── كشف إذا فُتح من زر خارجي — يُظهر الـ spacer فقط ──
   setTimeout(()=>{
     const screenH = window.screen.height;
     const viewH   = tg.viewportHeight || window.innerHeight;
-    // لو الـ viewport أصغر بـ 50px أو أكثر = فيه هيدر تيليجرام فوقنا
     const hasExtHeader = (screenH - viewH) > 80;
-    const appH = document.getElementById('appHeader');
-    const miniB = document.getElementById('miniBar');
-    const wrap  = document.getElementById('mainWrap');
+    const spacer = document.getElementById('tgSpacer');
+    const appH   = document.getElementById('appHeader');
+    const miniB  = document.getElementById('miniBar');
+    const wrap   = document.getElementById('mainWrap');
     if(hasExtHeader){
-      appH.style.display  = 'none';
-      miniB.style.display = 'flex';
-      wrap.style.paddingTop = '0';
+      // فُتح من خارج: الـ spacer يظهر + هيدرنا يختفي + mini-bar بدله
+      if(spacer) spacer.style.display = 'block';
+      if(appH)   appH.style.display   = 'none';
+      if(miniB)  miniB.style.display  = 'flex';
     } else {
-      appH.style.display  = '';
-      miniB.style.display = 'none';
+      // فُتح من داخل: لا spacer + هيدرنا يظهر كامل
+      if(spacer) spacer.style.display = 'none';
+      if(appH)   appH.style.display   = '';
+      if(miniB)  miniB.style.display  = 'none';
     }
   }, 500);
 }
