@@ -6,13 +6,6 @@
 
 
 
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -359,20 +352,17 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 @keyframes sg{0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}}
 .sp{animation:sg .7s ease}
 
-/* LOADING SPINNER on button */
-.eb.loading,.qb.loading,.rb.loading{opacity:.7;pointer-events:none}
-.eb.loading::before,.qb.loading::before,.rb.loading::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:rgba(0,0,0,0.25);z-index:1;
+/* LOADING SPINNER — بجانب النص داخل الزر */
+.eb.loading,.qb.loading,.rb.loading{pointer-events:none;opacity:.85}
+.btn-spinner{
+  display:none;width:14px;height:14px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.15);
+  border-top-color:currentColor;
+  animation:btnSpin .6s linear infinite;
 }
-.eb.loading::after,.qb.loading::after,.rb.loading::after{
-  content:'';position:absolute;top:50%;left:50%;
-  width:16px;height:16px;margin:-8px 0 0 -8px;
-  border:2px solid rgba(255,255,255,0.2);
-  border-top-color:rgba(255,255,255,0.9);
-  border-radius:50%;z-index:2;
-  animation:btnSpin .7s linear infinite;
-}
+.eb.loading .btn-spinner,
+.qb.loading .btn-spinner,
+.rb.loading .btn-spinner{display:block}
 @keyframes btnSpin{to{transform:rotate(360deg)}}
 
 /* PRESETS CARD */
@@ -1392,8 +1382,18 @@ function playOnlineSound() {
 // ── LOADING INDICATOR on buttons ──
 function setBtnLoading(btn, on) {
   if (!btn) return;
-  if (on) btn.classList.add('loading');
-  else    btn.classList.remove('loading');
+  if (on) {
+    btn.classList.add('loading');
+    // أضف spinner بجانب النص
+    const sp = document.createElement('span');
+    sp.className = 'btn-spinner';
+    sp.dataset.spinner = '1';
+    btn.appendChild(sp);
+  } else {
+    btn.classList.remove('loading');
+    const sp = btn.querySelector('[data-spinner]');
+    if (sp) sp.remove();
+  }
 }
 
 // ── CONFIRM DIALOG ──
