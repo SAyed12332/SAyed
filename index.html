@@ -20,6 +20,10 @@
 
 
 
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1135,29 +1139,29 @@ function hap(t){
   else if(t==='selection')tg.HapticFeedback.selectionChanged();
 }
 
-const  TICONS = { ok : 'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d' ,
-  خطأ : 'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060' ،
-  تحذير : 'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700' ،
-  info : 'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0' } ;
-let  toastT = null ;
-دالة  عرض رسالة التنبيه ( الرسالة ، النوع = 'معلومات' ) {
-  document.getElementById ( ' tIco ' ) . src = TICONS [ type ] || TICONS.info ;​​
-  وثيقة . getElementById ( 'tMsg' ) . محتوى النص = رسالة ;
-  const  el = document.getElementById ( ' toast ' ) ; el.classList.add ( ' show ' ) ;​​
-  clearTimeout ( toastT ) ; toastT = setTimeout ( ( ) = > el.classList.remove ( ' show ' ) , 2700 ) ;​
+const TICONS={ok:'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d',
+  err:'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060',
+  warn:'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700',
+  info:'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0'};
+let toastT=null;
+function showToast(msg,type='info'){
+  document.getElementById('tIco').src=TICONS[type]||TICONS.info;
+  document.getElementById('tMsg').textContent=msg;
+  const el=document.getElementById('toast');el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
 }
 
-// ── الثيم — الكشف التلقائي + التبديل اليدوي ──
-let  dark = true ;
+// ── THEME — auto-detect + manual toggle ──
+let dark = true;
 
-دالة  تطبيق المظهر ( الوضع الداكن ) {
-  dark = isDark ;
-  document.body.classList.toggle ( ' light ' , ! isDark ) ;​​​
-  const  ico = document.getElementById ( ' themeIco ' ) ;
-  إذا كان ( ico )  ico.src = isDark​
+function applyTheme(isDark){
+  dark = isDark;
+  document.body.classList.toggle('light', !isDark);
+  const ico = document.getElementById('themeIco');
+  if(ico) ico.src = isDark
     ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
-    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e' ;
-  // مافي هيدر تيليجرام
+    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e';
+  // مطابقة هيدر تيليجرام
   if(tg?.setHeaderColor)     tg.setHeaderColor(isDark ? '#06090f' : '#f0f4ff');
   if(tg?.setBackgroundColor) tg.setBackgroundColor(isDark ? '#06090f' : '#f0f4ff');
 }
