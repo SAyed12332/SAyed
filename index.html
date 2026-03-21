@@ -13,11 +13,6 @@
 
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -363,6 +358,63 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 /* SEND GLOW */
 @keyframes sg{0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}}
 .sp{animation:sg .7s ease}
+
+/* LOADING SPINNER on button */
+.eb.loading,.qb.loading,.rb.loading{opacity:.7;pointer-events:none}
+.eb.loading::before,.qb.loading::before,.rb.loading::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:rgba(0,0,0,0.25);z-index:1;
+}
+.eb.loading::after,.qb.loading::after,.rb.loading::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:16px;height:16px;margin:-8px 0 0 -8px;
+  border:2px solid rgba(255,255,255,0.2);
+  border-top-color:rgba(255,255,255,0.9);
+  border-radius:50%;z-index:2;
+  animation:btnSpin .7s linear infinite;
+}
+@keyframes btnSpin{to{transform:rotate(360deg)}}
+
+/* PRESETS CARD */
+.preset-list{display:flex;flex-direction:column;gap:7px;margin-bottom:9px}
+.preset-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:11px;padding:10px 12px;cursor:pointer;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+}
+.preset-item:active{transform:scale(.98);background:rgba(0,212,255,0.08)}
+.preset-item-icon{width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);
+  display:flex;align-items:center;justify-content:center}
+.preset-item-icon img{width:16px;height:16px}
+.preset-item-info{flex:1;min-width:0}
+.preset-item-name{font-size:13px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preset-item-cmds{font-size:10px;color:var(--muted);margin-top:2px;
+  font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preset-del{width:28px;height:28px;border-radius:7px;border:none;cursor:pointer;
+  background:rgba(255,64,96,0.08);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:.18s}
+.preset-del:active{background:rgba(255,64,96,0.25);transform:scale(.88)}
+.preset-del img{width:13px;height:13px}
+.preset-empty{text-align:center;padding:18px 0;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;font-size:11px}
+.p-add-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+.confirm-overlay.open{display:flex;animation:ov .2s ease both}
+.confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
+  border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
+  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .3s cubic-bezier(.22,1,.36,1) both}
+.confirm-icon{text-align:center;margin-bottom:12px}
+.confirm-icon img{width:40px;height:40px}
+.confirm-title{font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px}
+.confirm-msg{font-size:13px;color:var(--muted);text-align:center;margin-bottom:18px;line-height:1.5}
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
@@ -679,8 +731,53 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     </button>
   </div>
 </div>
+<!-- PRESETS -->
+<div class="card" id="cPresets">
+  <div class="ch">
+    <div class="ci"><img src="https://api.iconify.design/ph/bookmark-simple-fill.svg?color=%2300d4ff" alt=""></div>
+    <div>
+      <div class="ct">PRESETS</div>
+      <div class="cd" data-ar="أوامر محفوظة — اضغط لتنفيذ" data-en="Saved commands — tap to run">أوامر محفوظة — اضغط لتنفيذ</div>
+    </div>
+  </div>
+  <!-- قائمة الـ presets -->
+  <div class="preset-list" id="presetList">
+    <div class="preset-empty" id="presetEmpty" data-ar="لا توجد presets بعد" data-en="No presets yet">لا توجد presets بعد</div>
+  </div>
+  <!-- إضافة preset جديد -->
+  <div class="cd" style="margin-bottom:6px;display:flex;align-items:center;gap:5px">
+    <img src="https://api.iconify.design/ph/plus-circle-fill.svg?color=%234a5568" style="width:12px;height:12px">
+    <span data-ar="حفظ الأوامر الحالية كـ preset" data-en="Save current commands as preset">حفظ الأوامر الحالية كـ preset</span>
+  </div>
+  <div class="p-add-row">
+    <input type="text" id="presetName" data-ph-ar="اسم الـ preset (مثلاً: روتين البحث)" data-ph-en="Preset name (e.g. Search routine)" placeholder="اسم الـ preset" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="savePreset(this)">
+      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="حفظ" data-en="Save">حفظ</span>
+    </button>
+  </div>
+</div>
 
 </div><!-- /mainWrap -->
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon"><img src="https://api.iconify.design/ph/warning-fill.svg?color=%23ff4060" alt=""></div>
+    <div class="confirm-title" id="confirmTitle">تأكيد</div>
+    <div class="confirm-msg" id="confirmMsg">هل أنت متأكد؟</div>
+    <div class="confirm-btns">
+      <button class="eb bm" onclick="confirmResolve(false)">
+        <img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" alt="">
+        <span data-ar="إلغاء" data-en="Cancel">إلغاء</span>
+      </button>
+      <button class="eb br" onclick="confirmResolve(true)">
+        <img src="https://api.iconify.design/ph/check-fill.svg?color=%23ff4060" alt="">
+        <span data-ar="تأكيد" data-en="Confirm">تأكيد</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- RESULT DETAIL SHEET — dynamic contextual actions -->
 <div class="overlay" id="rdOverlay" onclick="closeSheet('rdOverlay',event)">
@@ -795,6 +892,9 @@ function setAge(age){
   if(age<10)      state='online';
   else if(age<25) state='warning';
   else            state='offline';
+  // صوت عند الاتصال
+  if(state==='online' && prevState!=='online') playOnlineSound();
+  prevState = state;
   dot.className='s-dot '+state;
   lbl.className='s-label '+state;
   lbl.textContent=state==='online'?'ONLINE':state==='warning'?'WEAK':'OFFLINE';
@@ -1009,7 +1109,7 @@ function closeSheet(id,ev){if(ev&&ev.target.id!==id)return;document.getElementBy
 
 // ── SEND CMD ──
 async function sendCmd(cmd,btn){
-  if(btn)btn.classList.add('sp');
+  if(btn) setBtnLoading(btn, true);
   const entry={c:cmd.c,v:cmd.v||'',st:'pend',msg:'',t:nowStr()};
   reqLog.unshift(entry);if(reqLog.length>40)reqLog.pop();
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
@@ -1026,11 +1126,20 @@ async function sendCmd(cmd,btn){
     }
   }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','err')}
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
-  if(btn)setTimeout(()=>btn.classList.remove('sp'),850);
+  if(btn) setBtnLoading(btn, false);
 }
 
 // ── COMMANDS ──
-function doCmd(cmd,btn){hap('light');sendCmd(cmd,btn)}
+function doCmd(cmd,btn){
+  if(cmd.c==='clear'){
+    showConfirm(
+      L==='ar'?'مسح النتائج':'Clear results',
+      L==='ar'?'هل تريد مسح كل النتائج؟':'Clear all results?'
+    ).then(ok=>{ if(ok){ hap('light'); sendCmd(cmd,btn); } });
+    return;
+  }
+  hap('light');sendCmd(cmd,btn);
+}
 function doSearch(btn){
   const v=document.getElementById('sVal').value.trim();
   if(!v){showToast(L==='ar'?'أدخل قيمة البحث':'Enter search value','warn');return}
@@ -1258,8 +1367,123 @@ function navTo(id) {
   }, 250);
 }
 
-// ── HELPERS ──
-function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+// ── ONLINE SOUND ──
+let prevState = 'offline';
+function playOnlineSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // نغمتان صاعدتان تدلان على الاتصال
+    const notes = [523, 659, 784]; // C5, E5, G5
+    notes.forEach((freq, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type      = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.12 + 0.04);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.12 + 0.22);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.25);
+    });
+  } catch {}
+}
+
+// ── LOADING INDICATOR on buttons ──
+function setBtnLoading(btn, on) {
+  if (!btn) return;
+  if (on) btn.classList.add('loading');
+  else    btn.classList.remove('loading');
+}
+
+// ── CONFIRM DIALOG ──
+let confirmResolve = null;
+function showConfirm(title, msg) {
+  return new Promise(resolve => {
+    confirmResolve = (val) => {
+      document.getElementById('confirmOverlay').classList.remove('open');
+      confirmResolve = null;
+      resolve(val);
+    };
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent   = msg;
+    document.getElementById('confirmOverlay').classList.add('open');
+    hap('warning');
+  });
+}
+
+// ── PRESETS ──
+let presets = JSON.parse(localStorage.getItem('gg_presets') || '[]');
+
+function savePresets() {
+  localStorage.setItem('gg_presets', JSON.stringify(presets));
+}
+
+function savePreset(btn) {
+  const name = document.getElementById('presetName').value.trim();
+  if (!name) { showToast(L==='ar'?'أدخل اسم الـ preset':'Enter preset name','warn'); return; }
+  // نجمع القيم الحالية
+  const cmds = [];
+  const sv = document.getElementById('sVal').value.trim();
+  const rv = document.getElementById('rVal').value.trim();
+  const ev = document.getElementById('eVal').value.trim();
+  const fv = document.getElementById('fVal').value.trim();
+  if (sv) cmds.push({c:'search', v:sv, t:T.s, label: L==='ar'?`بحث: ${sv}`:`Search: ${sv}`});
+  if (rv) cmds.push({c:'refine', v:rv, t:T.r, label: L==='ar'?`صقل: ${rv}`:`Refine: ${rv}`});
+  if (ev) cmds.push({c:'edit',   v:ev, t:T.e, label: L==='ar'?`تعديل: ${ev}`:`Edit: ${ev}`});
+  if (fv) cmds.push({c:'freeze', v:fv,        label: L==='ar'?`تجميد: ${fv}`:`Freeze: ${fv}`});
+  if (!cmds.length) { showToast(L==='ar'?'ملأ حقل واحد على الأقل':'Fill at least one field','warn'); return; }
+  presets.unshift({ id: Date.now(), name, cmds });
+  if (presets.length > 20) presets.pop();
+  savePresets();
+  document.getElementById('presetName').value = '';
+  renderPresets();
+  hap('success');
+  showToast(L==='ar'?`تم حفظ: ${name}`:`Saved: ${name}`, 'ok');
+}
+
+function runPreset(id) {
+  const p = presets.find(x=>x.id===id);
+  if (!p) return;
+  hap('medium');
+  p.cmds.forEach((cmd, i) => {
+    setTimeout(() => sendCmd(cmd, null), i * 600);
+  });
+  showToast(L==='ar'?`تشغيل: ${p.name}`:`Running: ${p.name}`, 'info');
+}
+
+async function deletePreset(id) {
+  const confirmed = await showConfirm(
+    L==='ar'?'حذف preset':'Delete preset',
+    L==='ar'?'هل تريد حذف هذا الـ preset؟':'Delete this preset?'
+  );
+  if (!confirmed) return;
+  presets = presets.filter(x=>x.id!==id);
+  savePresets();
+  renderPresets();
+}
+
+function renderPresets() {
+  const list  = document.getElementById('presetList');
+  const empty = document.getElementById('presetEmpty');
+  if (!presets.length) {
+    empty.textContent = L==='ar'?'لا توجد presets بعد':'No presets yet';
+    list.innerHTML = ''; list.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = presets.map(p => `
+    <div class="preset-item" onclick="runPreset(${p.id})">
+      <div class="preset-item-icon"><img src="https://api.iconify.design/ph/play-fill.svg?color=%2300d4ff" alt=""></div>
+      <div class="preset-item-info">
+        <div class="preset-item-name">${p.name}</div>
+        <div class="preset-item-cmds">${p.cmds.map(c=>c.label).join(' → ')}</div>
+      </div>
+      <button class="preset-del" onclick="event.stopPropagation();deletePreset(${p.id})">
+        <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      </button>
+    </div>`).join('');
+}
 function nowStr(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0')}
 
 // ── REVEAL ──
@@ -1272,6 +1496,7 @@ function reveal(){
 // ── INIT ──
 initTheme();
 applyL();
+renderPresets();
 setTimeout(reveal,1050);
 setTimeout(()=>{
   const el = document.getElementById('detectedCid');
