@@ -3,6 +3,9 @@
 
 
 
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -35,10 +38,20 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-.title{font-size:16px;font-weight:900;
-  background:linear-gradient(110deg,var(--cyan),var(--green) 60%,#fff);
+.title{
+  font-size:13.5px;font-weight:900;white-space:nowrap;
+  background:linear-gradient(90deg,
+    var(--cyan) 0%,#fff 20%,var(--green) 35%,
+    var(--cyan) 50%,#fff 65%,var(--purple) 80%,var(--cyan) 100%);
+  background-size:200% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 10px rgba(0,212,255,0.28))}
+  animation:titleShine 3s linear infinite;
+  filter:drop-shadow(0 0 8px rgba(0,212,255,0.6)) drop-shadow(0 0 16px rgba(0,255,157,0.3));
+}
+@keyframes titleShine{
+  0%{background-position:0% center}
+  100%{background-position:200% center}
+}
 .title-sub{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1.4px;margin-top:2px}
 .hdr-acts{display:flex;gap:7px;align-items:center}
 .hdr-btn{height:35px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
@@ -622,7 +635,12 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
 const API = `https://api.telegram.org/bot${BOT}`;
 const tg  = window.Telegram?.WebApp;
-if(tg){ tg.ready(); tg.expand(); }
+if(tg){
+  tg.ready();
+  tg.expand();
+  if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
+  if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
+}
 
 // ── CHAT ID ──
 // القيمة الافتراضية في حالة عدم قدرة الجهاز على الكشف
