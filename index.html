@@ -18,12 +18,6 @@
 
 
 
-
-
-
-
-
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -71,40 +65,40 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   position:relative;z-index:10}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 
-/* NAV SHEET */
-.nav-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0);pointer-events:none;transition:background .3s}
-.nav-overlay.open{background:rgba(0,0,0,0.4);pointer-events:all;backdrop-filter:blur(6px)}
-.nav-sheet{
-  position:fixed;top:0;left:0;right:0;z-index:901;
-  background:rgba(6,9,15,0.85);backdrop-filter:blur(28px) saturate(180%);
-  border-bottom:1px solid rgba(0,212,255,0.2);
-  padding:14px 16px 18px;
-  transform:translateY(-110%);transition:transform .38s cubic-bezier(.22,1,.36,1);
-  box-shadow:0 8px 40px rgba(0,212,255,0.12);
+/* ═══ RADIAL BUBBLE NAV ═══ */
+.nav-backdrop{
+  position:fixed;inset:0;z-index:900;
+  background:rgba(0,0,0,0);pointer-events:none;
+  transition:background .35s,backdrop-filter .35s;
+  backdrop-filter:blur(0px);
 }
-.nav-sheet::before{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);opacity:.6;
+.nav-backdrop.open{
+  background:rgba(0,0,0,0.45);pointer-events:all;
+  backdrop-filter:blur(10px);
 }
-.nav-overlay.open .nav-sheet{transform:translateY(0)}
-body.light .nav-sheet{background:rgba(240,244,255,0.88)}
-.nav-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-  color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px}
-.nav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:10px 5px;border-radius:13px;border:1px solid rgba(255,255,255,0.06);
-  background:rgba(255,255,255,0.04);cursor:pointer;
-  transition:all .2s cubic-bezier(.22,1,.36,1);
-  font-family:'Tajawal',sans-serif;font-size:11px;font-weight:700;color:var(--muted);
+/* الفقاعات */
+.nav-bubble{
+  position:fixed;z-index:901;
+  width:56px;height:56px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;border:none;
+  font-family:'Tajawal',sans-serif;font-size:9px;font-weight:800;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  transform:scale(0);opacity:0;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),
+             opacity .25s ease,
+             box-shadow .2s;
+  pointer-events:none;
+  /* الموضع يُعيَّن من JS */
 }
-.nav-item img{width:20px;height:20px}
-.nav-item:active{transform:scale(.9)}
-.nav-item.nav-c{color:var(--cyan);background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2)}
-.nav-item.nav-g{color:var(--green);background:rgba(0,255,157,0.07);border-color:rgba(0,255,157,0.18)}
-.nav-item.nav-y{color:var(--yellow);background:rgba(255,215,0,0.07);border-color:rgba(255,215,0,0.18)}
-.nav-item.nav-r{color:var(--red);background:rgba(255,64,96,0.07);border-color:rgba(255,64,96,0.18)}
-.nav-item.nav-p{color:var(--purple);background:rgba(181,122,255,0.07);border-color:rgba(181,122,255,0.18)}
+.nav-bubble.show{transform:scale(1);opacity:1;pointer-events:all}
+.nav-bubble:active{transform:scale(.88)!important}
+.nav-bubble img{width:20px;height:20px}
+.nav-b-c{background:linear-gradient(135deg,rgba(0,180,230,0.9),rgba(0,100,160,0.85));color:#cff6ff}
+.nav-b-g{background:linear-gradient(135deg,rgba(0,210,110,0.9),rgba(0,130,70,0.85));color:#c6fff0}
+.nav-b-y{background:linear-gradient(135deg,rgba(230,180,0,0.9),rgba(160,110,0,0.85));color:#fff8cc}
+.nav-b-p{background:linear-gradient(135deg,rgba(160,100,255,0.9),rgba(100,50,180,0.85));color:#eedcff}
+.nav-b-r{background:linear-gradient(135deg,rgba(230,50,80,0.9),rgba(160,20,50,0.85));color:#ffd0d8}
 .title{
   font-size:13.5px;font-weight:900;white-space:nowrap;
   background:linear-gradient(90deg,
@@ -384,8 +378,8 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 <div class="header" id="appHeader">
   <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control</div></div>
   <div class="hdr-acts">
-    <button class="hdr-btn" onclick="openNav()" title="انتقال سريع" style="width:35px;padding:0">
-      <img id="navIco" src="https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0" alt="">
+    <button class="hdr-btn" id="navBtn" onclick="toggleNav(this)" style="width:35px;padding:0;transition:all .25s cubic-bezier(.22,1,.36,1)">
+      <img id="navIco" src="https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0" alt="" style="transition:transform .3s">
     </button>
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px;gap:5px">
       <img src="https://api.iconify.design/ph/globe-simple-fill.svg?color=%23e2e8f0" style="width:14px;height:14px" alt="">
@@ -397,46 +391,8 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   </div>
 </div>
 
-<!-- NAV SHEET -->
-<div class="nav-overlay" id="navOverlay" onclick="closeNav(event)">
-  <div class="nav-sheet">
-    <div class="nav-title" id="navTitle">انتقال سريع</div>
-    <div class="nav-grid">
-      <div class="nav-item nav-c" onclick="navTo('statusCard')">
-        <img src="https://api.iconify.design/ph/activity-fill.svg?color=%2300d4ff" alt="">
-        <span data-ar="الحالة" data-en="Status">الحالة</span>
-      </div>
-      <div class="nav-item nav-c" onclick="navTo('cSearch')">
-        <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
-        <span data-ar="بحث" data-en="Search">بحث</span>
-      </div>
-      <div class="nav-item nav-c" onclick="navTo('cRefine')">
-        <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
-        <span data-ar="صقل" data-en="Refine">صقل</span>
-      </div>
-      <div class="nav-item nav-g" onclick="navTo('cEF')">
-        <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
-        <span data-ar="تعديل" data-en="Edit">تعديل</span>
-      </div>
-      <div class="nav-item nav-y" onclick="navTo('cEF');setTimeout(()=>swTab('f'),300)">
-        <img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt="">
-        <span data-ar="تجميد" data-en="Freeze">تجميد</span>
-      </div>
-      <div class="nav-item nav-c" onclick="navTo('cQuick')">
-        <img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt="">
-        <span data-ar="سريع" data-en="Quick">سريع</span>
-      </div>
-      <div class="nav-item nav-p" onclick="navTo('cAdv')">
-        <img src="https://api.iconify.design/ph/cpu-fill.svg?color=%23b57aff" alt="">
-        <span data-ar="متقدم" data-en="Adv">متقدم</span>
-      </div>
-      <div class="nav-item nav-g" onclick="navTo('cExport')">
-        <img src="https://api.iconify.design/ph/export-fill.svg?color=%2300ff9d" alt="">
-        <span data-ar="تصدير" data-en="Export">تصدير</span>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- NAV BACKDROP (blur overlay) -->
+<div class="nav-backdrop" id="navBackdrop" onclick="closeNav()"></div>
 
 <!-- STATUS -->
 <div class="status-card" id="statusCard">
@@ -1179,28 +1135,102 @@ function initTheme(){
   if(tg) tg.onEvent('themeChanged', ()=>{ applyTheme(tg.colorScheme === 'dark'); });
 }
 
-// ── NAV SHEET ──
-function openNav(){
-  document.getElementById('navOverlay').classList.add('open');
-  document.getElementById('navTitle').textContent = L==='ar'?'انتقال سريع':'Quick Nav';
-  hap('light');
+// ── RADIAL BUBBLE NAV ──
+const NAV_ITEMS = [
+  {id:'statusCard', ico:'ph/activity-fill.svg?color=%23cff6ff',       cls:'nav-b-c', ar:'الحالة',  en:'Status', fn:()=>navTo('statusCard')},
+  {id:'cSearch',    ico:'ph/magnifying-glass-fill.svg?color=%23cff6ff',cls:'nav-b-c', ar:'بحث',     en:'Search', fn:()=>navTo('cSearch')},
+  {id:'cRefine',    ico:'ph/funnel-fill.svg?color=%23cff6ff',           cls:'nav-b-c', ar:'صقل',     en:'Refine', fn:()=>navTo('cRefine')},
+  {id:'cEF',        ico:'ph/pencil-simple-fill.svg?color=%23c6fff0',    cls:'nav-b-g', ar:'تعديل',   en:'Edit',   fn:()=>navTo('cEF')},
+  {id:'cEFf',       ico:'ph/snowflake.svg?color=%23fff8cc',             cls:'nav-b-y', ar:'تجميد',   en:'Freeze', fn:()=>{navTo('cEF');setTimeout(()=>swTab('f'),300)}},
+  {id:'cQuick',     ico:'ph/lightning-fill.svg?color=%23cff6ff',        cls:'nav-b-c', ar:'سريع',    en:'Quick',  fn:()=>navTo('cQuick')},
+  {id:'cAdv',       ico:'ph/cpu-fill.svg?color=%23eedcff',              cls:'nav-b-p', ar:'متقدم',   en:'Adv',    fn:()=>navTo('cAdv')},
+  {id:'cExport',    ico:'ph/export-fill.svg?color=%23c6fff0',           cls:'nav-b-g', ar:'تصدير',   en:'Export', fn:()=>navTo('cExport')},
+];
+
+let navOpen = false;
+let bubbleEls = [];
+
+function toggleNav(btn) {
+  navOpen ? closeNav() : openNav(btn);
 }
-function closeNav(e){
-  if(e && e.target !== document.getElementById('navOverlay')) return;
-  document.getElementById('navOverlay').classList.remove('open');
+
+function openNav(btn) {
+  navOpen = true;
+  hap('medium');
+
+  // تغيير الأيقونة لـ X
+  document.getElementById('navIco').src = 'https://api.iconify.design/ph/x-bold.svg?color=%23ff4060';
+  document.getElementById('navIco').style.transform = 'rotate(90deg)';
+
+  // فتح البلور
+  document.getElementById('navBackdrop').classList.add('open');
+
+  // موقع الزر
+  const btnEl = document.getElementById('navBtn');
+  const rect  = btnEl.getBoundingClientRect();
+  const cx    = rect.left + rect.width / 2;
+  const cy    = rect.top  + rect.height / 2;
+
+  // إنشاء الفقاعات وتوزيعها في قوس
+  bubbleEls.forEach(b => b.remove());
+  bubbleEls = [];
+
+  const count   = NAV_ITEMS.length;
+  const radius  = 90;
+  // قوس من 200° إلى 340° (تحت وعلى اليمين/يسار من الزر)
+  const startA  = 195;
+  const endA    = 345;
+  const step    = (endA - startA) / (count - 1);
+
+  NAV_ITEMS.forEach((item, i) => {
+    const angle = (startA + i * step) * Math.PI / 180;
+    const tx    = cx + Math.cos(angle) * radius - 28; // -28 = نص عرض الفقاعة
+    const ty    = cy + Math.sin(angle) * radius - 28;
+
+    const b = document.createElement('button');
+    b.className = `nav-bubble ${item.cls}`;
+    b.style.left = tx + 'px';
+    b.style.top  = ty + 'px';
+    b.style.transitionDelay = (i * 40) + 'ms';
+    b.innerHTML = `<img src="https://api.iconify.design/${item.ico}" style="width:20px;height:20px"><span style="font-size:8px;line-height:1">${L==='ar'?item.ar:item.en}</span>`;
+    b.onclick = () => { item.fn(); closeNav(); };
+    document.body.appendChild(b);
+    bubbleEls.push(b);
+
+    requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('show')));
+  });
 }
-function navTo(id){
-  document.getElementById('navOverlay').classList.remove('open');
+
+function closeNav() {
+  if (!navOpen) return;
+  navOpen = false;
+
+  // رجع أيقونة الزر
+  document.getElementById('navIco').src = 'https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0';
+  document.getElementById('navIco').style.transform = 'rotate(0deg)';
+
+  // إغلاق البلور
+  document.getElementById('navBackdrop').classList.remove('open');
+
+  // إخفاء الفقاعات
+  bubbleEls.forEach((b, i) => {
+    b.style.transitionDelay = (i * 25) + 'ms';
+    b.classList.remove('show');
+  });
+  setTimeout(() => { bubbleEls.forEach(b=>b.remove()); bubbleEls=[]; }, 500);
+}
+
+function navTo(id) {
+  closeNav();
   setTimeout(()=>{
     const el = document.getElementById(id);
     if(!el) return;
     el.scrollIntoView({behavior:'smooth', block:'start'});
-    // وميض على الكارد المستهدف
     el.style.transition = 'box-shadow .3s';
     el.style.boxShadow  = '0 0 0 2px var(--cyan), 0 0 30px rgba(0,212,255,0.4)';
     setTimeout(()=>{ el.style.boxShadow=''; }, 1000);
     hap('light');
-  }, 200);
+  }, 250);
 }
 
 // ── HELPERS ──
