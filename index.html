@@ -8,6 +8,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -49,15 +61,10 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-size:40px 40px}
 .scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
-/* HEADER — seamless, no background, blends with page */
+/* HEADER — seamless, fully blends with page */
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;
   opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both;
   position:relative;z-index:10}
-.header::after{
-  content:'';position:absolute;bottom:0;left:16px;right:16px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),var(--purple),transparent);
-  opacity:.4;
-}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 
 /* NAV SHEET */
@@ -376,8 +383,9 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <button class="hdr-btn" onclick="openNav()" title="انتقال سريع" style="width:35px;padding:0">
       <img id="navIco" src="https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0" alt="">
     </button>
-    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
-      <span id="lgFlag"></span><span id="lgCode">AR</span>
+    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px;gap:5px">
+      <img src="https://api.iconify.design/ph/globe-simple-fill.svg?color=%23e2e8f0" style="width:14px;height:14px" alt="">
+      <span id="lgCode">AR</span>
     </button>
     <button class="hdr-btn" onclick="toggleTheme(this)">
       <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
@@ -754,7 +762,6 @@ function applyL(){
   const ar = L==='ar';
   document.documentElement.dir  = ar?'rtl':'ltr';
   document.documentElement.lang = L;
-  document.getElementById('lgFlag').textContent = ar?'🇸🇦':'🇺🇸';
   document.getElementById('lgCode').textContent = ar?'AR':'EN';
   document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=ar?el.dataset.ar:el.dataset.en);
   document.querySelectorAll('[data-ph-ar]').forEach(el=>el.placeholder=ar?el.dataset.phAr:el.dataset.phEn);
@@ -1128,29 +1135,29 @@ function hap(t){
   else if(t==='selection')tg.HapticFeedback.selectionChanged();
 }
 
-const TICONS={ok:'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d',
-  err:'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060',
-  warn:'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700',
-  info:'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0'};
-let toastT=null;
-function showToast(msg,type='info'){
-  document.getElementById('tIco').src=TICONS[type]||TICONS.info;
-  document.getElementById('tMsg').textContent=msg;
-  const el=document.getElementById('toast');el.classList.add('show');
-  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
+const  TICONS = { ok : 'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d' ,
+  خطأ : 'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060' ،
+  تحذير : 'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700' ،
+  info : 'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0' } ;
+let  toastT = null ;
+دالة  عرض رسالة التنبيه ( الرسالة ، النوع = 'معلومات' ) {
+  document.getElementById ( ' tIco ' ) . src = TICONS [ type ] || TICONS.info ;​​
+  وثيقة . getElementById ( 'tMsg' ) . محتوى النص = رسالة ;
+  const  el = document.getElementById ( ' toast ' ) ; el.classList.add ( ' show ' ) ;​​
+  clearTimeout ( toastT ) ; toastT = setTimeout ( ( ) = > el.classList.remove ( ' show ' ) , 2700 ) ;​
 }
 
-// ── THEME — auto-detect + manual toggle ──
-let dark = true;
+// ── الثيم — الكشف التلقائي + التبديل اليدوي ──
+let  dark = true ;
 
-function applyTheme(isDark){
-  dark = isDark;
-  document.body.classList.toggle('light', !isDark);
-  const ico = document.getElementById('themeIco');
-  if(ico) ico.src = isDark
+دالة  تطبيق المظهر ( الوضع الداكن ) {
+  dark = isDark ;
+  document.body.classList.toggle ( ' light ' , ! isDark ) ;​​​
+  const  ico = document.getElementById ( ' themeIco ' ) ;
+  إذا كان ( ico )  ico.src = isDark​
     ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
-    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e';
-  // مطابقة هيدر تيليجرام
+    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e' ;
+  // مافي هيدر تيليجرام
   if(tg?.setHeaderColor)     tg.setHeaderColor(isDark ? '#06090f' : '#f0f4ff');
   if(tg?.setBackgroundColor) tg.setBackgroundColor(isDark ? '#06090f' : '#f0f4ff');
 }
