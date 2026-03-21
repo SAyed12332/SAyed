@@ -2,6 +2,12 @@
 
 
 
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -15,7 +21,20 @@
   --bg:#06090f; --cyan:#00d4ff; --green:#00ff9d; --red:#ff4060;
   --yellow:#ffd700; --purple:#b57aff; --text:#e2e8f0; --muted:#4a5568;
   --border:rgba(0,212,255,0.14); --card-bg:rgba(10,15,28,0.93); --r:16px;
+  --hdr-bg:rgba(6,9,15,0.0);
 }
+/* LIGHT THEME */
+body.light{
+  --bg:#f0f4ff; --text:#1a1f2e; --muted:#8892a4; --card-bg:rgba(255,255,255,0.88);
+  --border:rgba(0,100,200,0.12); --hdr-bg:rgba(240,244,255,0.0);
+}
+body.light .orb1{background:radial-gradient(circle,rgba(0,150,255,0.09),transparent)}
+body.light .orb2{background:radial-gradient(circle,rgba(0,200,100,0.06),transparent)}
+body.light::after{background-image:linear-gradient(rgba(0,100,200,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.025) 1px,transparent 1px);background-size:40px 40px}
+body.light .scanline{opacity:.4}
+body.light .card{box-shadow:0 4px 20px rgba(0,50,150,0.08),inset 0 1px 0 rgba(255,255,255,0.8)}
+body.light .card::before{background:linear-gradient(90deg,transparent,rgba(0,150,255,0.3),transparent)}
+body.light .status-card{box-shadow:0 4px 16px rgba(0,50,150,0.08)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:var(--tg-vh,100vh);padding-bottom:72px;overflow-x:hidden;position:relative}
 
@@ -30,10 +49,51 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-size:40px 40px}
 .scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
-/* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;
-  opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both}
+/* HEADER — seamless, no background, blends with page */
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;
+  opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both;
+  position:relative;z-index:10}
+.header::after{
+  content:'';position:absolute;bottom:0;left:16px;right:16px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),var(--purple),transparent);
+  opacity:.4;
+}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+/* NAV SHEET */
+.nav-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0);pointer-events:none;transition:background .3s}
+.nav-overlay.open{background:rgba(0,0,0,0.4);pointer-events:all;backdrop-filter:blur(6px)}
+.nav-sheet{
+  position:fixed;top:0;left:0;right:0;z-index:901;
+  background:rgba(6,9,15,0.85);backdrop-filter:blur(28px) saturate(180%);
+  border-bottom:1px solid rgba(0,212,255,0.2);
+  padding:14px 16px 18px;
+  transform:translateY(-110%);transition:transform .38s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 8px 40px rgba(0,212,255,0.12);
+}
+.nav-sheet::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);opacity:.6;
+}
+.nav-overlay.open .nav-sheet{transform:translateY(0)}
+body.light .nav-sheet{background:rgba(240,244,255,0.88)}
+.nav-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px}
+.nav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:10px 5px;border-radius:13px;border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.04);cursor:pointer;
+  transition:all .2s cubic-bezier(.22,1,.36,1);
+  font-family:'Tajawal',sans-serif;font-size:11px;font-weight:700;color:var(--muted);
+}
+.nav-item img{width:20px;height:20px}
+.nav-item:active{transform:scale(.9)}
+.nav-item.nav-c{color:var(--cyan);background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2)}
+.nav-item.nav-g{color:var(--green);background:rgba(0,255,157,0.07);border-color:rgba(0,255,157,0.18)}
+.nav-item.nav-y{color:var(--yellow);background:rgba(255,215,0,0.07);border-color:rgba(255,215,0,0.18)}
+.nav-item.nav-r{color:var(--red);background:rgba(255,64,96,0.07);border-color:rgba(255,64,96,0.18)}
+.nav-item.nav-p{color:var(--purple);background:rgba(181,122,255,0.07);border-color:rgba(181,122,255,0.18)}
 .title{
   font-size:13.5px;font-weight:900;white-space:nowrap;
   background:linear-gradient(90deg,
@@ -313,12 +373,56 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 <div class="header" id="appHeader">
   <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control</div></div>
   <div class="hdr-acts">
+    <button class="hdr-btn" onclick="openNav()" title="انتقال سريع" style="width:35px;padding:0">
+      <img id="navIco" src="https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0" alt="">
+    </button>
     <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px">
       <span id="lgFlag"></span><span id="lgCode">AR</span>
     </button>
     <button class="hdr-btn" onclick="toggleTheme(this)">
       <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
     </button>
+  </div>
+</div>
+
+<!-- NAV SHEET -->
+<div class="nav-overlay" id="navOverlay" onclick="closeNav(event)">
+  <div class="nav-sheet">
+    <div class="nav-title" id="navTitle">انتقال سريع</div>
+    <div class="nav-grid">
+      <div class="nav-item nav-c" onclick="navTo('statusCard')">
+        <img src="https://api.iconify.design/ph/activity-fill.svg?color=%2300d4ff" alt="">
+        <span data-ar="الحالة" data-en="Status">الحالة</span>
+      </div>
+      <div class="nav-item nav-c" onclick="navTo('cSearch')">
+        <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
+        <span data-ar="بحث" data-en="Search">بحث</span>
+      </div>
+      <div class="nav-item nav-c" onclick="navTo('cRefine')">
+        <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
+        <span data-ar="صقل" data-en="Refine">صقل</span>
+      </div>
+      <div class="nav-item nav-g" onclick="navTo('cEF')">
+        <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
+        <span data-ar="تعديل" data-en="Edit">تعديل</span>
+      </div>
+      <div class="nav-item nav-y" onclick="navTo('cEF');setTimeout(()=>swTab('f'),300)">
+        <img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt="">
+        <span data-ar="تجميد" data-en="Freeze">تجميد</span>
+      </div>
+      <div class="nav-item nav-c" onclick="navTo('cQuick')">
+        <img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt="">
+        <span data-ar="سريع" data-en="Quick">سريع</span>
+      </div>
+      <div class="nav-item nav-p" onclick="navTo('cAdv')">
+        <img src="https://api.iconify.design/ph/cpu-fill.svg?color=%23b57aff" alt="">
+        <span data-ar="متقدم" data-en="Adv">متقدم</span>
+      </div>
+      <div class="nav-item nav-g" onclick="navTo('cExport')">
+        <img src="https://api.iconify.design/ph/export-fill.svg?color=%2300ff9d" alt="">
+        <span data-ar="تصدير" data-en="Export">تصدير</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1036,14 +1140,56 @@ function showToast(msg,type='info'){
   clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
 }
 
-// ── THEME ──
-let dark=true;
+// ── THEME — auto-detect + manual toggle ──
+let dark = true;
+
+function applyTheme(isDark){
+  dark = isDark;
+  document.body.classList.toggle('light', !isDark);
+  const ico = document.getElementById('themeIco');
+  if(ico) ico.src = isDark
+    ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
+    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e';
+  // مطابقة هيدر تيليجرام
+  if(tg?.setHeaderColor)     tg.setHeaderColor(isDark ? '#06090f' : '#f0f4ff');
+  if(tg?.setBackgroundColor) tg.setBackgroundColor(isDark ? '#06090f' : '#f0f4ff');
+}
+
 function toggleTheme(b){
-  dark=!dark;
-  document.getElementById('themeIco').src=dark
-    ?'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
-    :'https://api.iconify.design/ph/sun-fill.svg?color=%23ffd700';
-  bump(b);hap('light');
+  applyTheme(!dark);
+  bump(b); hap('light');
+}
+
+function initTheme(){
+  // كشف ثيم تيليجرام التلقائي
+  const tgDark = tg?.colorScheme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(tgDark);
+  // متابعة تغيير ثيم تيليجرام لحظياً
+  if(tg) tg.onEvent('themeChanged', ()=>{ applyTheme(tg.colorScheme === 'dark'); });
+}
+
+// ── NAV SHEET ──
+function openNav(){
+  document.getElementById('navOverlay').classList.add('open');
+  document.getElementById('navTitle').textContent = L==='ar'?'انتقال سريع':'Quick Nav';
+  hap('light');
+}
+function closeNav(e){
+  if(e && e.target !== document.getElementById('navOverlay')) return;
+  document.getElementById('navOverlay').classList.remove('open');
+}
+function navTo(id){
+  document.getElementById('navOverlay').classList.remove('open');
+  setTimeout(()=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    // وميض على الكارد المستهدف
+    el.style.transition = 'box-shadow .3s';
+    el.style.boxShadow  = '0 0 0 2px var(--cyan), 0 0 30px rgba(0,212,255,0.4)';
+    setTimeout(()=>{ el.style.boxShadow=''; }, 1000);
+    hap('light');
+  }, 200);
 }
 
 // ── HELPERS ──
@@ -1058,6 +1204,7 @@ function reveal(){
 }
 
 // ── INIT ──
+initTheme();
 applyL();
 setTimeout(reveal,1050);
 setTimeout(()=>{
