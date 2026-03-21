@@ -6,6 +6,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -398,6 +399,50 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
 .confirm-overlay.open{display:flex;animation:ov .2s ease both}
 .confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
+
+/* SCRIPT INJECT */
+.script-area{width:100%;min-height:110px;resize:vertical;border-radius:10px;
+  border:1px solid rgba(0,212,255,0.2);background:rgba(0,0,0,0.3);
+  color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;
+  padding:10px;outline:none;margin-bottom:8px;transition:border-color .2s;direction:ltr}
+.script-area:focus{border-color:rgba(0,212,255,0.5);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
+.script-area::placeholder{color:var(--muted)}
+.script-saved-item{display:flex;align-items:center;gap:9px;padding:9px 11px;
+  border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  cursor:pointer;transition:all .2s;margin-bottom:6px}
+.script-saved-item:active{transform:scale(.98);background:rgba(0,212,255,0.08)}
+.script-saved-name{flex:1;font-size:12px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.script-saved-size{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* AUTO EXECUTE */
+.ae-step{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;padding:12px;margin-bottom:8px;position:relative}
+.ae-step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.ae-step-num{font-size:10px;font-weight:700;color:var(--cyan);
+  font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.ae-del{width:24px;height:24px;border-radius:6px;border:none;cursor:pointer;
+  background:rgba(255,64,96,0.08);display:flex;align-items:center;justify-content:center;transition:.18s}
+.ae-del:active{background:rgba(255,64,96,0.25);transform:scale(.85)}
+.ae-del img{width:11px;height:11px}
+.ae-select{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;
+  border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.04);
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;
+  outline:none;-webkit-appearance:none;appearance:none}
+.ae-select option{background:#0a0f1c;color:var(--text)}
+.ae-progress-wrap{display:flex;align-items:center;gap:8px;padding:8px;
+  background:rgba(0,212,255,0.04);border-radius:8px;border:1px solid rgba(0,212,255,0.1);margin-top:4px}
+.ae-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
+.ae-dot.run{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:pWarn 1s infinite}
+.ae-dot.done{background:var(--green);box-shadow:0 0 6px var(--green)}
+.ae-dot.fail{background:var(--red);box-shadow:0 0 6px var(--red)}
+.ae-bar-wrap{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden}
+.ae-bar{height:100%;background:var(--cyan);width:0%;transition:width .5s;border-radius:2px}
+.ae-add-btn{width:100%;padding:9px;border-radius:10px;
+  border:1px dashed rgba(0,212,255,0.22);background:transparent;
+  color:var(--cyan);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:9px}
+.ae-add-btn:active{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.4)}
   border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
   box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .3s cubic-bezier(.22,1,.36,1) both}
 .confirm-icon{text-align:center;margin-bottom:12px}
@@ -744,6 +789,104 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <button class="eb bc" style="width:auto;padding:10px 14px" onclick="savePreset(this)">
       <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
       <span data-ar="حفظ" data-en="Save">حفظ</span>
+    </button>
+  </div>
+</div>
+<!-- SCRIPT INJECT -->
+<div class="card" id="cScript">
+  <div class="ch">
+    <div class="ci"><img src="https://api.iconify.design/ph/code-fill.svg?color=%2300d4ff" alt=""></div>
+    <div>
+      <div class="ct">SCRIPT INJECT</div>
+      <div class="cd" data-ar="حقن سكريبت Lua في GG مباشرة" data-en="Inject Lua script into GG">حقن سكريبت Lua في GG مباشرة</div>
+    </div>
+  </div>
+
+  <!-- السكريبتات المحفوظة -->
+  <div class="cd" style="margin-bottom:6px;display:flex;align-items:center;gap:5px">
+    <img src="https://api.iconify.design/ph/files-fill.svg?color=%234a5568" style="width:12px;height:12px">
+    <span data-ar="السكريبتات المحفوظة" data-en="Saved scripts">السكريبتات المحفوظة</span>
+  </div>
+  <div id="scriptSavedList">
+    <div class="preset-empty" id="scriptEmpty" data-ar="لا توجد سكريبتات محفوظة" data-en="No saved scripts">لا توجد سكريبتات محفوظة</div>
+  </div>
+
+  <!-- محرر السكريبت -->
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px">
+    <img src="https://api.iconify.design/ph/pencil-line.svg?color=%234a5568" style="width:12px;height:12px">
+    <span data-ar="كود السكريبت (Lua)" data-en="Script code (Lua)">كود السكريبت (Lua)</span>
+  </div>
+  <textarea class="script-area" id="scriptCode" placeholder="-- أكتب أو ألصق كود Lua هنا...&#10;gg.toast('مرحباً من السكريبت المحقون!')"></textarea>
+
+  <!-- اسم + حفظ -->
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px;align-items:center">
+    <input type="text" id="scriptSaveName" data-ph-ar="اسم السكريبت للحفظ" data-ph-en="Script name to save" placeholder="اسم السكريبت" style="margin-bottom:0">
+    <button class="eb bm" style="width:auto;padding:10px 13px" onclick="saveScript(this)">
+      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%234a5568" alt="">
+      <span data-ar="حفظ" data-en="Save">حفظ</span>
+    </button>
+  </div>
+
+  <!-- إرسال + Sx -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <button class="eb bc" onclick="injectScript(this)">
+      <img src="https://api.iconify.design/ph/rocket-launch-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="حقن وتشغيل" data-en="Inject & Run">حقن وتشغيل</span>
+    </button>
+    <button class="eb bg" onclick="openLastScript(this)">
+      <img src="https://api.iconify.design/ph/play-circle-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="تشغيل Sx" data-en="Run Sx">تشغيل Sx</span>
+    </button>
+  </div>
+</div>
+
+<!-- AUTO EXECUTE -->
+<div class="card" id="cAutoExec">
+  <div class="ch">
+    <div class="ci"><img src="https://api.iconify.design/ph/robot-fill.svg?color=%2300d4ff" alt=""></div>
+    <div>
+      <div class="ct">AUTO EXECUTE</div>
+      <div class="cd" data-ar="تسلسل أوامر تلقائي قابل للتخصيص" data-en="Customizable auto command sequence">تسلسل أوامر تلقائي قابل للتخصيص</div>
+    </div>
+  </div>
+
+  <!-- خطوات التنفيذ -->
+  <div id="aeStepsList"></div>
+
+  <!-- زر إضافة خطوة -->
+  <button class="ae-add-btn" onclick="aeAddStep()">
+    <img src="https://api.iconify.design/ph/plus-circle-fill.svg?color=%2300d4ff" style="width:16px;height:16px" alt="">
+    <span data-ar="إضافة خطوة" data-en="Add step">إضافة خطوة</span>
+  </button>
+
+  <!-- إعدادات التنفيذ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px">
+    <div>
+      <div class="cd" style="margin-bottom:4px" data-ar="التأخير بين الخطوات (ms)" data-en="Delay between steps (ms)">التأخير بين الخطوات (ms)</div>
+      <input type="number" id="aeDelay" value="800" style="margin-bottom:0">
+    </div>
+    <div>
+      <div class="cd" style="margin-bottom:4px" data-ar="عدد مرات التكرار" data-en="Repeat count">عدد مرات التكرار</div>
+      <input type="number" id="aeRepeat" value="1" min="1" style="margin-bottom:0">
+    </div>
+  </div>
+
+  <!-- شريط تقدم كلي -->
+  <div class="ae-progress-wrap" id="aeMainProgress" style="margin-bottom:9px">
+    <div class="ae-dot" id="aeDot"></div>
+    <div class="ae-bar-wrap"><div class="ae-bar" id="aeBar"></div></div>
+    <span id="aeStatusTxt" style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:55px;text-align:left">جاهز</span>
+  </div>
+
+  <!-- أزرار التحكم -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <button class="eb bg" id="aeBtnRun" onclick="aeRun(this)">
+      <img src="https://api.iconify.design/ph/play-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="تشغيل" data-en="Run">تشغيل</span>
+    </button>
+    <button class="eb br" onclick="aeStop()">
+      <img src="https://api.iconify.design/ph/stop-fill.svg?color=%23ff4060" alt="">
+      <span data-ar="إيقاف" data-en="Stop">إيقاف</span>
     </button>
   </div>
 </div>
@@ -1484,6 +1627,162 @@ function renderPresets() {
       </button>
     </div>`).join('');
 }
+// ── SCRIPT INJECT ──
+let savedScripts = JSON.parse(localStorage.getItem('gg_scripts')||'[]');
+let lastInjectedScript = localStorage.getItem('gg_last_script')||'';
+
+function saveScriptsList(){ localStorage.setItem('gg_scripts', JSON.stringify(savedScripts)); }
+
+function saveScript(btn){
+  const name = document.getElementById('scriptSaveName').value.trim();
+  const code = document.getElementById('scriptCode').value.trim();
+  if(!name){ showToast(L==='ar'?'أدخل اسماً':'Enter a name','warn'); return; }
+  if(!code){ showToast(L==='ar'?'الكود فارغ':'Code is empty','warn'); return; }
+  savedScripts.unshift({ id:Date.now(), name, code });
+  if(savedScripts.length>15) savedScripts.pop();
+  saveScriptsList(); renderSavedScripts();
+  document.getElementById('scriptSaveName').value='';
+  hap('success'); showToast(L==='ar'?`حُفظ: ${name}`:`Saved: ${name}`,'ok');
+}
+
+function renderSavedScripts(){
+  const el=document.getElementById('scriptSavedList');
+  const empty=document.getElementById('scriptEmpty');
+  if(!savedScripts.length){ empty.style.display=''; el.innerHTML=''; el.appendChild(empty); return; }
+  empty.style.display='none';
+  el.innerHTML=savedScripts.map(s=>`
+    <div class="script-saved-item" onclick="loadScript(${s.id})">
+      <img src="https://api.iconify.design/ph/file-code-fill.svg?color=%2300d4ff" style="width:16px;height:16px;flex-shrink:0">
+      <span class="script-saved-name">${s.name}</span>
+      <span class="script-saved-size">${s.code.length}c</span>
+      <button class="preset-del" onclick="event.stopPropagation();deleteScript(${s.id})">
+        <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      </button>
+    </div>`).join('');
+}
+
+function loadScript(id){
+  const s=savedScripts.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('scriptCode').value=s.code;
+  document.getElementById('scriptSaveName').value=s.name;
+  hap('light');
+}
+
+async function deleteScript(id){
+  const ok=await showConfirm(L==='ar'?'حذف سكريبت':'Delete script',L==='ar'?'حذف هذا السكريبت؟':'Delete this script?');
+  if(!ok) return;
+  savedScripts=savedScripts.filter(x=>x.id!==id);
+  saveScriptsList(); renderSavedScripts();
+}
+
+function injectScript(btn){
+  const code=document.getElementById('scriptCode').value.trim();
+  if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
+  lastInjectedScript=code;
+  localStorage.setItem('gg_last_script',code);
+  hap('medium');
+  // بيبعت الكود مشفراً base64
+  sendCmd({c:'loadScript', code:btoa(unescape(encodeURIComponent(code)))}, btn);
+}
+
+function openLastScript(btn){
+  if(!lastInjectedScript){ showToast(L==='ar'?'لا يوجد سكريبت محفوظ':'No saved script','warn'); return; }
+  hap('medium');
+  sendCmd({c:'runLastScript'}, btn);
+}
+
+// ── AUTO EXECUTE ──
+let aeSteps=[], aeRunning=false, aeStopFlag=false, aeStepId=0;
+
+const AE_CMDS=[
+  {v:'search',    ar:'بحث',         en:'Search',      needsVal:true, needsType:true },
+  {v:'refine',    ar:'صقل',         en:'Refine',      needsVal:true, needsType:true },
+  {v:'edit',      ar:'تعديل الكل',  en:'Edit All',    needsVal:true, needsType:true },
+  {v:'freeze',    ar:'تجميد',       en:'Freeze',      needsVal:true, needsType:false},
+  {v:'unfreeze',  ar:'رفع التجميد', en:'Unfreeze',    needsVal:false,needsType:false},
+  {v:'clear',     ar:'مسح النتائج', en:'Clear',       needsVal:false,needsType:false},
+  {v:'count',     ar:'عدد النتائج', en:'Count',       needsVal:false,needsType:false},
+  {v:'sleep',     ar:'انتظار (ms)', en:'Sleep (ms)',  needsVal:true, needsType:false},
+  {v:'goto',      ar:'فتح GG',      en:'Open GG',     needsVal:false,needsType:false},
+  {v:'hide',      ar:'إخفاء GG',    en:'Hide GG',     needsVal:false,needsType:false},
+  {v:'getResults',ar:'جلب نتائج',   en:'Get results', needsVal:true, needsType:false},
+  {v:'ranges',    ar:'تعيين نطاق',  en:'Set ranges',  needsVal:true, needsType:false},
+];
+
+function aeAddStep(){
+  aeSteps.push({id:++aeStepId, cmd:'search', val:'', type:4});
+  renderAeSteps(); hap('light');
+}
+function aeRemoveStep(id){ aeSteps=aeSteps.filter(s=>s.id!==id); renderAeSteps(); }
+function aeUpdate(id,f,v){ const s=aeSteps.find(x=>x.id===id); if(s) s[f]=v; }
+
+function renderAeSteps(){
+  const el=document.getElementById('aeStepsList');
+  if(!aeSteps.length){
+    el.innerHTML=`<div class="preset-empty" style="margin-bottom:8px">${L==='ar'?'لا توجد خطوات — أضف خطوة':'No steps — add a step'}</div>`;
+    return;
+  }
+  el.innerHTML=aeSteps.map((s,i)=>{
+    const def=AE_CMDS.find(c=>c.v===s.cmd)||AE_CMDS[0];
+    const opts=AE_CMDS.map(c=>`<option value="${c.v}"${c.v===s.cmd?' selected':''}>${L==='ar'?c.ar:c.en}</option>`).join('');
+    const tOpts=[{v:4,n:'DWORD'},{v:16,n:'FLOAT'},{v:32,n:'QWORD'},{v:1,n:'BYTE'},{v:2,n:'WORD'}]
+      .map(t=>`<option value="${t.v}"${t.v==s.type?' selected':''}>${t.n}</option>`).join('');
+    return `<div class="ae-step" id="ae-s-${s.id}">
+      <div class="ae-step-head">
+        <span class="ae-step-num">STEP ${i+1}</span>
+        <button class="ae-del" onclick="aeRemoveStep(${s.id})"><img src="https://api.iconify.design/ph/x-fill.svg?color=%23ff4060" alt=""></button>
+      </div>
+      <select class="ae-select" onchange="aeUpdate(${s.id},'cmd',this.value);renderAeSteps()">${opts}</select>
+      ${def.needsVal?`<input type="text" value="${s.val||''}" placeholder="${L==='ar'?'القيمة':'Value'}" style="margin-bottom:6px" oninput="aeUpdate(${s.id},'val',this.value)">`:'' }
+      ${def.needsType?`<select class="ae-select" onchange="aeUpdate(${s.id},'type',parseInt(this.value))">${tOpts}</select>`:''}
+      <div class="ae-progress-wrap"><div class="ae-dot" id="ae-d-${s.id}"></div><div class="ae-bar-wrap"><div class="ae-bar" id="ae-b-${s.id}"></div></div></div>
+    </div>`;
+  }).join('');
+}
+
+async function aeRun(btn){
+  if(aeRunning){showToast(L==='ar'?'جاري التشغيل':'Already running','warn');return}
+  if(!aeSteps.length){showToast(L==='ar'?'أضف خطوات':'Add steps','warn');return}
+  const d=parseInt(document.getElementById('aeDelay').value)||800;
+  const rep=parseInt(document.getElementById('aeRepeat').value)||1;
+  aeRunning=true;aeStopFlag=false;
+  const dot=document.getElementById('aeDot'),bar=document.getElementById('aeBar'),txt=document.getElementById('aeStatusTxt');
+  dot.className='ae-dot run';bar.style.width='0%';
+  const total=aeSteps.length*rep; let done=0;
+  for(let r=0;r<rep;r++){
+    for(const s of aeSteps){
+      if(aeStopFlag)break;
+      const sd=document.getElementById(`ae-d-${s.id}`),sb=document.getElementById(`ae-b-${s.id}`);
+      if(sd)sd.className='ae-dot run';
+      if(sb)sb.style.width='50%';
+      const cmd={c:s.cmd};
+      if(s.val)cmd.v=s.val;
+      if(s.type&&s.type!==0)cmd.t=s.type;
+      await sendCmd(cmd,null);
+      await new Promise(res=>setTimeout(res,d));
+      done++;
+      if(sd)sd.className='ae-dot done';
+      if(sb)sb.style.width='100%';
+      bar.style.width=Math.round((done/total)*100)+'%';
+      txt.textContent=`${done}/${total}`;
+    }
+    if(aeStopFlag)break;
+  }
+  aeRunning=false;
+  dot.className=aeStopFlag?'ae-dot fail':'ae-dot done';
+  txt.textContent=aeStopFlag?(L==='ar'?'موقوف':'Stopped'):(L==='ar'?'انتهى':'Done');
+  if(!aeStopFlag)hap('success');
+}
+
+function aeStop(){
+  aeStopFlag=true;aeRunning=false;
+  const dot=document.getElementById('aeDot'),txt=document.getElementById('aeStatusTxt');
+  if(dot)dot.className='ae-dot fail';
+  if(txt)txt.textContent=L==='ar'?'موقوف':'Stopped';
+  hap('warning');
+}
+
 function nowStr(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0')}
 
 // ── REVEAL ──
@@ -1497,6 +1796,8 @@ function reveal(){
 initTheme();
 applyL();
 renderPresets();
+renderSavedScripts();
+renderAeSteps();
 setTimeout(reveal,1050);
 setTimeout(()=>{
   const el = document.getElementById('detectedCid');
