@@ -69,36 +69,49 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .nav-backdrop{
   position:fixed;inset:0;z-index:900;
   background:rgba(0,0,0,0);pointer-events:none;
-  transition:background .35s,backdrop-filter .35s;
-  backdrop-filter:blur(0px);
+  transition:background .35s;backdrop-filter:blur(0px);
 }
 .nav-backdrop.open{
-  background:rgba(0,0,0,0.45);pointer-events:all;
-  backdrop-filter:blur(10px);
+  background:rgba(0,0,0,0.5);pointer-events:all;
+  backdrop-filter:blur(12px);
 }
-/* الفقاعات */
 .nav-bubble{
-  position:fixed;z-index:901;
-  width:56px;height:56px;border-radius:50%;
+  position:fixed;z-index:902;
+  width:52px;height:52px;border-radius:50%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  cursor:pointer;border:none;
-  font-family:'Tajawal',sans-serif;font-size:9px;font-weight:800;
-  box-shadow:0 4px 20px rgba(0,0,0,0.4);
-  transform:scale(0);opacity:0;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1),
-             opacity .25s ease,
-             box-shadow .2s;
+  cursor:pointer;border:1px solid rgba(255,255,255,0.12);
+  font-family:'Tajawal',sans-serif;font-size:8.5px;font-weight:800;
+  box-shadow:0 6px 24px rgba(0,0,0,0.5);
+  transform:scale(0) translate(-50%,-50%);opacity:0;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
   pointer-events:none;
-  /* الموضع يُعيَّن من JS */
+  top:0;left:0;
 }
-.nav-bubble.show{transform:scale(1);opacity:1;pointer-events:all}
-.nav-bubble:active{transform:scale(.88)!important}
-.nav-bubble img{width:20px;height:20px}
-.nav-b-c{background:linear-gradient(135deg,rgba(0,180,230,0.9),rgba(0,100,160,0.85));color:#cff6ff}
-.nav-b-g{background:linear-gradient(135deg,rgba(0,210,110,0.9),rgba(0,130,70,0.85));color:#c6fff0}
-.nav-b-y{background:linear-gradient(135deg,rgba(230,180,0,0.9),rgba(160,110,0,0.85));color:#fff8cc}
-.nav-b-p{background:linear-gradient(135deg,rgba(160,100,255,0.9),rgba(100,50,180,0.85));color:#eedcff}
-.nav-b-r{background:linear-gradient(135deg,rgba(230,50,80,0.9),rgba(160,20,50,0.85));color:#ffd0d8}
+.nav-bubble.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
+.nav-bubble:active{transform:scale(.85) translate(-50%,-50%)!important}
+.nav-bubble img{width:19px;height:19px}
+/* نفس ألوان أزرار الموقع */
+.nav-bubble.bc{background:linear-gradient(135deg,rgba(0,212,255,0.25),rgba(0,100,160,0.35));color:var(--cyan);border-color:rgba(0,212,255,0.4);box-shadow:0 0 18px rgba(0,212,255,0.3)}
+.nav-bubble.bg{background:linear-gradient(135deg,rgba(0,255,157,0.22),rgba(0,130,80,0.32));color:var(--green);border-color:rgba(0,255,157,0.38);box-shadow:0 0 18px rgba(0,255,157,0.25)}
+.nav-bubble.by{background:linear-gradient(135deg,rgba(255,215,0,0.22),rgba(160,120,0,0.32));color:var(--yellow);border-color:rgba(255,215,0,0.38);box-shadow:0 0 18px rgba(255,215,0,0.25)}
+.nav-bubble.bp{background:linear-gradient(135deg,rgba(181,122,255,0.22),rgba(100,50,180,0.32));color:var(--purple);border-color:rgba(181,122,255,0.38);box-shadow:0 0 18px rgba(181,122,255,0.25)}
+.nav-bubble.br{background:linear-gradient(135deg,rgba(255,64,96,0.22),rgba(160,20,50,0.32));color:var(--red);border-color:rgba(255,64,96,0.38);box-shadow:0 0 18px rgba(255,64,96,0.25)}
+/* زر الإغلاق X في المنتصف */
+.nav-close-btn{
+  position:fixed;z-index:903;
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,64,96,0.2);
+  border:2px solid rgba(255,64,96,0.6);
+  box-shadow:0 0 20px rgba(255,64,96,0.4),0 0 40px rgba(255,64,96,0.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transform:scale(0) translate(-50%,-50%);opacity:0;top:0;left:0;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1) .05s,opacity .25s;
+  pointer-events:none;
+}
+.nav-close-btn.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
+.nav-close-btn:active{transform:scale(.88) translate(-50%,-50%)!important}
+.nav-close-btn img{width:20px;height:20px}
 .title{
   font-size:13.5px;font-weight:900;white-space:nowrap;
   background:linear-gradient(90deg,
@@ -1137,87 +1150,99 @@ function initTheme(){
 
 // ── RADIAL BUBBLE NAV ──
 const NAV_ITEMS = [
-  {id:'statusCard', ico:'ph/activity-fill.svg?color=%23cff6ff',       cls:'nav-b-c', ar:'الحالة',  en:'Status', fn:()=>navTo('statusCard')},
-  {id:'cSearch',    ico:'ph/magnifying-glass-fill.svg?color=%23cff6ff',cls:'nav-b-c', ar:'بحث',     en:'Search', fn:()=>navTo('cSearch')},
-  {id:'cRefine',    ico:'ph/funnel-fill.svg?color=%23cff6ff',           cls:'nav-b-c', ar:'صقل',     en:'Refine', fn:()=>navTo('cRefine')},
-  {id:'cEF',        ico:'ph/pencil-simple-fill.svg?color=%23c6fff0',    cls:'nav-b-g', ar:'تعديل',   en:'Edit',   fn:()=>navTo('cEF')},
-  {id:'cEFf',       ico:'ph/snowflake.svg?color=%23fff8cc',             cls:'nav-b-y', ar:'تجميد',   en:'Freeze', fn:()=>{navTo('cEF');setTimeout(()=>swTab('f'),300)}},
-  {id:'cQuick',     ico:'ph/lightning-fill.svg?color=%23cff6ff',        cls:'nav-b-c', ar:'سريع',    en:'Quick',  fn:()=>navTo('cQuick')},
-  {id:'cAdv',       ico:'ph/cpu-fill.svg?color=%23eedcff',              cls:'nav-b-p', ar:'متقدم',   en:'Adv',    fn:()=>navTo('cAdv')},
-  {id:'cExport',    ico:'ph/export-fill.svg?color=%23c6fff0',           cls:'nav-b-g', ar:'تصدير',   en:'Export', fn:()=>navTo('cExport')},
+  {id:'statusCard', ico:'ph/activity-fill.svg?color=%2300d4ff',         cls:'bc', ar:'الحالة', en:'Status', fn:()=>navTo('statusCard')},
+  {id:'cSearch',    ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff', cls:'bc', ar:'بحث',    en:'Search', fn:()=>navTo('cSearch')},
+  {id:'cRefine',    ico:'ph/funnel-fill.svg?color=%2300d4ff',            cls:'bc', ar:'صقل',    en:'Refine', fn:()=>navTo('cRefine')},
+  {id:'cEF',        ico:'ph/pencil-simple-fill.svg?color=%2300ff9d',     cls:'bg', ar:'تعديل',  en:'Edit',   fn:()=>navTo('cEF')},
+  {id:'cEFf',       ico:'ph/snowflake.svg?color=%23ffd700',              cls:'by', ar:'تجميد',  en:'Freeze', fn:()=>{navTo('cEF');setTimeout(()=>swTab('f'),300)}},
+  {id:'cQuick',     ico:'ph/lightning-fill.svg?color=%2300d4ff',         cls:'bc', ar:'سريع',   en:'Quick',  fn:()=>navTo('cQuick')},
+  {id:'cAdv',       ico:'ph/cpu-fill.svg?color=%23b57aff',               cls:'bp', ar:'متقدم',  en:'Adv',    fn:()=>navTo('cAdv')},
+  {id:'cExport',    ico:'ph/export-fill.svg?color=%2300ff9d',            cls:'bg', ar:'تصدير',  en:'Export', fn:()=>navTo('cExport')},
 ];
 
 let navOpen = false;
 let bubbleEls = [];
+let closeBtnEl = null;
 
-function toggleNav(btn) {
-  navOpen ? closeNav() : openNav(btn);
+function toggleNav() {
+  navOpen ? closeNav() : openNav();
 }
 
-function openNav(btn) {
+function openNav() {
   navOpen = true;
   hap('medium');
 
-  // تغيير الأيقونة لـ X
-  document.getElementById('navIco').src = 'https://api.iconify.design/ph/x-bold.svg?color=%23ff4060';
-  document.getElementById('navIco').style.transform = 'rotate(90deg)';
+  // تغيير أيقونة زر الهيدر
+  const navIco = document.getElementById('navIco');
+  navIco.src = 'https://api.iconify.design/ph/dots-six-fill.svg?color=%23ff4060';
+  document.getElementById('navBtn').style.borderColor = 'rgba(255,64,96,0.4)';
 
-  // فتح البلور
   document.getElementById('navBackdrop').classList.add('open');
 
-  // موقع الزر
+  // موقع زر الهيدر — مركز الانتشار
   const btnEl = document.getElementById('navBtn');
   const rect  = btnEl.getBoundingClientRect();
   const cx    = rect.left + rect.width / 2;
   const cy    = rect.top  + rect.height / 2;
 
-  // إنشاء الفقاعات وتوزيعها في قوس
-  bubbleEls.forEach(b => b.remove());
+  // أنماط انتشار عشوائية ثابتة حول المركز
+  const positions = [
+    {dx:-110, dy: 30}, {dx:-80,  dy:-70},
+    {dx: 0,   dy:-100},{dx: 80,  dy:-70},
+    {dx: 110, dy: 30}, {dx: 70,  dy: 110},
+    {dx:-30,  dy: 120},{dx:-100, dy: 90},
+  ];
+
+  // إنشاء فقاعات العناصر
+  bubbleEls.forEach(b=>b.remove());
   bubbleEls = [];
 
-  const count   = NAV_ITEMS.length;
-  const radius  = 90;
-  // قوس من 200° إلى 340° (تحت وعلى اليمين/يسار من الزر)
-  const startA  = 195;
-  const endA    = 345;
-  const step    = (endA - startA) / (count - 1);
-
   NAV_ITEMS.forEach((item, i) => {
-    const angle = (startA + i * step) * Math.PI / 180;
-    const tx    = cx + Math.cos(angle) * radius - 28; // -28 = نص عرض الفقاعة
-    const ty    = cy + Math.sin(angle) * radius - 28;
-
+    const pos = positions[i % positions.length];
     const b = document.createElement('button');
     b.className = `nav-bubble ${item.cls}`;
-    b.style.left = tx + 'px';
-    b.style.top  = ty + 'px';
-    b.style.transitionDelay = (i * 40) + 'ms';
-    b.innerHTML = `<img src="https://api.iconify.design/${item.ico}" style="width:20px;height:20px"><span style="font-size:8px;line-height:1">${L==='ar'?item.ar:item.en}</span>`;
-    b.onclick = () => { item.fn(); closeNav(); };
+    b.style.left = (cx + pos.dx) + 'px';
+    b.style.top  = (cy + pos.dy) + 'px';
+    b.style.transitionDelay = (i * 35) + 'ms';
+    b.innerHTML = `<img src="https://api.iconify.design/${item.ico}"><span>${L==='ar'?item.ar:item.en}</span>`;
+    b.onclick = () => { item.fn(); };
     document.body.appendChild(b);
     bubbleEls.push(b);
-
     requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('show')));
   });
+
+  // زر الإغلاق X في نفس مكان الزر
+  if(closeBtnEl) closeBtnEl.remove();
+  closeBtnEl = document.createElement('button');
+  closeBtnEl.className = 'nav-close-btn';
+  closeBtnEl.style.left = cx + 'px';
+  closeBtnEl.style.top  = cy + 'px';
+  closeBtnEl.innerHTML  = `<img src="https://api.iconify.design/ph/x-bold.svg?color=%23ff4060">`;
+  closeBtnEl.onclick    = closeNav;
+  document.body.appendChild(closeBtnEl);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>closeBtnEl.classList.add('show')));
 }
 
 function closeNav() {
-  if (!navOpen) return;
+  if(!navOpen) return;
   navOpen = false;
+  hap('light');
 
-  // رجع أيقونة الزر
+  // رجع أيقونة الهيدر
   document.getElementById('navIco').src = 'https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0';
-  document.getElementById('navIco').style.transform = 'rotate(0deg)';
+  document.getElementById('navBtn').style.borderColor = '';
 
-  // إغلاق البلور
   document.getElementById('navBackdrop').classList.remove('open');
 
   // إخفاء الفقاعات
-  bubbleEls.forEach((b, i) => {
+  [...bubbleEls, closeBtnEl].filter(Boolean).forEach((b,i)=>{
     b.style.transitionDelay = (i * 25) + 'ms';
     b.classList.remove('show');
   });
-  setTimeout(() => { bubbleEls.forEach(b=>b.remove()); bubbleEls=[]; }, 500);
+  setTimeout(()=>{
+    bubbleEls.forEach(b=>b.remove()); bubbleEls=[];
+    if(closeBtnEl){ closeBtnEl.remove(); closeBtnEl=null; }
+  }, 500);
 }
 
 function navTo(id) {
