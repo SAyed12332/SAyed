@@ -8,6 +8,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1807,18 +1842,7 @@ async function injectScript(btn){
   let code = document.getElementById('scriptCode').value.trim();
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
 
-  // لو سويتش Sx مفعل، لف الكود داخل حلقة Sx
-  if(sxMode){
-    code = `gg.showUiButton()
-while true do
-  if gg.isClickedUiButton() then
-    gg.hideUiButton()
-${code.split('\n').map(l=>'    '+l).join('\n')}
-    gg.showUiButton()
-  end
-  gg.sleep(100)
-end`;
-  }
+  // لو سويتش Sx مفعل، نبعت flag فقط — الـ Lua يتولى إدارة الزر
 
   const encoded = toBase64Unicode(code);
   const CHUNK = 60;
@@ -1830,7 +1854,7 @@ end`;
   showToast(L==='ar'?`إرسال ${n} قطعة...`:`Sending ${n} chunks...`,'info');
 
   for(let i=0; i<n; i++){
-    await sendCmd({c:'scriptChunk', i, n, d:chunks[i]}, null);
+    await sendCmd({c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0}, null);
     await new Promise(r=>setTimeout(r, 1200));
   }
   setBtnLoading(btn, false);
