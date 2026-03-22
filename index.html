@@ -5,6 +5,11 @@
 
 
 
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1848,11 +1853,11 @@ async function injectScript(btn){
   hap('success');
 }
 
-// دالة حقن السكريبت عبر sendMessage للمجموعة
+// حقن السكريبت عبر sendData
 async function sendScriptChunk(cmd){
   try{
     const text='CMD:'+JSON.stringify(cmd);
-    await fetch(`${API}/sendMessage?chat_id=${GROUP_ID}&text=${encodeURIComponent(text)}`,{cache:'no-store'});
+    if(tg && tg.sendData) tg.sendData(text);
   }catch{}
 }
 
@@ -2037,3 +2042,5 @@ setInterval(fetchResult,4000);
 </script>
 </body>
 </html>
+
+
