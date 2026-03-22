@@ -1,4 +1,5 @@
-د
+
+
 
 
 
@@ -54,7 +55,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
 /* HEADER — seamless, fully blends with page */
 .header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;
-  opacity:0;animation:fadeD .45s cubic-bezier(.22,1,.36,1) .05s both;
+  opacity:0;animation:fadeD .15s cubic-bezier(.22,1,.36,1) .05s both;
   position:relative;z-index:10}
 @keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 
@@ -62,7 +63,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .nav-backdrop{
   position:fixed;inset:0;z-index:900;
   background:rgba(0,0,0,0);pointer-events:none;
-  transition:background .35s;backdrop-filter:blur(0px);
+  transition:background .2s;backdrop-filter:blur(0px);
 }
 .nav-backdrop.open{
   background:rgba(0,0,0,0.5);pointer-events:all;
@@ -70,19 +71,19 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 }
 .nav-bubble{
   position:fixed;z-index:902;
-  width:52px;height:52px;border-radius:50%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:54px;height:54px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   cursor:pointer;border:1px solid rgba(255,255,255,0.12);
-  font-family:'Tajawal',sans-serif;font-size:8.5px;font-weight:800;
+  font-family:'Tajawal',sans-serif;font-size:8px;font-weight:800;
   box-shadow:0 6px 24px rgba(0,0,0,0.5);
   transform:scale(0) translate(-50%,-50%);opacity:0;
-  transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .15s ease;
   pointer-events:none;
   top:0;left:0;
 }
 .nav-bubble.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
 .nav-bubble:active{transform:scale(.85) translate(-50%,-50%)!important}
-.nav-bubble img{width:19px;height:19px}
+.nav-bubble img{width:20px;height:20px}
 /* نفس ألوان أزرار الموقع */
 .nav-bubble.bc{background:linear-gradient(135deg,rgba(0,212,255,0.25),rgba(0,100,160,0.35));color:var(--cyan);border-color:rgba(0,212,255,0.4);box-shadow:0 0 18px rgba(0,212,255,0.3)}
 .nav-bubble.bg{background:linear-gradient(135deg,rgba(0,255,157,0.22),rgba(0,130,80,0.32));color:var(--green);border-color:rgba(0,255,157,0.38);box-shadow:0 0 18px rgba(0,255,157,0.25)}
@@ -99,7 +100,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;
   transform:scale(0) translate(-50%,-50%);opacity:0;top:0;left:0;
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1) .05s,opacity .25s;
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),opacity .12s;
   pointer-events:none;
 }
 .nav-close-btn.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
@@ -132,7 +133,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   border:1px solid var(--border);backdrop-filter:blur(14px);
   display:flex;align-items:center;justify-content:space-between;
   position:relative;overflow:hidden;cursor:pointer;user-select:none;
-  opacity:0;animation:cardUp .48s cubic-bezier(.22,1,.36,1) .1s both;
+  opacity:0;animation:cardUp .15s cubic-bezier(.22,1,.36,1) .1s both;
   transition:border-color .2s}
 .status-card:active{transform:scale(.985)}
 .status-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
@@ -170,7 +171,7 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   border-radius:var(--r);padding:13px;backdrop-filter:blur(14px);
   box-shadow:0 5px 25px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.035);
   position:relative;overflow:hidden;opacity:0;transform:translateY(14px) scale(.985)}
-.card.in{animation:cardUp .5s cubic-bezier(.22,1,.36,1) both}
+.card.in{animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
 @keyframes cardUp{to{opacity:1;transform:translateY(0) scale(1)}}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.3}
@@ -286,7 +287,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   background-size:200% 100%;animation:shim 1.6s infinite;border-radius:10px}
 @keyframes shim{to{background-position:-200% 0}}
 .skc{margin:0 16px 13px;background:var(--card-bg);border:1px solid var(--border);
-  border-radius:var(--r);padding:13px;opacity:0;animation:cardUp .5s cubic-bezier(.22,1,.36,1) both}
+  border-radius:var(--r);padding:13px;opacity:0;animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
 
 /* MODAL SHEET */
 .overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.72);
@@ -386,7 +387,7 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 .confirm-overlay.open{display:flex;animation:ov .2s ease both}
 .confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
   border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
-  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .3s cubic-bezier(.22,1,.36,1) both}
+  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
 .confirm-icon{text-align:center;margin-bottom:12px}
 .confirm-icon img{width:40px;height:40px}
 .confirm-title{font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px}
@@ -517,7 +518,7 @@ body.light .ae-select option{background:#f0f4ff;color:#1a1f2e}
 .confirm-overlay.open{display:flex;animation:ov .2s ease both}
 .confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
   border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
-  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .3s cubic-bezier(.22,1,.36,1) both}
+  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
 .confirm-icon{text-align:center;margin-bottom:12px}
 .confirm-icon img{width:40px;height:40px}
 .confirm-title{font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px}
@@ -531,14 +532,14 @@ body.light .ae-select option{background:#f0f4ff;color:#1a1f2e}
 
 <!-- SKELETON -->
 <div id="skWrap">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;opacity:0;animation:cardUp .4s ease .05s both">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;opacity:0;animation:cardUp .15s ease .05s both">
     <div><div class="sk" style="width:130px;height:20px;margin-bottom:5px"></div><div class="sk" style="width:85px;height:9px"></div></div>
     <div style="display:flex;gap:7px"><div class="sk" style="width:68px;height:35px;border-radius:10px"></div><div class="sk" style="width:35px;height:35px;border-radius:10px"></div></div>
   </div>
-  <div class="skc" style="animation-delay:.09s"><div class="sk" style="width:55%;height:13px;margin-bottom:10px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
-  <div class="skc" style="animation-delay:.17s"><div class="sk" style="width:72%;height:13px;margin-bottom:8px"></div><div class="sk" style="width:48%;height:11px;margin-bottom:9px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
-  <div class="skc" style="animation-delay:.25s"><div class="sk" style="width:62%;height:13px;margin-bottom:8px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div class="sk" style="height:42px;border-radius:11px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div></div>
-  <div class="skc" style="animation-delay:.33s"><div class="sk" style="width:48%;height:13px;margin-bottom:9px"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+  <div class="skc" style=""><div class="sk" style="width:55%;height:13px;margin-bottom:10px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style=""><div class="sk" style="width:72%;height:13px;margin-bottom:8px"></div><div class="sk" style="width:48%;height:11px;margin-bottom:9px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style=""><div class="sk" style="width:62%;height:13px;margin-bottom:8px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div class="sk" style="height:42px;border-radius:11px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div></div>
+  <div class="skc" style=""><div class="sk" style="width:48%;height:13px;margin-bottom:9px"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
     <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
     <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
   </div></div>
@@ -1310,7 +1311,7 @@ function renderLog(){
   if(!reqLog.length){empty.textContent=L==='ar'?'لا توجد طلبات بعد':'No requests yet';b.innerHTML='';b.appendChild(empty);return}
   empty.style.display='none';
   b.innerHTML=reqLog.map((e,i)=>`
-    <div class="rl-item" style="animation-delay:${i*.035}s">
+    <div class="rl-item" style="}s">
       <div class="rl-dot ${e.st}"></div>
       <div class="rl-info">
         <div class="rl-cmd">${CLBL[e.c]||e.c}</div>
@@ -1326,6 +1327,8 @@ function openSheet(id){document.getElementById(id).classList.add('open')}
 function closeSheet(id,ev){if(ev&&ev.target.id!==id)return;document.getElementById(id).classList.remove('open')}
 
 // ── SEND CMD ──
+const GROUP_ID = '-1003756223972'; // مجموعة التحكم
+
 async function sendCmd(cmd,btn){
   if(btn) setBtnLoading(btn, true);
   const entry={c:cmd.c,v:cmd.v||'',st:'pend',msg:'',t:nowStr()};
@@ -1333,7 +1336,7 @@ async function sendCmd(cmd,btn){
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
   try{
     const text='CMD:'+JSON.stringify(cmd);
-    const r=await fetch(`${API}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,{cache:'no-store'});
+    const r=await fetch(`${API}/sendMessage?chat_id=${GROUP_ID}&text=${encodeURIComponent(text)}`,{cache:'no-store'});
     const d=await r.json();
     if(d.ok){
       entry.st='ok';hap('success');
@@ -1477,7 +1480,6 @@ function initTheme(){
 
 // ── RADIAL BUBBLE NAV ──
 const NAV_ITEMS = [
-  {id:'statusCard', ico:'ph/activity-fill.svg?color=%2300d4ff',         cls:'bc', ar:'الحالة', en:'Status', fn:()=>navTo('statusCard')},
   {id:'cSearch',    ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff', cls:'bc', ar:'بحث',    en:'Search', fn:()=>navTo('cSearch')},
   {id:'cRefine',    ico:'ph/funnel-fill.svg?color=%2300d4ff',            cls:'bc', ar:'صقل',    en:'Refine', fn:()=>navTo('cRefine')},
   {id:'cEF',        ico:'ph/pencil-simple-fill.svg?color=%2300ff9d',     cls:'bg', ar:'تعديل',  en:'Edit',   fn:()=>navTo('cEF')},
@@ -1490,12 +1492,24 @@ const NAV_ITEMS = [
 ];
 
 let navOpen = false;
+let navDragging = false;
 let bubbleEls = [];
 let closeBtnEl = null;
 
 function toggleNav() {
   navOpen ? closeNav() : openNav();
 }
+
+// كشف السحب لتفعيل الفقاعات
+document.addEventListener('pointerdown', e => {
+  if(e.target.id === 'navBtn' || e.target.id === 'navIco') navDragging = false;
+});
+document.addEventListener('pointermove', e => {
+  if(navOpen && e.buttons > 0) navDragging = true;
+});
+document.addEventListener('pointerup', () => {
+  setTimeout(() => { navDragging = false; }, 100);
+});
 
 function openNav() {
   navOpen = true;
@@ -1508,33 +1522,40 @@ function openNav() {
 
   document.getElementById('navBackdrop').classList.add('open');
 
-  // موقع زر الهيدر — مركز الانتشار
+  // الـ X بالظبط مكان زر الهيدر
   const btnEl = document.getElementById('navBtn');
   const rect  = btnEl.getBoundingClientRect();
   const cx    = rect.left + rect.width / 2;
-  const cy    = rect.top  + rect.height / 2;
+  const cy    = rect.top  + rect.height / 2 + 85;
 
-  // توزيع دائري متساوي حول المركز
   const count = NAV_ITEMS.length;
-  const radius = 115;
-  // نبدأ من الأعلى (270°) ونوزع بالتساوي
-  const startAngle = -90; // أعلى
+  // نصف دائرة كاملة حول الـ X — radius ثابت 110px
+  const R = 115;
+  const n10 = NAV_ITEMS.length;
+  const positions = Array.from({length: n10}, (_, i) => {
+    const deg = -60 + (255 / (n10 - 1)) * i;
+    const rad = deg * Math.PI / 180;
+    return { dx: Math.cos(rad) * R, dy: Math.sin(rad) * R };
+  });
 
-  // إنشاء فقاعات العناصر
   bubbleEls.forEach(b=>b.remove());
   bubbleEls = [];
 
   NAV_ITEMS.forEach((item, i) => {
-    const angle = (startAngle + (360 / count) * i) * Math.PI / 180;
-    const dx = Math.cos(angle) * radius;
-    const dy = Math.sin(angle) * radius;
+    const pos = positions[i % positions.length];
+    const dx = pos.dx;
+    const dy = pos.dy;
     const b = document.createElement('button');
     b.className = `nav-bubble ${item.cls}`;
     b.style.left = (cx + dx) + 'px';
     b.style.top  = (cy + dy) + 'px';
-    b.style.transitionDelay = (i * 30) + 'ms';
+    b.style.transitionDelay = '0ms';
     b.innerHTML = `<img src="https://api.iconify.design/${item.ico}"><span>${L==='ar'?item.ar:item.en}</span>`;
     b.onclick = () => { item.fn(); };
+    // تفعيل بالسحب والوقوف على الفقاعة
+    b.addEventListener('pointerenter', () => {
+      if(navDragging){ item.fn(); closeNav(); }
+    });
     document.body.appendChild(b);
     bubbleEls.push(b);
     requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('show')));
@@ -1810,29 +1831,36 @@ function toBase64Unicode(str){
   return btoa(bin);
 }
 
-// حقن بالـ chunks
+// حقن بدون انتظار — قطعة واحدة عبر setMyDescription
 async function injectScript(btn){
   let code = document.getElementById('scriptCode').value.trim();
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
 
-  // لو سويتش Sx مفعل، نبعت flag فقط — الـ Lua يتولى إدارة الزر
-
   const encoded = toBase64Unicode(code);
-  const CHUNK = 60;
+  // نقسم على 200 حرف ونبعت بدون أي انتظار بين القطع
+  const CHUNK = 200;
   const chunks = [];
   for(let i=0; i<encoded.length; i+=CHUNK) chunks.push(encoded.slice(i,i+CHUNK));
   const n = chunks.length;
 
   setBtnLoading(btn, true);
-  showToast(L==='ar'?`إرسال ${n} قطعة...`:`Sending ${n} chunks...`,'info');
+  showToast(L==='ar'?`حقن ${n} قطعة...`:`Injecting ${n} chunks...`,'info');
 
   for(let i=0; i<n; i++){
-    await sendCmd({c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0}, null);
-    await new Promise(r=>setTimeout(r, 1200));
+    // نبعت عبر setMyDescription (أقل قيوداً من setMyShortDescription)
+    await sendScriptChunk({c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0});
   }
   setBtnLoading(btn, false);
   showToast(L==='ar'?'تم الحقن بنجاح':'Injected successfully','ok');
   hap('success');
+}
+
+// دالة حقن السكريبت عبر sendMessage للمجموعة
+async function sendScriptChunk(cmd){
+  try{
+    const text='CMD:'+JSON.stringify(cmd);
+    await fetch(`${API}/sendMessage?chat_id=${GROUP_ID}&text=${encodeURIComponent(text)}`,{cache:'no-store'});
+  }catch{}
 }
 
 // ── AUTO EXECUTE ──
@@ -1996,7 +2024,7 @@ function nowStr(){const d=new Date();return d.getHours().toString().padStart(2,'
 function reveal(){
   document.getElementById('skWrap').style.display='none';
   const w=document.getElementById('mainWrap');w.style.display='block';
-  w.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(.07+i*.08)+'s';c.classList.add('in')});
+  w.querySelectorAll('.card').forEach((c,i)=>{c.classList.add('in')});
 }
 
 // ── INIT ──
@@ -2005,7 +2033,7 @@ applyL();
 renderSavedScripts();
 renderAeSteps();
 renderAeSeqList();
-setTimeout(reveal,1050);
+setTimeout(reveal,200);
 setTimeout(()=>{
   const el = document.getElementById('detectedCid');
   if(el) el.textContent = detectedChatId;
