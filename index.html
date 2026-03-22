@@ -6,6 +6,11 @@
 
 
 
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -442,6 +447,12 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   color:var(--cyan);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
   cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:9px}
 .ae-add-btn:active{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.4)}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+.confirm-overlay.open{display:flex;animation:ov .2s ease both}
+.confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
   border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
   box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .3s cubic-bezier(.22,1,.36,1) both}
 .confirm-icon{text-align:center;margin-bottom:12px}
@@ -797,36 +808,42 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <div class="ci"><img src="https://api.iconify.design/ph/code-fill.svg?color=%2300d4ff" alt=""></div>
     <div>
       <div class="ct">SCRIPT INJECT</div>
-      <div class="cd" data-ar="حقن سكريبت Lua في GG مباشرة" data-en="Inject Lua script into GG">حقن سكريبت Lua في GG مباشرة</div>
+      <div class="cd" data-ar="حقن وتشغيل سكريبت Lua في GG" data-en="Inject & run Lua script in GG">حقن وتشغيل سكريبت Lua في GG</div>
     </div>
   </div>
 
-  <!-- السكريبتات المحفوظة -->
-  <div class="cd" style="margin-bottom:6px;display:flex;align-items:center;gap:5px">
-    <img src="https://api.iconify.design/ph/files-fill.svg?color=%234a5568" style="width:12px;height:12px">
-    <span data-ar="السكريبتات المحفوظة" data-en="Saved scripts">السكريبتات المحفوظة</span>
-  </div>
-  <div id="scriptSavedList">
+  <!-- قائمة المحفوظات -->
+  <div id="scriptSavedList" style="margin-bottom:10px">
     <div class="preset-empty" id="scriptEmpty" data-ar="لا توجد سكريبتات محفوظة" data-en="No saved scripts">لا توجد سكريبتات محفوظة</div>
   </div>
 
-  <!-- محرر السكريبت -->
-  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px">
-    <img src="https://api.iconify.design/ph/pencil-line.svg?color=%234a5568" style="width:12px;height:12px">
-    <span data-ar="كود السكريبت (Lua)" data-en="Script code (Lua)">كود السكريبت (Lua)</span>
-  </div>
-  <textarea class="script-area" id="scriptCode" placeholder="-- أكتب أو ألصق كود Lua هنا...&#10;gg.toast('مرحباً من السكريبت المحقون!')"></textarea>
+  <!-- محرر الكود -->
+  <textarea class="script-area" id="scriptCode"
+    placeholder="-- اكتب سكريبت Lua هنا...&#10;gg.toast('Hello GG!')"></textarea>
+
+  <!-- رفع ملف -->
+  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;
+    background:rgba(255,255,255,0.03);border:1px dashed rgba(0,212,255,0.2);
+    border-radius:10px;padding:9px 13px;margin-bottom:8px;transition:all .2s"
+    id="fileUploadLbl">
+    <img src="https://api.iconify.design/ph/upload-simple-fill.svg?color=%234a5568" style="width:15px;height:15px;flex-shrink:0">
+    <span style="font-size:13px;color:var(--muted)" id="fileUploadTxt"
+      data-ar="رفع ملف .lua" data-en="Upload .lua file">رفع ملف .lua</span>
+    <input type="file" id="scriptFile" accept=".lua,.txt" style="display:none" onchange="loadScriptFile(this)">
+  </label>
 
   <!-- اسم + حفظ -->
-  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px;align-items:center">
-    <input type="text" id="scriptSaveName" data-ph-ar="اسم السكريبت للحفظ" data-ph-en="Script name to save" placeholder="اسم السكريبت" style="margin-bottom:0">
-    <button class="eb bm" style="width:auto;padding:10px 13px" onclick="saveScript(this)">
-      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%234a5568" alt="">
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:9px;align-items:center">
+    <input type="text" id="scriptSaveName"
+      data-ph-ar="اسم السكريبت للحفظ" data-ph-en="Script name to save"
+      placeholder="اسم السكريبت" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 13px" onclick="saveScript(this)">
+      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
       <span data-ar="حفظ" data-en="Save">حفظ</span>
     </button>
   </div>
 
-  <!-- إرسال + Sx -->
+  <!-- حقن + تشغيل آخر -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
     <button class="eb bc" onclick="injectScript(this)">
       <img src="https://api.iconify.design/ph/rocket-launch-fill.svg?color=%2300d4ff" alt="">
@@ -842,44 +859,45 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 <!-- AUTO EXECUTE -->
 <div class="card" id="cAutoExec">
   <div class="ch">
-    <div class="ci"><img src="https://api.iconify.design/ph/robot-fill.svg?color=%2300d4ff" alt=""></div>
+    <div class="ci"><img src="https://api.iconify.design/ph/shuffle-fill.svg?color=%2300d4ff" alt=""></div>
     <div>
       <div class="ct">AUTO EXECUTE</div>
-      <div class="cd" data-ar="تسلسل أوامر تلقائي قابل للتخصيص" data-en="Customizable auto command sequence">تسلسل أوامر تلقائي قابل للتخصيص</div>
+      <div class="cd" data-ar="تسلسل أوامر تلقائي" data-en="Automated command sequence">تسلسل أوامر تلقائي</div>
     </div>
   </div>
 
-  <!-- خطوات التنفيذ -->
+  <!-- خطوات -->
   <div id="aeStepsList"></div>
 
-  <!-- زر إضافة خطوة -->
+  <!-- إضافة خطوة -->
   <button class="ae-add-btn" onclick="aeAddStep()">
-    <img src="https://api.iconify.design/ph/plus-circle-fill.svg?color=%2300d4ff" style="width:16px;height:16px" alt="">
+    <img src="https://api.iconify.design/ph/plus-circle-fill.svg?color=%2300d4ff" style="width:15px;height:15px" alt="">
     <span data-ar="إضافة خطوة" data-en="Add step">إضافة خطوة</span>
   </button>
 
-  <!-- إعدادات التنفيذ -->
+  <!-- إعدادات -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px">
     <div>
-      <div class="cd" style="margin-bottom:4px" data-ar="التأخير بين الخطوات (ms)" data-en="Delay between steps (ms)">التأخير بين الخطوات (ms)</div>
+      <div class="cd" style="margin-bottom:4px" data-ar="تأخير بين الخطوات (ms)" data-en="Delay between steps (ms)">تأخير (ms)</div>
       <input type="number" id="aeDelay" value="800" style="margin-bottom:0">
     </div>
     <div>
-      <div class="cd" style="margin-bottom:4px" data-ar="عدد مرات التكرار" data-en="Repeat count">عدد مرات التكرار</div>
+      <div class="cd" style="margin-bottom:4px" data-ar="عدد مرات التكرار" data-en="Repeat count">تكرار</div>
       <input type="number" id="aeRepeat" value="1" min="1" style="margin-bottom:0">
     </div>
   </div>
 
-  <!-- شريط تقدم كلي -->
-  <div class="ae-progress-wrap" id="aeMainProgress" style="margin-bottom:9px">
+  <!-- شريط التقدم -->
+  <div class="ae-progress-wrap" style="margin-bottom:9px">
     <div class="ae-dot" id="aeDot"></div>
     <div class="ae-bar-wrap"><div class="ae-bar" id="aeBar"></div></div>
-    <span id="aeStatusTxt" style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:55px;text-align:left">جاهز</span>
+    <span id="aeStatusTxt" style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:50px;text-align:left"
+      data-ar="جاهز" data-en="Ready">جاهز</span>
   </div>
 
-  <!-- أزرار التحكم -->
+  <!-- تشغيل / إيقاف -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <button class="eb bg" id="aeBtnRun" onclick="aeRun(this)">
+    <button class="eb bg" onclick="aeRun(this)">
       <img src="https://api.iconify.design/ph/play-fill.svg?color=%2300ff9d" alt="">
       <span data-ar="تشغيل" data-en="Run">تشغيل</span>
     </button>
@@ -1632,13 +1650,30 @@ let lastInjectedScript = localStorage.getItem('gg_last_script')||'';
 
 function saveScriptsList(){ localStorage.setItem('gg_scripts', JSON.stringify(savedScripts)); }
 
+// رفع ملف .lua
+function loadScriptFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('scriptCode').value = e.target.result;
+    const name = file.name.replace(/\.lua$/i,'').replace(/\.txt$/i,'');
+    document.getElementById('scriptSaveName').value = name;
+    document.getElementById('fileUploadTxt').textContent = file.name;
+    hap('success');
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
 function saveScript(btn){
   const name = document.getElementById('scriptSaveName').value.trim();
   const code = document.getElementById('scriptCode').value.trim();
   if(!name){ showToast(L==='ar'?'أدخل اسماً':'Enter a name','warn'); return; }
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Code is empty','warn'); return; }
-  savedScripts.unshift({ id:Date.now(), name, code });
-  if(savedScripts.length>15) savedScripts.pop();
+  const existing = savedScripts.findIndex(s=>s.name===name);
+  if(existing>=0) savedScripts[existing] = {id:savedScripts[existing].id, name, code};
+  else { savedScripts.unshift({id:Date.now(), name, code}); }
+  if(savedScripts.length>20) savedScripts.pop();
   saveScriptsList(); renderSavedScripts();
   document.getElementById('scriptSaveName').value='';
   hap('success'); showToast(L==='ar'?`حُفظ: ${name}`:`Saved: ${name}`,'ok');
@@ -1651,7 +1686,7 @@ function renderSavedScripts(){
   empty.style.display='none';
   el.innerHTML=savedScripts.map(s=>`
     <div class="script-saved-item" onclick="loadScript(${s.id})">
-      <img src="https://api.iconify.design/ph/file-code-fill.svg?color=%2300d4ff" style="width:16px;height:16px;flex-shrink:0">
+      <img src="https://api.iconify.design/ph/file-code-fill.svg?color=%2300d4ff" style="width:15px;height:15px;flex-shrink:0">
       <span class="script-saved-name">${s.name}</span>
       <span class="script-saved-size">${s.code.length}c</span>
       <button class="preset-del" onclick="event.stopPropagation();deleteScript(${s.id})">
@@ -1675,14 +1710,24 @@ async function deleteScript(id){
   saveScriptsList(); renderSavedScripts();
 }
 
+// تشفير base64 يدعم Unicode والعربية بالكامل
+function toBase64Unicode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
 function injectScript(btn){
   const code=document.getElementById('scriptCode').value.trim();
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
   lastInjectedScript=code;
   localStorage.setItem('gg_last_script',code);
   hap('medium');
-  // بيبعت الكود مشفراً base64
-  sendCmd({c:'loadScript', code:btoa(unescape(encodeURIComponent(code)))}, btn);
+  // تشفير صحيح يدعم العربية
+  const encoded = toBase64Unicode(code);
+  // تقسيم الكود لو كبير (short_description محدود بـ 120 حرف — نبعته عبر أمر خاص)
+  sendCmd({c:'loadScript', code: encoded}, btn);
 }
 
 function openLastScript(btn){
