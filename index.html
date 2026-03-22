@@ -6,6 +6,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1328,15 +1330,16 @@ async function sendCmd(cmd,btn){
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
   try{
     const text='CMD:'+JSON.stringify(cmd);
-    if(tg && tg.sendData){
-      tg.sendData(text);
+    const r=await fetch(`${API}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,{cache:'no-store'});
+    const d=await r.json();
+    if(d.ok){
       entry.st='ok';hap('success');
       setTimeout(fetchResult,1800);setTimeout(fetchResult,3200);
-    } else {
-      entry.st='err';entry.msg='not in telegram';
-      showToast(L==='ar'?'افتح من تيليجرام':'Open from Telegram','warn');
+    }else{
+      entry.st='err';entry.msg=d.description||'fail';
+      showToast((L==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'err');
     }
-  }catch(ex){entry.st='err';entry.msg='error';showToast(L==='ar'?'خطأ في الإرسال':'Send error','err')}
+  }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','err')}
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
   if(btn) setBtnLoading(btn, false);
 }
@@ -1828,7 +1831,6 @@ async function injectScript(btn){
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
 
   const encoded = toBase64Unicode(code);
-  // نقسم على 200 حرف ونبعت بدون أي انتظار بين القطع
   const CHUNK = 200;
   const chunks = [];
   for(let i=0; i<encoded.length; i+=CHUNK) chunks.push(encoded.slice(i,i+CHUNK));
@@ -1838,19 +1840,20 @@ async function injectScript(btn){
   showToast(L==='ar'?`حقن ${n} قطعة...`:`Injecting ${n} chunks...`,'info');
 
   for(let i=0; i<n; i++){
-    // نبعت عبر setMyDescription (أقل قيوداً من setMyShortDescription)
     await sendScriptChunk({c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0});
+    // delay صغير فقط بين الـ chunks لتجنب rate limit
+    if(n > 1) await new Promise(r=>setTimeout(r, 3100));
   }
   setBtnLoading(btn, false);
   showToast(L==='ar'?'تم الحقن بنجاح':'Injected successfully','ok');
   hap('success');
 }
 
-// حقن السكريبت عبر sendData
+// حقن السكريبت عبر setMyDescription (حد أقل قيوداً من setMyShortDescription)
 async function sendScriptChunk(cmd){
   try{
     const text='CMD:'+JSON.stringify(cmd);
-    if(tg && tg.sendData) tg.sendData(text);
+    await fetch(`${API}/setMyDescription?description=${encodeURIComponent(text)}`,{cache:'no-store'});
   }catch{}
 }
 
