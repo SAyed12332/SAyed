@@ -6,6 +6,32 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -399,14 +425,62 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 .confirm-overlay.open{display:flex;animation:ov .2s ease both}
 .confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
 
-/* SCRIPT INJECT */
-.script-area{width:100%;min-height:140px;resize:vertical;border-radius:10px;
-  border:1px solid rgba(0,212,255,0.2);background:rgba(0,0,0,0.3);
+/* SCRIPT INJECT — Professional Code Editor */
+.script-editor-wrap{
+  position:relative;border-radius:13px;margin-bottom:9px;
+  border:1px solid rgba(0,212,255,0.22);
+  background:rgba(4,8,18,0.75);
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,0.45),inset 0 1px 0 rgba(0,212,255,0.08);
+  transition:border-color .22s,box-shadow .22s;
+}
+.script-editor-wrap:focus-within{
+  border-color:rgba(0,212,255,0.5);
+  box-shadow:0 0 0 3px rgba(0,212,255,0.09),0 4px 24px rgba(0,0,0,0.45);
+}
+.script-editor-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 12px;background:rgba(0,212,255,0.045);
+  border-bottom:1px solid rgba(0,212,255,0.1);
+}
+.script-editor-lang{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  color:var(--cyan);letter-spacing:1.4px;
+  background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.18);
+  border-radius:5px;padding:2px 7px;
+}
+.sed-dots{display:flex;gap:5px;align-items:center}
+.sed{width:9px;height:9px;border-radius:50%}
+.sed-r{background:rgba(255,64,96,0.75);box-shadow:0 0 4px rgba(255,64,96,0.4)}
+.sed-y{background:rgba(255,215,0,0.75);box-shadow:0 0 4px rgba(255,215,0,0.4)}
+.sed-g{background:rgba(0,255,157,0.75);box-shadow:0 0 4px rgba(0,255,157,0.4)}
+.script-editor-lines{
+  display:flex;min-height:140px;
+}
+.script-editor-gutter{
+  width:32px;padding:12px 0;flex-shrink:0;
+  background:rgba(0,212,255,0.02);border-left:1px solid rgba(0,212,255,0.07);
+  display:flex;flex-direction:column;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:rgba(0,212,255,0.2);line-height:1.7;padding-top:12px;user-select:none;
+}
+.script-area{
+  width:100%;min-height:140px;resize:vertical;
+  border:none;border-radius:0;
+  background:transparent;
   color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;
-  padding:11px;outline:none;margin-bottom:8px;transition:border-color .2s;direction:ltr;
-  -webkit-user-select:text;user-select:text;touch-action:manipulation;cursor:text}
-.script-area:focus{border-color:rgba(0,212,255,0.5);box-shadow:0 0 0 3px rgba(0,212,255,0.08)}
-.script-area::placeholder{color:var(--muted)}
+  padding:12px 12px 12px 10px;outline:none;direction:ltr;
+  -webkit-user-select:text;user-select:text;touch-action:manipulation;cursor:text;
+  caret-color:var(--cyan);
+  tab-size:2;
+}
+.script-area::placeholder{color:rgba(0,212,255,0.28);font-style:italic}
+.script-area::-webkit-scrollbar{width:4px}
+.script-area::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.18);border-radius:2px}
+
+/* PURPLE BUTTON */
+.bp{background:linear-gradient(135deg,rgba(181,122,255,0.14),rgba(181,122,255,0.05));color:var(--purple);border:1px solid rgba(181,122,255,0.28)}
+.bp:active{box-shadow:0 0 22px rgba(181,122,255,0.4),inset 0 0 14px rgba(181,122,255,0.08)}
 .script-saved-item{display:flex;align-items:center;gap:9px;padding:9px 11px;
   border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
   cursor:pointer;transition:all .2s;margin-bottom:6px}
@@ -416,38 +490,54 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 .script-saved-size{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0}
 
 /* AUTO EXECUTE */
-.ae-step{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);
-  border-radius:12px;padding:12px;margin-bottom:8px;position:relative}
-.ae-step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+/* AUTO EXECUTE */
+.ae-step{background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.12);
+  border-radius:14px;padding:13px;margin-bottom:9px;position:relative;
+  box-shadow:inset 0 1px 0 rgba(0,212,255,0.07),0 3px 12px rgba(0,0,0,0.2)}
+.ae-step::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.35),transparent);
+  border-radius:14px 14px 0 0}
+.ae-step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .ae-step-num{font-size:10px;font-weight:700;color:var(--cyan);
-  font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
-.ae-del{width:24px;height:24px;border-radius:6px;border:none;cursor:pointer;
-  background:rgba(255,64,96,0.08);display:flex;align-items:center;justify-content:center;transition:.18s}
+  font-family:'JetBrains Mono',monospace;letter-spacing:.6px;
+  background:rgba(0,212,255,0.09);border:1px solid rgba(0,212,255,0.2);
+  border-radius:7px;padding:3px 10px}
+.ae-del{width:26px;height:26px;border-radius:7px;border:none;cursor:pointer;
+  background:rgba(255,64,96,0.08);border:1px solid rgba(255,64,96,0.15);
+  display:flex;align-items:center;justify-content:center;transition:.18s}
 .ae-del:active{background:rgba(255,64,96,0.25);transform:scale(.85)}
 .ae-del img{width:11px;height:11px}
-.ae-select{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;
-  border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.04);
-  color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;
-  outline:none;-webkit-appearance:none;appearance:none}
+.ae-select{width:100%;padding:9px 12px;border-radius:9px;margin-bottom:7px;
+  border:1px solid rgba(0,212,255,0.12);
+  background:rgba(0,212,255,0.04) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300d4ff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat left 10px center;
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+  outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;
+  transition:border-color .2s,background-color .2s}
+.ae-select:focus{border-color:rgba(0,212,255,0.38);background-color:rgba(0,212,255,0.07)}
 .ae-select option{background:#0a0f1c;color:var(--text)}
-.ae-progress-wrap{display:flex;align-items:center;gap:8px;padding:8px;
-  background:rgba(0,212,255,0.04);border-radius:8px;border:1px solid rgba(0,212,255,0.1);margin-top:4px}
+.ae-progress-wrap{display:flex;align-items:center;gap:8px;padding:8px 10px;
+  background:rgba(0,212,255,0.04);border-radius:9px;border:1px solid rgba(0,212,255,0.1);margin-top:5px}
 .ae-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
 .ae-dot.run{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:pWarn 1s infinite}
 .ae-dot.done{background:var(--green);box-shadow:0 0 6px var(--green)}
 .ae-dot.fail{background:var(--red);box-shadow:0 0 6px var(--red)}
-.ae-bar-wrap{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden}
-.ae-bar{height:100%;background:var(--cyan);width:0%;transition:width .5s;border-radius:2px}
-.ae-add-btn{width:100%;padding:10px;border-radius:11px;margin-bottom:9px;
-  border:1px solid rgba(0,212,255,0.25);
-  background:rgba(0,212,255,0.06);
-  color:var(--cyan);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all .2s cubic-bezier(.22,1,.36,1);
-  display:flex;align-items:center;justify-content:center;gap:7px}
-.ae-add-btn:active{background:rgba(0,212,255,0.14);border-color:rgba(0,212,255,0.45);transform:scale(.97)}
+.ae-bar-wrap{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden}
+.ae-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));width:0%;transition:width .5s;border-radius:2px}
+.ae-add-btn{width:100%;padding:11px;border-radius:12px;margin-bottom:9px;
+  border:1px dashed rgba(0,212,255,0.3);
+  background:rgba(0,212,255,0.04);
+  color:var(--cyan);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;
+  cursor:pointer;transition:all .22s cubic-bezier(.22,1,.36,1);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden}
+.ae-add-btn::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,212,255,0.06),transparent);
+  opacity:0;transition:opacity .2s}
+.ae-add-btn:active{background:rgba(0,212,255,0.12);border-style:solid;
+  border-color:rgba(0,212,255,0.5);transform:scale(.97)}
+.ae-add-btn:active::before{opacity:1}
 
-/* AE SAVED SEQUENCES */
-.ae-seq-item{display:flex;align-items:center;gap:9px;padding:9px 11px;
+/* AE SAVED SEQUENCES */{display:flex;align-items:center;gap:9px;padding:9px 11px;
   border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
   cursor:pointer;transition:all .2s;margin-bottom:6px}
 .ae-seq-item:active{transform:scale(.98);background:rgba(0,212,255,0.07)}
@@ -798,9 +888,19 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
     <div class="preset-empty" id="scriptEmpty" data-ar="لا توجد سكريبتات محفوظة" data-en="No saved scripts">لا توجد سكريبتات محفوظة</div>
   </div>
 
-  <!-- محرر الكود -->
-  <textarea class="script-area" id="scriptCode"
-    placeholder="-- اكتب سكريبت Lua هنا...&#10;gg.toast('Hello GG!')"></textarea>
+  <!-- محرر الكود — Professional Editor -->
+  <div class="script-editor-wrap">
+    <div class="script-editor-bar">
+      <span class="script-editor-lang">⌨ LUA SCRIPT</span>
+      <div class="sed-dots">
+        <div class="sed sed-r"></div>
+        <div class="sed sed-y"></div>
+        <div class="sed sed-g"></div>
+      </div>
+    </div>
+    <textarea class="script-area" id="scriptCode"
+      placeholder="-- اكتب سكريبت Lua هنا...&#10;-- مثال مع زر Sx:&#10;gg.showUiButton()&#10;while true do&#10;  if gg.isClickedUiButton() then&#10;    gg.alert('مرحبا!')&#10;  end&#10;  gg.sleep(100)&#10;end"></textarea>
+  </div>
 
   <!-- رفع ملف -->
   <label style="display:flex;align-items:center;gap:8px;cursor:pointer;
@@ -825,10 +925,22 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   </div>
 
   <!-- حقن فقط -->
-  <button class="eb bc" style="width:100%" onclick="injectScript(this)">
+  <button class="eb bc" style="width:100%;margin-bottom:8px" onclick="injectScript(this)">
     <img src="https://api.iconify.design/ph/rocket-launch-fill.svg?color=%2300d4ff" alt="">
     <span data-ar="حقن وتشغيل في GG" data-en="Inject & Run in GG">حقن وتشغيل في GG</span>
   </button>
+
+  <!-- أزرار تحكم زر Sx -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+    <button class="eb bp" onclick="doCmd({c:'hideSx'},this)">
+      <img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%23b57aff" alt="">
+      <span data-ar="إخفاء زر Sx" data-en="Hide Sx Button">إخفاء زر Sx</span>
+    </button>
+    <button class="eb bp" onclick="doCmd({c:'showSx'},this)">
+      <img src="https://api.iconify.design/ph/eye-fill.svg?color=%23b57aff" alt="">
+      <span data-ar="إظهار زر Sx" data-en="Show Sx Button">إظهار زر Sx</span>
+    </button>
+  </div>
 </div>
 
 <!-- AUTO EXECUTE -->
@@ -1251,17 +1363,32 @@ async function sendCmd(cmd,btn){
   const entry={c:cmd.c,v:cmd.v||'',st:'pend',msg:'',t:nowStr()};
   reqLog.unshift(entry);if(reqLog.length>40)reqLog.pop();
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
-  try{
+  
+  const doFetch = async (retryCount) => {
     const text='CMD:'+JSON.stringify(cmd);
     const r=await fetch(`${API}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,{cache:'no-store'});
     const d=await r.json();
     if(d.ok){
       entry.st='ok';hap('success');
       setTimeout(fetchResult,1800);setTimeout(fetchResult,3200);
-    }else{
+    } else if(d.error_code===429 && retryCount<3){
+      // 429 — انتظار صامت وإعادة المحاولة
+      const wait = (d.parameters?.retry_after || 5) * 1000;
+      entry.msg='retry '+(retryCount+1);
+      if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
+      await new Promise(r=>setTimeout(r, Math.min(wait, 8000)));
+      return doFetch(retryCount+1);
+    } else if(d.error_code!==429){
       entry.st='err';entry.msg=d.description||'fail';
       showToast((L==='ar'?'خطأ: ':'Error: ')+(d.description||'fail'),'err');
+    } else {
+      // 429 تجاوز المحاولات — تجاهل صامت
+      entry.st='err';entry.msg='rate limit';
     }
+  };
+
+  try{
+    await doFetch(0);
   }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','err')}
   if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
   if(btn) setBtnLoading(btn, false);
@@ -1711,6 +1838,7 @@ function toBase64Unicode(str){
 }
 
 // حقن بالـ chunks — الحل الوحيد لتجاوز حد 120 حرف
+let _pollPaused = false;
 async function injectScript(btn){
   const code = document.getElementById('scriptCode').value.trim();
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
@@ -1722,13 +1850,15 @@ async function injectScript(btn){
   const n = chunks.length;
 
   setBtnLoading(btn, true);
+  _pollPaused = true; // إيقاف الاستطلاع مؤقتاً
   showToast(L==='ar'?`إرسال ${n} قطعة...`:`Sending ${n} chunks...`,'info');
 
   for(let i=0; i<n; i++){
     if(aeStopFlag) break;
     await sendCmd({c:'scriptChunk', i, n, d:chunks[i]}, null);
-    await new Promise(r=>setTimeout(r, 1200));
+    await new Promise(r=>setTimeout(r, 1500));
   }
+  _pollPaused = false;
   setBtnLoading(btn, false);
   hap('success');
 }
@@ -1752,6 +1882,8 @@ const AE_CMDS=[
   {v:'hide',      ar:'إخفاء GG',    en:'Hide GG',     needsVal:false,needsType:false},
   {v:'getResults',ar:'جلب نتائج',   en:'Get results', needsVal:true, needsType:false},
   {v:'ranges',    ar:'تعيين نطاق',  en:'Set ranges',  needsVal:true, needsType:false},
+  {v:'hideSx',    ar:'إخفاء زر Sx', en:'Hide Sx',      needsVal:false,needsType:false},
+  {v:'showSx',    ar:'إظهار زر Sx', en:'Show Sx',      needsVal:false,needsType:false},
 ];
 
 // حفظ التسلسل الحالي
@@ -1903,8 +2035,8 @@ setTimeout(()=>{
   if(el) el.textContent = detectedChatId;
 },1100);
 checkStatus();fetchResult();
-setInterval(checkStatus,6000);
-setInterval(fetchResult,4000);
+setInterval(()=>{ if(!_pollPaused) checkStatus(); },6000);
+setInterval(()=>{ if(!_pollPaused) fetchResult(); },4000);
 </script>
 </body>
 </html>
