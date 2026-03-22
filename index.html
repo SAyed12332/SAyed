@@ -1,36 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+د
 
 
 
@@ -505,7 +473,10 @@ html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2300d4ff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:left 12px center}
 .ae-select:focus{border-color:rgba(0,212,255,0.55);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
-.ae-select option{background:#070d1a;color:var(--text)}
+.ae-select option{background:var(--bg, #06090f);color:var(--text)}
+body.light .ae-select{background:rgba(0,100,200,0.06);border-color:rgba(0,100,200,0.2);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%230064c8' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")}
+body.light .ae-select option{background:#f0f4ff;color:#1a1f2e}
 .ae-progress-wrap{display:flex;align-items:center;gap:9px;padding:9px 12px;
   background:rgba(0,212,255,0.04);border-radius:10px;border:1px solid rgba(0,212,255,0.1);
   margin-top:4px;position:relative;z-index:1}
@@ -1514,6 +1485,8 @@ const NAV_ITEMS = [
   {id:'cQuick',     ico:'ph/lightning-fill.svg?color=%2300d4ff',         cls:'bc', ar:'سريع',   en:'Quick',  fn:()=>navTo('cQuick')},
   {id:'cAdv',       ico:'ph/cpu-fill.svg?color=%23b57aff',               cls:'bp', ar:'متقدم',  en:'Adv',    fn:()=>navTo('cAdv')},
   {id:'cExport',    ico:'ph/export-fill.svg?color=%2300ff9d',            cls:'bg', ar:'تصدير',  en:'Export', fn:()=>navTo('cExport')},
+  {id:'cScript',    ico:'ph/code-fill.svg?color=%2300d4ff',              cls:'bc', ar:'سكريبت', en:'Script', fn:()=>navTo('cScript')},
+  {id:'cAutoExec',  ico:'ph/shuffle-fill.svg?color=%23b57aff',           cls:'bp', ar:'تلقائي', en:'Auto',   fn:()=>navTo('cAutoExec')},
 ];
 
 let navOpen = false;
@@ -1541,25 +1514,25 @@ function openNav() {
   const cx    = rect.left + rect.width / 2;
   const cy    = rect.top  + rect.height / 2;
 
-  // أنماط انتشار عشوائية ثابتة حول المركز
-  const positions = [
-    {dx:-110, dy: 30}, {dx:-80,  dy:-70},
-    {dx: 0,   dy:-100},{dx: 80,  dy:-70},
-    {dx: 110, dy: 30}, {dx: 70,  dy: 110},
-    {dx:-30,  dy: 120},{dx:-100, dy: 90},
-  ];
+  // توزيع دائري متساوي حول المركز
+  const count = NAV_ITEMS.length;
+  const radius = 115;
+  // نبدأ من الأعلى (270°) ونوزع بالتساوي
+  const startAngle = -90; // أعلى
 
   // إنشاء فقاعات العناصر
   bubbleEls.forEach(b=>b.remove());
   bubbleEls = [];
 
   NAV_ITEMS.forEach((item, i) => {
-    const pos = positions[i % positions.length];
+    const angle = (startAngle + (360 / count) * i) * Math.PI / 180;
+    const dx = Math.cos(angle) * radius;
+    const dy = Math.sin(angle) * radius;
     const b = document.createElement('button');
     b.className = `nav-bubble ${item.cls}`;
-    b.style.left = (cx + pos.dx) + 'px';
-    b.style.top  = (cy + pos.dy) + 'px';
-    b.style.transitionDelay = (i * 35) + 'ms';
+    b.style.left = (cx + dx) + 'px';
+    b.style.top  = (cy + dy) + 'px';
+    b.style.transitionDelay = (i * 30) + 'ms';
     b.innerHTML = `<img src="https://api.iconify.design/${item.ico}"><span>${L==='ar'?item.ar:item.en}</span>`;
     b.onclick = () => { item.fn(); };
     document.body.appendChild(b);
