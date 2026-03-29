@@ -1,8 +1,6 @@
 
 
 
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -244,9 +242,15 @@
 <script>
 const tg = window.Telegram?.WebApp;
 
+// ألوان تيليجرام الحقيقية بالترتيب الصحيح (7 ألوان — id % 7)
 const AVATAR_COLORS = [
-  "#2AABEE","#E91E8C","#9C27B0",
-  "#FF6B35","#00BCD4","#FF9800","#4CAF50","#F44336"
+  "#e17076", // أحمر
+  "#ee7aae", // وردي
+  "#a695e7", // بنفسجي
+  "#65aadd", // أزرق
+  "#6ec9cb", // سماوي
+  "#7bc862", // أخضر
+  "#e88b4a", // برتقالي
 ];
 
 function init() {
@@ -275,7 +279,7 @@ function fillUser(user) {
     av.innerHTML = `<img src="${user.photo_url}" alt="avatar">`;
   } else {
     av.textContent = first[0] || "؟";
-    av.style.background = AVATAR_COLORS[user.id % AVATAR_COLORS.length];
+    av.style.background = AVATAR_COLORS[Math.abs(user.id) % 7];
   }
 
   document.getElementById("fullName").textContent    = (first + " " + last).trim() || "مجهول";
