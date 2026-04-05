@@ -4,387 +4,2023 @@
 
 
 
+
+
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>معلوماتي</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GG Control Panel By SAyed</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root{
+  --bg:#06090f; --cyan:#00d4ff; --green:#00ff9d; --red:#ff4060;
+  --yellow:#ffd700; --purple:#b57aff; --text:#e2e8f0; --muted:#4a5568;
+  --border:rgba(0,212,255,0.14); --card-bg:rgba(10,15,28,0.93); --r:16px;
+  --hdr-bg:rgba(6,9,15,0.0);
+}
+/* LIGHT THEME */
+body.light{
+  --bg:#f0f4ff; --text:#1a1f2e; --muted:#8892a4; --card-bg:rgba(255,255,255,0.88);
+  --border:rgba(0,100,200,0.12); --hdr-bg:rgba(240,244,255,0.0);
+}
+body.light .orb1{background:radial-gradient(circle,rgba(0,150,255,0.09),transparent)}
+body.light .orb2{background:radial-gradient(circle,rgba(0,200,100,0.06),transparent)}
+body.light::after{background-image:linear-gradient(rgba(0,100,200,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.025) 1px,transparent 1px);background-size:40px 40px}
+body.light .scanline{opacity:.4}
+body.light .card{box-shadow:0 4px 20px rgba(0,50,150,0.08),inset 0 1px 0 rgba(255,255,255,0.8)}
+body.light .card::before{background:linear-gradient(90deg,transparent,rgba(0,150,255,0.3),transparent)}
+body.light .status-card{box-shadow:0 4px 16px rgba(0,50,150,0.08)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:var(--tg-vh,100vh);padding-bottom:72px;overflow-x:hidden;position:relative}
 
-  body {
-    font-family: 'Tajawal', sans-serif;
-    background-color: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
-    min-height: 100vh;
-    padding-bottom: 40px;
-  }
+/* BG */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px)}
+.orb1{width:360px;height:360px;top:-90px;right:-80px;background:radial-gradient(circle,rgba(0,212,255,0.11),transparent);animation:orbA 11s ease-in-out infinite}
+.orb2{width:290px;height:290px;bottom:90px;left:-60px;background:radial-gradient(circle,rgba(0,255,157,0.07),transparent);animation:orbB 13s ease-in-out infinite}
+@keyframes orbA{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,28px)}}
+@keyframes orbB{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-22px)}}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,212,255,0.016) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.016) 1px,transparent 1px);
+  background-size:40px 40px}
+.scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px)}
+/* HEADER — seamless, fully blends with page */
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px;
+  opacity:0;animation:fadeD .15s cubic-bezier(.22,1,.36,1) .05s both;
+  position:relative;z-index:10}
+@keyframes fadeD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 
-  /* ── AVATAR ── */
-  .avatar-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 36px 20px 24px;
-  }
+/* ═══ RADIAL BUBBLE NAV ═══ */
+.nav-backdrop{
+  position:fixed;inset:0;z-index:900;
+  background:rgba(0,0,0,0);pointer-events:none;
+  transition:background .2s;backdrop-filter:blur(0px);
+}
+.nav-backdrop.open{
+  background:rgba(0,0,0,0.5);pointer-events:all;
+  backdrop-filter:blur(12px);
+}
+.nav-bubble{
+  position:fixed;z-index:902;
+  width:54px;height:54px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  cursor:pointer;border:1px solid rgba(255,255,255,0.12);
+  font-family:'Tajawal',sans-serif;font-size:8px;font-weight:800;
+  box-shadow:0 6px 24px rgba(0,0,0,0.5);
+  transform:scale(0) translate(-50%,-50%);opacity:0;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .15s ease;
+  pointer-events:none;
+  top:0;left:0;
+}
+.nav-bubble.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
+.nav-bubble:active{transform:scale(.85) translate(-50%,-50%)!important}
+.nav-bubble img{width:20px;height:20px}
+/* نفس ألوان أزرار الموقع */
+.nav-bubble.bc{background:linear-gradient(135deg,rgba(0,212,255,0.25),rgba(0,100,160,0.35));color:var(--cyan);border-color:rgba(0,212,255,0.4);box-shadow:0 0 18px rgba(0,212,255,0.3)}
+.nav-bubble.bg{background:linear-gradient(135deg,rgba(0,255,157,0.22),rgba(0,130,80,0.32));color:var(--green);border-color:rgba(0,255,157,0.38);box-shadow:0 0 18px rgba(0,255,157,0.25)}
+.nav-bubble.by{background:linear-gradient(135deg,rgba(255,215,0,0.22),rgba(160,120,0,0.32));color:var(--yellow);border-color:rgba(255,215,0,0.38);box-shadow:0 0 18px rgba(255,215,0,0.25)}
+.nav-bubble.bp{background:linear-gradient(135deg,rgba(181,122,255,0.22),rgba(100,50,180,0.32));color:var(--purple);border-color:rgba(181,122,255,0.38);box-shadow:0 0 18px rgba(181,122,255,0.25)}
+.nav-bubble.br{background:linear-gradient(135deg,rgba(255,64,96,0.22),rgba(160,20,50,0.32));color:var(--red);border-color:rgba(255,64,96,0.38);box-shadow:0 0 18px rgba(255,64,96,0.25)}
+/* زر الإغلاق X في المنتصف */
+.nav-close-btn{
+  position:fixed;z-index:903;
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,64,96,0.2);
+  border:2px solid rgba(255,64,96,0.6);
+  box-shadow:0 0 20px rgba(255,64,96,0.4),0 0 40px rgba(255,64,96,0.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transform:scale(0) translate(-50%,-50%);opacity:0;top:0;left:0;
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),opacity .12s;
+  pointer-events:none;
+}
+.nav-close-btn.show{transform:scale(1) translate(-50%,-50%);opacity:1;pointer-events:all}
+.nav-close-btn:active{transform:scale(.88) translate(-50%,-50%)!important}
+.nav-close-btn img{width:20px;height:20px}
+.title{
+  font-size:13.5px;font-weight:900;white-space:nowrap;
+  background:linear-gradient(90deg,
+    var(--cyan) 0%,#fff 20%,var(--green) 35%,
+    var(--cyan) 50%,#fff 65%,var(--purple) 80%,var(--cyan) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:titleShine 3s linear infinite;
+  filter:drop-shadow(0 0 8px rgba(0,212,255,0.6)) drop-shadow(0 0 16px rgba(0,255,157,0.3));
+}
+@keyframes titleShine{
+  0%{background-position:0% center}
+  100%{background-position:200% center}
+}
+.title-sub{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1.4px;margin-top:2px}
+.hdr-acts{display:flex;gap:7px;align-items:center}
+.hdr-btn{height:35px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;transition:all .18s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;
+  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:0 11px;gap:5px}
+.hdr-btn img{width:15px;height:15px}
+.hdr-btn:active{transform:scale(.87);background:rgba(255,255,255,0.09)}
 
-  /* الحلقة الزرقاء */
-  .avatar-ring {
-    width: 98px; height: 98px; border-radius: 50%;
-    padding: 3px;
-    background: linear-gradient(135deg, #74d7ff, #2AABEE, #74d7ff);
-    margin-bottom: 14px;
-    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-    box-shadow: 0 0 20px rgba(42,171,238,0.4);
-  }
+/* STATUS CARD */
+.status-card{margin:0 16px 13px;padding:12px 14px;border-radius:var(--r);background:var(--card-bg);
+  border:1px solid var(--border);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;cursor:pointer;user-select:none;
+  opacity:0;animation:cardUp .15s cubic-bezier(.22,1,.36,1) .1s both;
+  transition:border-color .2s}
+.status-card:active{transform:scale(.985)}
+.status-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--green),transparent);opacity:.55}
+.s-left{display:flex;align-items:center;gap:11px}
+.s-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;position:relative;transition:all .4s}
+.s-dot::after{content:'';position:absolute;inset:-5px;border-radius:50%;opacity:0}
+/* ALL 3 states pulse */
+.s-dot.online{background:var(--green);box-shadow:0 0 10px var(--green),0 0 22px rgba(0,255,157,0.35);animation:pOn 2.2s infinite}
+.s-dot.online::after{background:radial-gradient(circle,rgba(0,255,157,0.25),transparent);opacity:1;animation:ping 2.2s infinite}
+.s-dot.warning{background:var(--yellow);box-shadow:0 0 9px var(--yellow),0 0 18px rgba(255,215,0,0.3);animation:pWarn 1.6s infinite}
+.s-dot.warning::after{background:radial-gradient(circle,rgba(255,215,0,0.22),transparent);opacity:1;animation:ping 1.6s infinite}
+.s-dot.offline{background:var(--red);box-shadow:0 0 9px var(--red),0 0 18px rgba(255,64,96,0.3);animation:pOff 1.9s infinite}
+.s-dot.offline::after{background:radial-gradient(circle,rgba(255,64,96,0.22),transparent);opacity:1;animation:ping 1.9s infinite}
+@keyframes pOn  {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.65;transform:scale(.8)}}
+@keyframes pWarn{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+@keyframes pOff {0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes ping {0%{transform:scale(1);opacity:.55}100%{transform:scale(3.2);opacity:0}}
+.s-label{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.7px;transition:color .35s}
+.s-label.online{color:var(--green)}.s-label.warning{color:var(--yellow)}.s-label.offline{color:var(--red)}
+.s-sub{font-size:9.5px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace;transition:opacity .3s}
+.s-lastseen{font-size:9px;margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:.2px;transition:all .4s;display:none}
+.s-lastseen.show{display:block}
+.s-lastseen.fresh{color:rgba(0,255,157,0.5)}.s-lastseen.stale{color:rgba(255,215,0,0.55)}.s-lastseen.dead{color:rgba(255,64,96,0.45)}
 
-  .avatar {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: var(--tg-theme-button-color, #2AABEE);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 38px; font-weight: 800;
-    color: var(--tg-theme-button-text-color, #fff);
-    overflow: hidden;
-    border: 3px solid var(--tg-theme-bg-color, #ffffff);
-  }
+/* Last result chip — clickable */
+.s-result{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--cyan);max-width:130px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+  padding:5px 10px;border-radius:9px;cursor:pointer;transition:all .18s;flex-shrink:0}
+.s-result:active{background:rgba(0,212,255,0.16);transform:scale(.94)}
 
-  .avatar img {
-    width: 100%; height: 100%;
-    object-fit: cover; border-radius: 50%; display: block;
-  }
+/* CARD */
+.card{margin:0 16px 13px;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;backdrop-filter:blur(14px);
+  box-shadow:0 5px 25px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.035);
+  position:relative;overflow:hidden;opacity:0;transform:translateY(14px) scale(.985)}
+.card.in{animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardUp{to{opacity:1;transform:translateY(0) scale(1)}}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.3}
+.ch{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.ci{width:30px;height:30px;border-radius:9px;background:rgba(0,212,255,0.07);
+  border:1px solid rgba(0,212,255,0.16);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,212,255,0.3));transition:filter .25s}
+.card:hover .ci{filter:drop-shadow(0 0 12px rgba(0,212,255,0.55))}
+.ci img{width:16px;height:16px}
+.ct{font-size:11px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace;letter-spacing:.6px;text-transform:uppercase}
+.cd{font-size:10px;color:var(--muted);margin-top:1px}
 
-  .full-name {
-    font-size: 22px; font-weight: 800;
-    color: var(--tg-theme-text-color, #000);
-    letter-spacing: -0.4px;
-    animation: fadeUp 0.4s 0.1s ease both;
-  }
+/* INPUT */
+input[type=text],input[type=number]{
+  width:100%;padding:10px 13px;border-radius:10px;margin-bottom:8px;
+  border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;
+  outline:none;transition:all .22s cubic-bezier(.22,1,.36,1);-webkit-appearance:none}
+input:focus{border-color:rgba(0,212,255,0.45);background:rgba(0,212,255,0.04);
+  box-shadow:0 0 0 3px rgba(0,212,255,0.09),0 0 18px rgba(0,212,255,0.07);transform:translateY(-1px)}
+input::placeholder{color:var(--muted)}
 
-  .username {
-    font-size: 14px; margin-top: 4px;
-    color: var(--tg-theme-link-color, #2AABEE);
-    animation: fadeUp 0.4s 0.15s ease both;
-  }
+/* TYPE ROW */
+.tr{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;margin-bottom:9px;scrollbar-width:none}
+.tr::-webkit-scrollbar{display:none}
+.tb{flex-shrink:0;padding:5px 11px;border-radius:7px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid rgba(255,255,255,0.06);
+  transition:all .18s cubic-bezier(.22,1,.36,1)}
+.tb.on{background:rgba(0,212,255,0.11);color:var(--cyan);border-color:rgba(0,212,255,0.32);
+  box-shadow:0 0 9px rgba(0,212,255,0.18)}
+.tb:active{transform:scale(.88)}
 
-  /* ── CARDS ── */
-  .section {
-    padding: 0 16px;
-    animation: fadeUp 0.4s 0.2s ease both;
-  }
+/* EXEC BTN */
+.eb{width:100%;padding:11px;border-radius:11px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .18s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.eb img{width:16px;height:16px;transition:transform .2s}
+.eb:active{transform:scale(.96)}
+.eb:active img{transform:scale(1.18) rotate(-7deg)}
+.bc{background:linear-gradient(135deg,rgba(0,212,255,0.14),rgba(0,212,255,0.06));color:var(--cyan);border:1px solid rgba(0,212,255,0.28)}
+.bc:active{box-shadow:0 0 24px rgba(0,212,255,0.4),inset 0 0 14px rgba(0,212,255,0.08)}
+.bg{background:linear-gradient(135deg,rgba(0,255,157,0.13),rgba(0,255,157,0.05));color:var(--green);border:1px solid rgba(0,255,157,0.28)}
+.bg:active{box-shadow:0 0 24px rgba(0,255,157,0.4),inset 0 0 14px rgba(0,255,157,0.08)}
+.br{background:linear-gradient(135deg,rgba(255,64,96,0.14),rgba(255,64,96,0.05));color:var(--red);border:1px solid rgba(255,64,96,0.28)}
+.br:active{box-shadow:0 0 22px rgba(255,64,96,0.4),inset 0 0 14px rgba(255,64,96,0.08)}
+.by{background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,215,0,0.04));color:var(--yellow);border:1px solid rgba(255,215,0,0.26)}
+.by:active{box-shadow:0 0 20px rgba(255,215,0,0.35),inset 0 0 12px rgba(255,215,0,0.08)}
+.bm{background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));color:var(--muted);border:1px solid rgba(255,255,255,0.07)}
+.bm:active{box-shadow:0 0 14px rgba(255,255,255,0.1)}
 
-  .section-label {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: var(--tg-theme-hint-color, #999);
-    padding: 0 4px 8px;
-  }
+/* QUICK GRID */
+.qg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.qb{padding:10px 5px;border-radius:11px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:11px;font-weight:800;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all .18s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.qb img{width:19px;height:19px;transition:transform .18s}
+.qb:active{transform:scale(.9)}
+.qb:active img{transform:scale(1.18) rotate(-5deg)}
 
-  .card {
-    background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
+/* EF TABS */
+.ef-tabs{display:flex;gap:4px;margin-bottom:11px;background:rgba(255,255,255,0.025);
+  border-radius:10px;padding:4px;border:1px solid rgba(255,255,255,0.05)}
+.ef-tab{flex:1;padding:7px;border-radius:7px;border:none;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  background:transparent;color:var(--muted);letter-spacing:.4px;
+  transition:all .2s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;justify-content:center;gap:5px}
+.ef-tab img{width:12px;height:12px}
+.ef-tab.on{color:var(--cyan);background:rgba(0,212,255,0.11);box-shadow:0 0 10px rgba(0,212,255,0.18);border:1px solid rgba(0,212,255,0.22)}
+.ef-tab.on.ft{color:var(--yellow);background:rgba(255,215,0,0.09);box-shadow:0 0 10px rgba(255,215,0,0.18);border-color:rgba(255,215,0,0.22)}
+.ef-tab:active{transform:scale(.91)}
+.ef-panel{display:none}
+.ef-panel.on{display:block;animation:pi .28s cubic-bezier(.22,1,.36,1) both}
+@keyframes pi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-  .row {
-    display: flex; align-items: center; gap: 14px;
-    padding: 13px 16px;
-    border-bottom: 1px solid color-mix(in srgb, var(--tg-theme-hint-color, #999) 15%, transparent);
-    transition: background 0.15s;
-  }
-  .row:last-child { border-bottom: none; }
+/* FREEZE TOGGLE — label always yellow */
+.ftg{display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.18);
+  border-radius:10px;padding:9px 12px;margin-bottom:8px;
+  cursor:pointer;transition:all .22s;user-select:none}
+.ftg:active{transform:scale(.98)}
+.ftg.on{background:rgba(255,215,0,0.12);border-color:rgba(255,215,0,0.42);box-shadow:0 0 15px rgba(255,215,0,0.15)}
+.ftg-lbl{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--yellow)}
+.ftg-lbl img{width:14px;height:14px}
+.sw{width:42px;height:22px;border-radius:11px;background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.18);position:relative;transition:all .28s cubic-bezier(.22,1,.36,1);flex-shrink:0}
+.sw::after{content:'';position:absolute;top:3px;width:14px;height:14px;border-radius:50%;
+  background:rgba(255,215,0,0.32);transition:all .28s cubic-bezier(.22,1,.36,1);box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+html[dir=rtl] .sw::after{right:3px}
+html[dir=ltr] .sw::after{left:3px}
+.ftg.on .sw{background:rgba(255,215,0,0.28);border-color:rgba(255,215,0,0.55);box-shadow:0 0 10px rgba(255,215,0,0.3)}
+.ftg.on .sw::after{background:var(--yellow);box-shadow:0 0 8px rgba(255,215,0,0.75)}
+html[dir=rtl] .ftg.on .sw::after{right:auto;left:3px}
+html[dir=ltr] .ftg.on .sw::after{left:auto;right:3px}
 
-  .row-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
-  }
+/* RANGES */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.rb{padding:10px;border-radius:10px;cursor:pointer;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:700;color:var(--text);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:all .2s cubic-bezier(.22,1,.36,1)}
+.rb span{font-size:9px;color:var(--muted);font-weight:400}
+.rb:active{transform:scale(.92);border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,0.3);color:var(--cyan);background:rgba(0,212,255,0.07)}
 
-  .row-info { flex: 1; min-width: 0; }
-  .row-label { font-size: 12px; color: var(--tg-theme-hint-color, #999); margin-bottom: 1px; }
-  .row-value { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* FREEZE BTNS */
+.fb2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
 
-  .row-copy {
-    font-size: 13px; color: var(--tg-theme-link-color, #2AABEE);
-    background: none; border: none; cursor: pointer;
-    font-family: 'Tajawal', sans-serif; font-weight: 600; flex-shrink: 0;
-    padding: 4px 8px; border-radius: 8px;
-    transition: background 0.15s;
-  }
-  .row-copy:active { background: color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent); }
+/* SKELETON */
+.sk{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.085) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;animation:shim 1.6s infinite;border-radius:10px}
+@keyframes shim{to{background-position:-200% 0}}
+.skc{margin:0 16px 13px;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;opacity:0;animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
 
-  /* ── BADGES ── */
-  .badge-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    padding: 0 16px 4px;
-    animation: fadeUp 0.4s 0.25s ease both;
-  }
-  .badge {
-    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
-    background: color-mix(in srgb, var(--tg-theme-button-color, #2AABEE) 15%, transparent);
-    color: var(--tg-theme-button-color, #2AABEE);
-  }
+/* MODAL SHEET */
+.overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex;animation:ov .22s ease both}
+@keyframes ov{from{opacity:0}to{opacity:1}}
+.sheet{width:100%;max-width:500px;background:rgba(7,12,23,0.99);
+  border:1px solid rgba(0,212,255,0.1);border-radius:22px 22px 0 0;
+  padding:0 0 26px;box-shadow:0 -10px 50px rgba(0,0,0,0.7);
+  animation:su .3s cubic-bezier(.22,1,.36,1) both;
+  max-height:75vh;display:flex;flex-direction:column}
+@keyframes su{from{transform:translateY(100%)}to{transform:none}}
+.sh-handle{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.12);margin:12px auto 0;flex-shrink:0}
+.sh-head{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 17px 10px;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0}
+.sh-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.7px}
+.sh-close{width:27px;height:27px;border-radius:7px;border:none;cursor:pointer;
+  background:rgba(255,255,255,0.05);color:var(--muted);font-size:14px;
+  display:flex;align-items:center;justify-content:center;transition:.18s}
+.sh-close:active{transform:scale(.85);background:rgba(255,64,96,0.18);color:var(--red)}
+.sh-body{overflow-y:auto;flex:1;padding:10px 13px;scrollbar-width:thin;scrollbar-color:rgba(0,212,255,0.12) transparent}
+.sh-body::-webkit-scrollbar{width:3px}
+.sh-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.15);border-radius:2px}
 
-  /* ── THEME ── */
-  .theme-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 8px; padding: 0 16px;
-    animation: fadeUp 0.4s 0.3s ease both;
-    margin-bottom: 20px;
-  }
-  .color-chip {
-    height: 52px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 600; gap: 6px; flex-direction: column;
-  }
-  .chip-dot { width: 20px; height: 20px; border-radius: 50%; }
+/* Result detail sheet */
+.rd-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;
+  color:var(--cyan);background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+  border-radius:10px;padding:12px 14px;margin-bottom:12px;word-break:break-all;
+  text-align:center;letter-spacing:.3px}
+.rd-label{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;
+  letter-spacing:.8px;margin-bottom:8px;text-transform:uppercase}
+.rd-qacts{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.rd-time{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;text-align:center;margin-top:8px}
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(10px);
-    background: #34C759; color: #fff;
-    padding: 10px 22px; border-radius: 20px;
-    font-size: 14px; font-weight: 600;
-    opacity: 0; pointer-events: none;
-    transition: all 0.3s; z-index: 999; white-space: nowrap;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* Request log items */
+.rl-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:10px;margin-bottom:5px;
+  background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.045);
+  animation:ii .2s cubic-bezier(.22,1,.36,1) both}
+@keyframes ii{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.rl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rl-dot.ok{background:var(--green);box-shadow:0 0 5px var(--green)}
+.rl-dot.err{background:var(--red);box-shadow:0 0 5px var(--red)}
+.rl-dot.pend{background:var(--yellow);box-shadow:0 0 5px var(--yellow);animation:pWarn 1s infinite}
+.rl-info{min-width:0}
+.rl-cmd{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text)}
+.rl-val{font-size:10px;color:var(--cyan);margin-top:1px;font-family:'JetBrains Mono',monospace;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl-t{font-size:9px;color:var(--muted);margin-top:1px;font-family:'JetBrains Mono',monospace}
+.rl-st{font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;text-align:right}
+.rl-st.ok{color:var(--green)}.rl-st.err{color:var(--red)}.rl-st.pend{color:var(--yellow)}
+.rl-empty{text-align:center;padding:28px 0;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px}
 
-  @keyframes popIn  { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+/* CANVAS */
+#pvc{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  z-index:1000;background:rgba(8,13,24,0.97);border:1px solid var(--border);
+  color:var(--text);font-size:13px;font-weight:700;padding:10px 18px;
+  border-radius:13px;backdrop-filter:blur(20px);
+  transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .32s;
+  opacity:0;white-space:nowrap;box-shadow:0 7px 28px rgba(0,0,0,0.55);
+  display:flex;align-items:center;gap:7px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* SEND GLOW */
+@keyframes sg{0%{box-shadow:0 0 0 0 rgba(0,212,255,0.7)}70%{box-shadow:0 0 0 16px rgba(0,212,255,0)}100%{box-shadow:0 0 0 0 rgba(0,212,255,0)}}
+.sp{animation:sg .7s ease}
+
+/* LOADING SPINNER — بجانب النص داخل الزر */
+.eb.loading,.qb.loading,.rb.loading{pointer-events:none;opacity:.85}
+.btn-spinner{
+  display:none;width:14px;height:14px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,0.15);
+  border-top-color:currentColor;
+  animation:btnSpin .6s linear infinite;
+}
+.eb.loading .btn-spinner,
+.qb.loading .btn-spinner,
+.rb.loading .btn-spinner{display:block}
+@keyframes btnSpin{to{transform:rotate(360deg)}}
+
+/* PRESETS/SCRIPT SAVED ITEMS */
+.preset-del{width:28px;height:28px;border-radius:7px;border:none;cursor:pointer;
+  background:rgba(255,64,96,0.08);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:.18s}
+.preset-del:active{background:rgba(255,64,96,0.25);transform:scale(.88)}
+.preset-del img{width:13px;height:13px}
+.preset-empty{text-align:center;padding:16px 0;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;font-size:11px}
+.p-add-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+.confirm-overlay.open{display:flex;animation:ov .2s ease both}
+.confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
+  border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
+  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
+.confirm-icon{text-align:center;margin-bottom:12px}
+.confirm-icon img{width:40px;height:40px}
+.confirm-title{font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px}
+.confirm-msg{font-size:13px;color:var(--muted);text-align:center;margin-bottom:18px;line-height:1.5}
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ══ NEON SCRIPT EDITOR ══ */
+.script-editor-wrap{
+  position:relative;border-radius:14px;margin-bottom:9px;
+  border:1px solid rgba(0,212,255,0.35);
+  background:linear-gradient(180deg,rgba(0,15,30,0.98),rgba(0,5,15,0.99));
+  overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,212,255,0.07) inset,0 8px 32px rgba(0,0,0,0.7),0 0 60px rgba(0,212,255,0.06);
+  transition:border-color .25s,box-shadow .25s;
+}
+.script-editor-wrap:focus-within{
+  border-color:rgba(0,212,255,0.65);
+  box-shadow:0 0 0 3px rgba(0,212,255,0.1),0 8px 32px rgba(0,0,0,0.7),0 0 80px rgba(0,212,255,0.12);
+}
+.script-editor-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;
+  background:linear-gradient(90deg,rgba(0,212,255,0.09),rgba(0,80,120,0.1),rgba(0,212,255,0.07));
+  border-bottom:1px solid rgba(0,212,255,0.18);position:relative;
+}
+.script-editor-bar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00d4ff,#00ff9d,#00d4ff,transparent);opacity:.6}
+.editor-lang{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:2px;
+  text-shadow:0 0 12px rgba(0,212,255,0.8)}
+.editor-lang .elDot{width:7px;height:7px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan),0 0 20px rgba(0,212,255,0.6);animation:pOn 2s infinite}
+.sed-dots{display:flex;gap:7px}
+.sed{width:10px;height:10px;border-radius:50%}
+.sed-r{background:#ff5f57;box-shadow:0 0 6px rgba(255,95,87,0.7)}
+.sed-y{background:#ffbd2e;box-shadow:0 0 6px rgba(255,189,46,0.7)}
+.sed-g{background:#28c840;box-shadow:0 0 6px rgba(40,200,64,0.7)}
+.script-area{
+  display:block;width:100%;min-height:160px;resize:none;
+  border:none;background:transparent;color:#a8d8ff;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;
+  padding:14px;outline:none;direction:ltr;caret-color:var(--cyan);
+  -webkit-user-select:text;user-select:text;touch-action:manipulation;cursor:text;
+  text-shadow:0 0 8px rgba(0,180,255,0.15);
+}
+.script-area::placeholder{color:rgba(0,212,255,0.22);font-style:italic}
+.editor-footer{padding:7px 14px;border-top:1px solid rgba(0,212,255,0.1);
+  background:rgba(0,212,255,0.03);display:flex;align-items:center;justify-content:space-between}
+.einfo{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(0,212,255,0.35);letter-spacing:.9px}
+
+.script-saved-item{display:flex;align-items:center;gap:9px;padding:9px 11px;
+  border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  cursor:pointer;transition:all .2s;margin-bottom:6px}
+.script-saved-item:active{transform:scale(.98);background:rgba(0,212,255,0.08)}
+.script-saved-name{flex:1;font-size:12px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.script-saved-size{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* ══ NEON AE STEP ══ */
+.ae-step{
+  background:linear-gradient(145deg,rgba(0,212,255,0.05),rgba(0,60,100,0.04));
+  border:1px solid rgba(0,212,255,0.25);border-radius:15px;padding:15px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.35),inset 0 1px 0 rgba(0,212,255,0.1),0 0 30px rgba(0,212,255,0.03);
+}
+.ae-step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#00d4ff 30%,#00ff9d 50%,#00d4ff 70%,transparent);opacity:.65}
+.ae-step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1}
+.ae-step-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:800;
+  color:var(--cyan);letter-spacing:1.2px;
+  background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,100,160,0.12));
+  border:1px solid rgba(0,212,255,0.35);border-radius:9px;padding:4px 14px;
+  box-shadow:0 0 14px rgba(0,212,255,0.15);text-shadow:0 0 10px rgba(0,212,255,0.7)}
+.ae-del{width:30px;height:30px;border-radius:9px;cursor:pointer;border:1px solid rgba(255,64,96,0.22);
+  background:rgba(255,64,96,0.08);display:flex;align-items:center;justify-content:center;
+  transition:all .18s;position:relative;z-index:1}
+.ae-del:active{background:rgba(255,64,96,0.25);box-shadow:0 0 16px rgba(255,64,96,0.35);transform:scale(.88)}
+.ae-del img{width:12px;height:12px}
+.ae-select{width:100%;padding:10px 14px;border-radius:11px;margin-bottom:9px;
+  border:1px solid rgba(0,212,255,0.2);background:rgba(0,212,255,0.05);
+  color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+  outline:none;-webkit-appearance:none;appearance:none;position:relative;z-index:1;
+  transition:border-color .2s,box-shadow .2s;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2300d4ff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left 12px center}
+.ae-select:focus{border-color:rgba(0,212,255,0.55);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+.ae-select option{background:var(--bg, #06090f);color:var(--text)}
+body.light .ae-select{background:rgba(0,100,200,0.06);border-color:rgba(0,100,200,0.2);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%230064c8' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")}
+body.light .ae-select option{background:#f0f4ff;color:#1a1f2e}
+.ae-progress-wrap{display:flex;align-items:center;gap:9px;padding:9px 12px;
+  background:rgba(0,212,255,0.04);border-radius:10px;border:1px solid rgba(0,212,255,0.1);
+  margin-top:4px;position:relative;z-index:1}
+.ae-dot{width:8px;height:8px;border-radius:50%;background:rgba(100,140,180,0.3);flex-shrink:0;transition:all .3s}
+.ae-dot.run{background:var(--yellow);box-shadow:0 0 6px var(--yellow);animation:pWarn 1s infinite}
+.ae-dot.done{background:var(--green);box-shadow:0 0 8px var(--green)}
+.ae-dot.fail{background:var(--red);box-shadow:0 0 6px var(--red)}
+.ae-bar-wrap{flex:1;height:4px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden}
+.ae-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));
+  width:0%;transition:width .5s;border-radius:3px;box-shadow:0 0 6px rgba(0,212,255,0.4)}
+
+/* ══ NEON ADD STEP BTN ══ */
+.ae-add-btn{width:100%;padding:13px;border-radius:14px;margin-bottom:9px;
+  border:1.5px dashed rgba(0,212,255,0.4);
+  background:linear-gradient(135deg,rgba(0,212,255,0.05),rgba(0,80,140,0.04));
+  color:var(--cyan);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  text-shadow:0 0 12px rgba(0,212,255,0.6);
+  box-shadow:0 0 20px rgba(0,212,255,0.04),inset 0 1px 0 rgba(0,212,255,0.08);
+  transition:all .25s;position:relative;overflow:hidden}
+.ae-add-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.8),#00ff9d,rgba(0,212,255,0.8),transparent);opacity:.4}
+.ae-add-btn:active{border-color:rgba(0,212,255,0.75);border-style:solid;
+  box-shadow:0 0 30px rgba(0,212,255,0.25);transform:scale(.97)}
+
+/* AE SAVED SEQUENCES */
+.ae-seq-item{display:flex;align-items:center;gap:9px;padding:9px 11px;
+  border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  cursor:pointer;transition:all .2s;margin-bottom:6px}
+.ae-seq-item:active{transform:scale(.98);background:rgba(0,212,255,0.07)}
+.ae-seq-name{flex:1;font-size:12px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ae-seq-info{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px}
+.confirm-overlay.open{display:flex;animation:ov .2s ease both}
+.confirm-box{background:rgba(10,15,28,0.98);border:1px solid rgba(255,64,96,0.3);
+  border-radius:18px;padding:22px 20px;width:100%;max-width:320px;
+  box-shadow:0 0 40px rgba(255,64,96,0.2);animation:cardUp .15s cubic-bezier(.22,1,.36,1) both}
+.confirm-icon{text-align:center;margin-bottom:12px}
+.confirm-icon img{width:40px;height:40px}
+.confirm-title{font-size:16px;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px}
+.confirm-msg{font-size:13px;color:var(--muted);text-align:center;margin-bottom:18px;line-height:1.5}
+.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+<div class="scanline"></div>
 
-<div class="avatar-section">
-  <!-- الحلقة الزرقاء + الصورة -->
-  <div class="avatar-ring">
-    <div class="avatar" id="avatar">؟</div>
+<div id="skWrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;opacity:0;animation:cardUp .15s ease .05s both">
+    <div><div class="sk" style="width:130px;height:20px;margin-bottom:5px"></div><div class="sk" style="width:85px;height:9px"></div></div>
+    <div style="display:flex;gap:7px"><div class="sk" style="width:68px;height:35px;border-radius:10px"></div><div class="sk" style="width:35px;height:35px;border-radius:10px"></div></div>
   </div>
-  <div class="full-name" id="fullName">جاري التحميل...</div>
-  <div class="username"  id="username"></div>
+  <div class="skc" style=""><div class="sk" style="width:55%;height:13px;margin-bottom:10px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style=""><div class="sk" style="width:72%;height:13px;margin-bottom:8px"></div><div class="sk" style="width:48%;height:11px;margin-bottom:9px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div>
+  <div class="skc" style=""><div class="sk" style="width:62%;height:13px;margin-bottom:8px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><div class="sk" style="height:42px;border-radius:11px"></div><div class="sk" style="height:42px;border-radius:11px"></div></div></div>
+  <div class="skc" style=""><div class="sk" style="width:48%;height:13px;margin-bottom:9px"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+    <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
+    <div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div><div class="sk" style="height:68px;border-radius:11px"></div>
+  </div></div>
 </div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .18s ease both">
-  <div class="section-label">معلومات الحساب</div>
-</div>
+<div class="wrap" id="mainWrap" style="display:none">
 
-<div class="section">
-  <div class="card">
-    <div class="row">
-      <div class="row-icon">🆔</div>
-      <div class="row-info">
-        <div class="row-label">User ID</div>
-        <div class="row-value" id="userId">—</div>
-      </div>
-      <button class="row-copy" onclick="copyVal('userId')">نسخ</button>
-    </div>
-    <div class="row">
-      <div class="row-icon">👤</div>
-      <div class="row-info">
-        <div class="row-label">الاسم الأول</div>
-        <div class="row-value" id="firstName">—</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">👤</div>
-      <div class="row-info">
-        <div class="row-label">الاسم الأخير</div>
-        <div class="row-value" id="lastName">—</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">🔗</div>
-      <div class="row-info">
-        <div class="row-label">اسم المستخدم</div>
-        <div class="row-value" id="usernameVal">—</div>
-      </div>
-      <button class="row-copy" id="copyUsernameBtn" onclick="copyVal('usernameVal')" style="display:none">نسخ</button>
-    </div>
-    <div class="row">
-      <div class="row-icon">🌍</div>
-      <div class="row-info">
-        <div class="row-label">اللغة</div>
-        <div class="row-value" id="langCode">—</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">⭐</div>
-      <div class="row-info">
-        <div class="row-label">حساب Premium</div>
-        <div class="row-value" id="isPremium">—</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="row-icon">📅</div>
-      <div class="row-info">
-        <div class="row-label">تاريخ الإنشاء (تقريبي)</div>
-        <div class="row-value" id="regDate">—</div>
-      </div>
-    </div>
+<div class="header" id="appHeader">
+  <div><div class="title">GG Control Panel By SAyed</div><div class="title-sub">GAME GUARDIAN Control</div></div>
+  <div class="hdr-acts">
+    <button class="hdr-btn" id="navBtn" onclick="toggleNav(this)" style="width:35px;padding:0;transition:all .25s cubic-bezier(.22,1,.36,1)">
+      <img id="navIco" src="https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0" alt="" style="transition:transform .3s">
+    </button>
+    <button class="hdr-btn" id="langBtn" onclick="toggleLang(this)" style="min-width:70px;gap:5px">
+      <img src="https://api.iconify.design/ph/globe-simple-fill.svg?color=%23e2e8f0" style="width:14px;height:14px" alt="">
+      <span id="lgCode">AR</span>
+    </button>
+    <button class="hdr-btn" onclick="toggleTheme(this)">
+      <img id="themeIco" src="https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0" alt="">
+    </button>
   </div>
 </div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .22s ease both">
-  <div class="section-label">بيئة التشغيل</div>
-</div>
-<div class="badge-row" id="badgeRow"></div>
-<div style="height:16px"></div>
+<div class="nav-backdrop" id="navBackdrop" onclick="closeNav()"></div>
 
-<div style="padding:0 16px 8px; animation:fadeUp .4s .28s ease both">
-  <div class="section-label">ألوان الثيم الحالي</div>
+<div class="status-card" id="statusCard">
+  <div class="s-left">
+    <div class="s-dot offline" id="sDot"></div>
+    <div>
+      <div class="s-label offline" id="sLabel">OFFLINE</div>
+      <div class="s-sub" id="sSub">—</div>
+      <div class="s-lastseen dead" id="sLastSeen"></div>
+    </div>
+  </div>
+  <div class="s-result" id="sResult" onclick="openResultSheet()">—</div>
 </div>
-<div class="theme-grid" id="themeGrid"></div>
 
-<div class="toast" id="toast">✓ تم النسخ</div>
+<div class="card" id="cSearch">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">SEARCH</div><div class="cd" data-ar="ابحث عن رقم في الذاكرة" data-en="Search a value in memory">ابحث عن رقم في الذاكرة</div></div>
+  </div>
+  <input type="text" id="sVal" data-ph-ar="100  أو  100;200;300" data-ph-en="100  or  100;200;300" placeholder="100  أو  100;200;300">
+  <div class="tr" id="sTr">
+    <button class="tb on" onclick="selT('s',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('s',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('s',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('s',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('s',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" onclick="doSearch(this)">
+    <img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt="">
+    <span data-ar="بحث" data-en="Search">بحث</span>
+  </button>
+</div>
+
+<div class="card" id="cRefine">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">REFINE</div><div class="cd" data-ar="صقل النتائج الحالية" data-en="Refine current results">صقل النتائج الحالية</div></div>
+  </div>
+  <input type="text" id="rVal" data-ph-ar="200  أو  200;300" data-ph-en="200  or  200;300" placeholder="200  أو  200;300">
+  <div class="tr" id="rTr">
+    <button class="tb on" onclick="selT('r',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('r',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('r',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('r',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('r',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" onclick="doRefine(this)">
+    <img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt="">
+    <span data-ar="صقل" data-en="Refine">صقل</span>
+  </button>
+</div>
+
+<div class="card" id="cEF">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">EDIT &amp; FREEZE</div><div class="cd" data-ar="تعديل وتجميد النتائج" data-en="Edit and freeze results">تعديل وتجميد النتائج</div></div>
+  </div>
+  <div class="ef-tabs">
+    <button class="ef-tab on" id="et-e" onclick="swTab('e')">
+      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="تعديل" data-en="Edit">تعديل</span>
+    </button>
+    <button class="ef-tab ft" id="et-f" onclick="swTab('f')">
+      <img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt="">
+      <span data-ar="تجميد" data-en="Freeze">تجميد</span>
+    </button>
+  </div>
+  <div class="ef-panel on" id="ep-e">
+    <input type="text" id="eVal" placeholder="9999999">
+    <div class="tr" id="eTr">
+      <button class="tb on" onclick="selT('e',this,4)">DWORD</button>
+      <button class="tb" onclick="selT('e',this,16)">FLOAT</button>
+      <button class="tb" onclick="selT('e',this,32)">QWORD</button>
+      <button class="tb" onclick="selT('e',this,1)">BYTE</button>
+      <button class="tb" onclick="selT('e',this,2)">WORD</button>
+    </div>
+    <div class="ftg" id="ftg" onclick="toggleFZ(this)">
+      <div class="ftg-lbl"><img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt=""><span data-ar="تجميد بعد التعديل" data-en="Freeze after edit">تجميد بعد التعديل</span></div>
+      <div class="sw"></div>
+    </div>
+    <button class="eb bg" onclick="doEdit(this)">
+      <img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="تعديل الكل" data-en="Edit All">تعديل الكل</span>
+    </button>
+  </div>
+  <div class="ef-panel" id="ep-f">
+    <input type="text" id="fVal" placeholder="9999999">
+    <div class="fb2">
+      <button class="eb by" onclick="doFreeze(this)">
+        <img src="https://api.iconify.design/ph/lock-fill.svg?color=%23ffd700" alt="">
+        <span data-ar="نتائج" data-en="Results">نتائج</span>
+      </button>
+      <button class="eb by" onclick="doFreezeList(this)">
+        <img src="https://api.iconify.design/ph/list-fill.svg?color=%23ffd700" alt="">
+        <span data-ar="قائمة" data-en="List">قائمة</span>
+      </button>
+    </div>
+    <button class="eb bg" onclick="doCmd({c:'unfreeze'},this)">
+      <img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="رفع التجميد" data-en="Unfreeze">رفع التجميد</span>
+    </button>
+  </div>
+</div>
+
+<div class="card" id="cQuick">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/lightning-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">QUICK</div><div class="cd" data-ar="أوامر سريعة قابلة للتخصيص" data-en="Customizable quick actions">أوامر سريعة قابلة للتخصيص</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+    <button class="eb bc" onclick="doCmd({c:'count'},this)"><img src="https://api.iconify.design/ph/hash-fill.svg?color=%2300d4ff" alt=""><span data-ar="عدد النتائج" data-en="Count">عدد النتائج</span></button>
+    <button class="eb br" onclick="doCmd({c:'clear'},this)"><img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt=""><span data-ar="مسح الكل" data-en="Clear all">مسح الكل</span></button>
+  </div>
+  <div class="cd" style="margin-bottom:5px" data-ar="جلب نتائج (حدد العدد)" data-en="Get results (set count)">جلب نتائج (حدد العدد)</div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:8px;align-items:center">
+    <input type="number" id="qResN" data-ph-ar="عدد النتائج (مثلاً 20)" data-ph-en="Count (e.g. 20)" placeholder="عدد النتائج (مثلاً 20)" style="margin-bottom:0;min-width:0">
+    <button class="eb by" style="width:auto;padding:10px 14px;white-space:nowrap" onclick="doGetN(this)"><img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%23ffd700" alt=""><span data-ar="جلب" data-en="Fetch">جلب</span></button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+    <button class="eb bc" onclick="doCmd({c:'goto'},this)"><img src="https://api.iconify.design/ph/arrow-up-right-fill.svg?color=%2300d4ff" alt=""><span data-ar="فتح GG" data-en="Open GG">فتح GG</span></button>
+    <button class="eb bm" onclick="doCmd({c:'hide'},this)"><img src="https://api.iconify.design/ph/eye-slash-fill.svg?color=%234a5568" alt=""><span data-ar="إخفاء GG" data-en="Hide GG">إخفاء GG</span></button>
+  </div>
+  <button class="eb bg" onclick="doCmd({c:'unfreeze'},this)"><img src="https://api.iconify.design/ph/lock-open-fill.svg?color=%2300ff9d" alt=""><span data-ar="رفع تجميد الكل" data-en="Unfreeze all">رفع تجميد الكل</span></button>
+</div>
+
+<div class="card" id="cAdv">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/cpu-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">ADVANCED</div><div class="cd" data-ar="أوامر متقدمة — كل شيء قابل للتخصيص" data-en="Advanced — fully customizable">أوامر متقدمة — كل شيء قابل للتخصيص</div></div>
+  </div>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/timer-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="انتظار (ms)" data-en="Sleep (ms)">انتظار (ms)</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="number" id="sleepVal" data-ph-ar="مثلاً 1000 = ثانية واحدة" data-ph-en="e.g. 1000 = 1 second" placeholder="مثلاً 1000 = ثانية واحدة" style="margin-bottom:0">
+    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doSleep(this)"><img src="https://api.iconify.design/ph/timer-fill.svg?color=%23ffd700" alt=""><span data-ar="تنفيذ" data-en="Run">تنفيذ</span></button>
+  </div>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="نطاق مخصص (قيمة عددية)" data-en="Custom range (numeric value)">نطاق مخصص (قيمة عددية)</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="number" id="customRange" data-ph-ar="مثلاً 2147483712" data-ph-en="e.g. 2147483712" placeholder="مثلاً 2147483712" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doCustomRange(this)"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""><span data-ar="تعيين" data-en="Set">تعيين</span></button>
+  </div>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="بحث مع حجم المجموعة (Group Size)" data-en="Search with group size">بحث مع حجم المجموعة (Group Size)</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="gsVal" data-ph-ar="القيم (100;200)" data-ph-en="Values (100;200)" placeholder="القيم (100;200)" style="margin-bottom:0">
+    <input type="number" id="gsSize" data-ph-ar="حجم المجموعة" data-ph-en="Group size" placeholder="حجم المجموعة" style="margin-bottom:0">
+  </div>
+  <div class="tr" id="gsTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('gs',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('gs',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('gs',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('gs',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('gs',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" style="margin-bottom:11px" onclick="doGS(this)"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""><span data-ar="بحث بمجموعة" data-en="Group search">بحث بمجموعة</span></button>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="صقل مع حجم المجموعة" data-en="Refine with group size">صقل مع حجم المجموعة</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="grVal" data-ph-ar="القيم" data-ph-en="Values" placeholder="القيم" style="margin-bottom:0">
+    <input type="number" id="grSize" data-ph-ar="حجم المجموعة" data-ph-en="Group size" placeholder="حجم المجموعة" style="margin-bottom:0">
+  </div>
+  <div class="tr" id="grTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('gr',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('gr',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('gr',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('gr',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('gr',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" style="margin-bottom:11px" onclick="doGR(this)"><img src="https://api.iconify.design/ph/funnel-fill.svg?color=%2300d4ff" alt=""><span data-ar="صقل بمجموعة" data-en="Group refine">صقل بمجموعة</span></button>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="تعديل عنوان محدد (Address + Value)" data-en="Edit specific address">تعديل عنوان محدد (Address + Value)</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px">
+    <input type="text" id="addrVal" data-ph-ar="العنوان (hex)" data-ph-en="Address (hex)" placeholder="0x12345678" style="margin-bottom:0">
+    <input type="text" id="addrNew" data-ph-ar="القيمة الجديدة" data-ph-en="New value" placeholder="9999" style="margin-bottom:0">
+  </div>
+  <div class="tr" id="adTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('ad',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('ad',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('ad',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('ad',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('ad',this,2)">WORD</button>
+  </div>
+  <button class="eb bg" style="margin-bottom:11px" onclick="doEditAddr(this)"><img src="https://api.iconify.design/ph/pencil-simple-fill.svg?color=%2300ff9d" alt=""><span data-ar="تعديل العنوان" data-en="Edit address">تعديل العنوان</span></button>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/snowflake.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="تجميد القائمة على قيمة محددة" data-en="Freeze list on specific value">تجميد القائمة على قيمة محددة</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="text" id="flVal" data-ph-ar="القيمة للتجميد عليها" data-ph-en="Value to freeze on" placeholder="9999999" style="margin-bottom:0">
+    <button class="eb by" style="width:auto;padding:10px 14px" onclick="doFLV(this)"><img src="https://api.iconify.design/ph/snowflake.svg?color=%23ffd700" alt=""><span data-ar="تجميد" data-en="Freeze">تجميد</span></button>
+  </div>
+
+  <div class="cd" style="margin-bottom:5px;display:flex;align-items:center;gap:5px"><img src="https://api.iconify.design/ph/list-bullets-fill.svg?color=%234a5568" style="width:12px;height:12px"><span data-ar="بحث بقيم متعددة (مفصولة بـ ;)" data-en="Multi-value search">بحث بقيم متعددة (مفصولة بـ ;)</span></div>
+  <input type="text" id="mvVal" data-ph-ar="مثلاً 100;200;300;400" data-ph-en="e.g. 100;200;300;400" placeholder="100;200;300;400">
+  <div class="tr" id="mvTr" style="margin-bottom:7px">
+    <button class="tb on" onclick="selT('mv',this,4)">DWORD</button>
+    <button class="tb" onclick="selT('mv',this,16)">FLOAT</button>
+    <button class="tb" onclick="selT('mv',this,32)">QWORD</button>
+    <button class="tb" onclick="selT('mv',this,1)">BYTE</button>
+    <button class="tb" onclick="selT('mv',this,2)">WORD</button>
+  </div>
+  <button class="eb bc" onclick="doMV(this)"><img src="https://api.iconify.design/ph/magnifying-glass-fill.svg?color=%2300d4ff" alt=""><span data-ar="بحث متعدد" data-en="Multi search">بحث متعدد</span></button>
+</div>
+
+<div class="card" id="cRanges">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/globe-hemisphere-west-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">MEMORY RANGES</div><div class="cd" data-ar="تحديد نطاق الذاكرة" data-en="Set memory region">تحديد نطاق الذاكرة</div></div>
+  </div>
+  <div class="rg">
+    <button class="rb" onclick="doCmd({c:'ranges',v:'2147483712'},this)">ANON+ALLOC<span data-ar="الأشيع" data-en="Most common">الأشيع</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'536870912'},this)">JAVA<span data-ar="ذاكرة Java" data-en="Java heap">ذاكرة Java</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'8'},this)">CODE APP<span data-ar="كود التطبيق" data-en="App code">كود التطبيق</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'4294967295'},this)">ALL<span data-ar="كل النطاقات" data-en="All regions">كل النطاقات</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'64'},this)">STACK<span data-ar="ذاكرة Stack" data-en="Stack memory">Stack</span></button>
+    <button class="rb" onclick="doCmd({c:'ranges',v:'32'},this)">HEAP<span data-ar="ذاكرة Heap" data-en="Heap memory">Heap</span></button>
+  </div>
+</div>
+<div class="card" id="cExport">
+  <div class="ch"><div class="ci"><img src="https://api.iconify.design/ph/export-fill.svg?color=%2300d4ff" alt=""></div>
+    <div><div class="ct">EXPORT</div><div class="cd" data-ar="تصدير البيانات إلى تيليجرام" data-en="Export data to Telegram">تصدير البيانات إلى تيليجرام</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.12);border-radius:10px;padding:9px 12px;margin-bottom:10px">
+    <img src="https://api.iconify.design/ph/user-circle-fill.svg?color=%234a5568" style="width:16px;height:16px;flex-shrink:0">
+    <div>
+      <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace" data-ar="Chat ID" data-en="Chat ID">Chat ID</div>
+      <div style="font-size:12px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace" id="detectedCid">—</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px">
+    <button class="eb bc" onclick="doExport('exportResults',this)">
+      <img src="https://api.iconify.design/ph/list-numbers-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="نتائج البحث" data-en="Search results">نتائج البحث</span>
+    </button>
+    <button class="eb by" onclick="doExport('exportList',this)">
+      <img src="https://api.iconify.design/ph/list-star-fill.svg?color=%23ffd700" alt="">
+      <span data-ar="قائمة المحفوظات" data-en="Saved list">قائمة المحفوظات</span>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px">
+    <button class="eb bg" onclick="doExport('exportFrozen',this)">
+      <img src="https://api.iconify.design/ph/snowflake.svg?color=%2300ff9d" alt="">
+      <span data-ar="العناصر المجمدة" data-en="Frozen items">العناصر المجمدة</span>
+    </button>
+    <button class="eb bm" onclick="doExport('exportCount',this)">
+      <img src="https://api.iconify.design/ph/hash-fill.svg?color=%234a5568" alt="">
+      <span data-ar="عدد النتائج فقط" data-en="Count only">عدد النتائج فقط</span>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center">
+    <input type="number" id="exportN" data-ph-ar="عدد النتائج للتصدير (مثلاً 50)" data-ph-en="Results count to export (e.g. 50)" placeholder="عدد النتائج للتصدير" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 14px" onclick="doExportN(this)">
+      <img src="https://api.iconify.design/ph/paper-plane-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="إرسال" data-en="Send">إرسال</span>
+    </button>
+  </div>
+</div>
+<div class="card" id="cScript">
+  <div class="ch">
+    <div class="ci"><img src="https://api.iconify.design/ph/code-fill.svg?color=%2300d4ff" alt=""></div>
+    <div>
+      <div class="ct">SCRIPT INJECT</div>
+      <div class="cd" data-ar="حقن وتشغيل سكريبت Lua في GG" data-en="Inject & run Lua script in GG">حقن وتشغيل سكريبت Lua في GG</div>
+    </div>
+  </div>
+
+  <div id="scriptSavedList" style="margin-bottom:10px">
+    <div class="preset-empty" id="scriptEmpty" data-ar="لا توجد سكريبتات محفوظة" data-en="No saved scripts">لا توجد سكريبتات محفوظة</div>
+  </div>
+
+  <div class="script-editor-wrap">
+    <div class="script-editor-bar">
+      <div class="editor-lang">
+        <div class="elDot"></div>
+        LUA SCRIPT
+      </div>
+      <div class="sed-dots">
+        <div class="sed sed-r"></div>
+        <div class="sed sed-y"></div>
+        <div class="sed sed-g"></div>
+      </div>
+    </div>
+    <textarea class="script-area" id="scriptCode"
+      placeholder="-- اكتب سكريبت Lua هنا...&#10;-- مثال مع زر Sx:&#10;gg.showUiButton()&#10;while true do&#10;  if gg.isClickedUiButton() then&#10;    gg.alert('مرحبا!')&#10;  end&#10;  gg.sleep(100)&#10;end"
+      oninput="updateEditorInfo(this)"></textarea>
+    <div class="editor-footer">
+      <span class="einfo" id="editorLines">0 سطر</span>
+      <span class="einfo">UTF-8 · LuaJ</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr auto auto;gap:7px;margin-bottom:9px;align-items:center">
+    <input type="text" id="scriptSaveName"
+      data-ph-ar="اسم السكريبت" data-ph-en="Script name"
+      placeholder="اسم السكريبت" style="margin-bottom:0">
+    <label style="width:38px;height:38px;border-radius:10px;cursor:pointer;flex-shrink:0;
+      background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+      display:flex;align-items:center;justify-content:center;transition:.18s" title="رفع ملف .lua">
+      <img src="https://api.iconify.design/ph/upload-simple-fill.svg?color=%234a5568" style="width:15px;height:15px">
+      <input type="file" id="scriptFile" accept=".lua" style="display:none" onchange="loadScriptFile(this)">
+    </label>
+    <button class="eb bc" style="width:auto;padding:10px 13px" onclick="saveScript(this)">
+      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="حفظ" data-en="Save">حفظ</span>
+    </button>
+  </div>
+
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="eb bc" style="flex:1" onclick="injectScript(this)">
+      <img src="https://api.iconify.design/ph/rocket-launch-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="حقن وتشغيل في GG" data-en="Inject & Run in GG">حقن وتشغيل في GG</span>
+    </button>
+    <div class="ftg" id="sxToggle" onclick="toggleSx(this)"
+      style="flex-shrink:0;margin-bottom:0;padding:9px 12px;
+        border-color:rgba(0,255,157,0.18);background:rgba(0,255,157,0.06)">
+      <div class="ftg-lbl" style="color:var(--green);gap:5px">
+        <img src="https://api.iconify.design/ph/game-controller-fill.svg?color=%2300ff9d" alt="" style="width:13px;height:13px">
+        <span style="font-size:12px">Sx</span>
+      </div>
+      <div class="sw" style="margin-right:8px;background:rgba(0,255,157,0.1);border-color:rgba(0,255,157,0.18)"></div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cAutoExec">
+  <div class="ch">
+    <div class="ci"><img src="https://api.iconify.design/ph/shuffle-fill.svg?color=%2300d4ff" alt=""></div>
+    <div>
+      <div class="ct">AUTO EXECUTE</div>
+      <div class="cd" data-ar="تسلسل أوامر تلقائي قابل للحفظ" data-en="Automated command sequence with save">تسلسل أوامر تلقائي قابل للحفظ</div>
+    </div>
+  </div>
+
+  <div id="aeSeqList" style="margin-bottom:9px"></div>
+
+  <div style="display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:11px;align-items:center">
+    <input type="text" id="aeSeqName"
+      data-ph-ar="اسم التسلسل للحفظ" data-ph-en="Sequence name to save"
+      placeholder="اسم التسلسل" style="margin-bottom:0">
+    <button class="eb bc" style="width:auto;padding:10px 13px" onclick="aeSaveSeq(this)">
+      <img src="https://api.iconify.design/ph/floppy-disk-fill.svg?color=%2300d4ff" alt="">
+      <span data-ar="حفظ" data-en="Save">حفظ</span>
+    </button>
+  </div>
+
+  <div id="aeStepsList"></div>
+
+  <button class="ae-add-btn" onclick="aeAddStep()">
+    <img src="https://api.iconify.design/ph/plus-circle-fill.svg?color=%2300d4ff" style="width:15px;height:15px" alt="">
+    <span data-ar="إضافة خطوة" data-en="Add step">إضافة خطوة</span>
+  </button>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px">
+    <div>
+      <div class="cd" style="margin-bottom:4px" data-ar="تأخير بين الخطوات (ms)" data-en="Delay between steps (ms)">تأخير (ms)</div>
+      <input type="number" id="aeDelay" value="800" style="margin-bottom:0">
+    </div>
+    <div>
+      <div class="cd" style="margin-bottom:4px" data-ar="عدد مرات التكرار" data-en="Repeat count">تكرار</div>
+      <input type="number" id="aeRepeat" value="1" min="1" style="margin-bottom:0">
+    </div>
+  </div>
+
+  <div class="ae-progress-wrap" style="margin-bottom:9px">
+    <div class="ae-dot" id="aeDot"></div>
+    <div class="ae-bar-wrap"><div class="ae-bar" id="aeBar"></div></div>
+    <span id="aeStatusTxt" style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:50px;text-align:left">جاهز</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <button class="eb bg" onclick="aeRun(this)">
+      <img src="https://api.iconify.design/ph/play-fill.svg?color=%2300ff9d" alt="">
+      <span data-ar="تشغيل" data-en="Run">تشغيل</span>
+    </button>
+    <button class="eb br" onclick="aeStop()">
+      <img src="https://api.iconify.design/ph/stop-fill.svg?color=%23ff4060" alt="">
+      <span data-ar="إيقاف" data-en="Stop">إيقاف</span>
+    </button>
+  </div>
+</div>
+
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon"><img src="https://api.iconify.design/ph/warning-fill.svg?color=%23ff4060" alt=""></div>
+    <div class="confirm-title" id="confirmTitle">تأكيد</div>
+    <div class="confirm-msg" id="confirmMsg">هل أنت متأكد؟</div>
+    <div class="confirm-btns">
+      <button class="eb bm" onclick="confirmResolve(false)">
+        <img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" alt="">
+        <span data-ar="إلغاء" data-en="Cancel">إلغاء</span>
+      </button>
+      <button class="eb br" onclick="confirmResolve(true)">
+        <img src="https://api.iconify.design/ph/check-fill.svg?color=%23ff4060" alt="">
+        <span data-ar="تأكيد" data-en="Confirm">تأكيد</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="rdOverlay" onclick="closeSheet('rdOverlay',event)">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-head">
+      <span class="sh-title" id="rdTitle">آخر نتيجة</span>
+      <button class="sh-close" onclick="closeSheet('rdOverlay')"><img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" style="width:13px;height:13px"></button>
+    </div>
+    <div class="sh-body">
+      <div class="rd-val" id="rdVal">—</div>
+      <div id="rdCtx"></div>
+      <div class="rd-time" id="rdTime"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="rlOverlay" onclick="closeSheet('rlOverlay',event)">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-head">
+      <span class="sh-title" id="rlTitle">REQUEST LOG</span>
+      <button class="sh-close" onclick="closeSheet('rlOverlay')"><img src="https://api.iconify.design/ph/x-fill.svg?color=%234a5568" style="width:13px;height:13px"></button>
+    </div>
+    <div class="sh-body" id="rlBody"><div class="rl-empty" id="rlEmpty">—</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><img id="tIco" style="width:15px;height:15px;flex-shrink:0" src="https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0" alt=""><span id="tMsg">—</span></div>
 
 <script>
-const tg = window.Telegram?.WebApp;
-
-// ألوان تيليجرام الحقيقية بالترتيب الصحيح (7 ألوان — id % 7)
-const AVATAR_COLORS = [
-  "#e17076", // أحمر
-  "#ee7aae", // وردي
-  "#a695e7", // بنفسجي
-  "#65aadd", // أزرق
-  "#6ec9cb", // سماوي
-  "#7bc862", // أخضر
-  "#e88b4a", // برتقالي
-];
-
-function init() {
-  if (!tg) { showDemo(); return; }
+const BOT = "8326557142:AAFMciO-6kV9I7uLxf2G3uJmR_BhOPWENdo";
+const API = `https://api.telegram.org/bot${BOT}`;
+const tg  = window.Telegram?.WebApp;
+if(tg){
   tg.ready();
   tg.expand();
-  const user = tg.initDataUnsafe?.user;
-  fillUser(user);
-  fillEnv();
-  fillTheme();
-  tg.onEvent("themeChanged", fillTheme);
+  if(tg.setHeaderColor)     tg.setHeaderColor('#06090f');
+  if(tg.setBackgroundColor) tg.setBackgroundColor('#06090f');
 }
 
-function fillUser(user) {
-  if (!user) { showDemo(); return; }
+// ── CHAT ID ──
+// القيمة الافتراضية في حالة عدم قدرة الجهاز على الكشف
+const DEFAULT_CID = '6108279690';
+let detectedChatId = String(tg?.initDataUnsafe?.user?.id || DEFAULT_CID);
 
-  const first  = user.first_name    || "";
-  const last   = user.last_name     || "";
-  const uname  = user.username      || "";
-  const lang   = user.language_code || "—";
-  const isPrem = user.is_premium    || false;
+// ── LANG — كشف فوري من navigator.language (يعكس لغة تيليجرام الحالية) ──
+const _navLang = navigator.language || navigator.userLanguage || 'ar';
+let L = _navLang.startsWith('ar') ? 'ar' : 'en';
+function applyL(){
+  const ar = L==='ar';
+  document.documentElement.dir  = ar?'rtl':'ltr';
+  document.documentElement.lang = L;
+  document.getElementById('lgCode').textContent = ar?'AR':'EN';
+  document.querySelectorAll('[data-ar]').forEach(el=>el.textContent=ar?el.dataset.ar:el.dataset.en);
+  document.querySelectorAll('[data-ph-ar]').forEach(el=>el.placeholder=ar?el.dataset.phAr:el.dataset.phEn);
+  syncSub();
+}
+function toggleLang(b){L=L==='ar'?'en':'ar';applyL();bump(b);hap('light')}
+function bump(el){el.style.transform='scale(.87)';setTimeout(()=>el.style.transform='',170)}
 
-  // صورة الحساب — لو موجودة يعرضها، لو لأ يعرض الحرف الأول
-  const av = document.getElementById("avatar");
-  if (user.photo_url) {
-    av.innerHTML = `<img src="${user.photo_url}" alt="avatar">`;
+// ── TYPES ──
+const T={s:4,r:4,e:4,gs:4,gr:4,ad:4,mv:4};
+function selT(g,b,v){
+  document.getElementById(g+'Tr').querySelectorAll('.tb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');T[g]=v;bump(b)
+}
+
+// ── EF TABS ──
+function swTab(t){
+  ['e','f'].forEach(x=>{
+    document.getElementById('et-'+x).classList.toggle('on',x===t);
+    document.getElementById('ep-'+x).classList.toggle('on',x===t);
+  });
+  hap('selection')
+}
+
+// ── FREEZE TOGGLE ──
+let fzMode=false;
+function toggleFZ(row){fzMode=!fzMode;row.classList.toggle('on',fzMode);hap(fzMode?'medium':'light')}
+
+// ── STATUS ──
+let lastTS=0,retrying=false,lastResultText='',lastResultTime='';
+
+async function fetchDesc(){
+  const r=await fetch(`${API}/getMyDescription`,{cache:'no-store'});
+  return ((await r.json())?.result?.description||'');
+}
+async function checkStatus(){
+  try{
+    let d=await fetchDesc(),m=d.match(/GG_ONLINE_(\d+)/);
+    if(!m&&!retrying){retrying=true;await delay(2000);d=await fetchDesc();m=d.match(/GG_ONLINE_(\d+)/);retrying=false}
+    if(m){lastTS=parseInt(m[1]);setAge(Math.floor(Date.now()/1000)-lastTS)}
+    else setAge(Infinity);
+  }catch{setAge(Infinity)}
+}
+async function fetchResult(){
+  try{
+    const r=await fetch(`${WORKER}/result?secret=${SECRET}`,{cache:'no-store'});
+    const d=await r.json();
+    const txt=d.result||'';
+    if(txt && txt!==lastResultText){
+      lastResultText=txt;
+      lastResultTime=nowStr();
+      document.getElementById('sResult').textContent=lastResultText;
+    }
+  }catch{}
+}
+function setAge(age){
+  const dot=document.getElementById('sDot'),lbl=document.getElementById('sLabel');
+  let state;
+  if(age<10)      state='online';
+  else if(age<25) state='warning';
+  else            state='offline';
+  // صوت عند الاتصال
+  if(state==='online' && prevState!=='online') playOnlineSound();
+  prevState = state;
+  dot.className='s-dot '+state;
+  lbl.className='s-label '+state;
+  lbl.textContent=state==='online'?'ONLINE':state==='warning'?'WEAK':'OFFLINE';
+  syncSub(state);
+  syncLastSeen(state,age);
+}
+function syncSub(s){
+  s=s||curState();
+  const el=document.getElementById('sSub'),ar=L==='ar';
+  el.textContent=s==='online'?(ar?'السكربت متصل بـ GG':'Script connected to GG')
+    :s==='warning'?(ar?'إشارة ضعيفة — اتصال متأخر':'Weak signal — delayed')
+    :(ar?'السكربت غير متصل':'Script not connected');
+}
+function syncLastSeen(state,age){
+  const el=document.getElementById('sLastSeen');
+  // only show when offline
+  if(state!=='offline'){el.classList.remove('show');return}
+  if(!lastTS){el.classList.remove('show');return}
+  el.classList.add('show');
+  const ar=L==='ar';
+  let cls='dead',txt;
+  if(age<60)     txt=ar?`آخر اتصال: منذ ${age} ثانية`:`Last seen: ${age}s ago`;
+  else           txt=ar?`آخر اتصال: منذ ${Math.floor(age/60)} دقيقة`:`Last seen: ${Math.floor(age/60)}m ago`;
+  el.className='s-lastseen show '+cls;
+  el.textContent=txt;
+}
+function curState(){
+  const d=document.getElementById('sDot');
+  return d.classList.contains('online')?'online':d.classList.contains('warning')?'warning':'offline';
+}
+
+// update last-seen every second (no API)
+setInterval(()=>{
+  if(curState()==='offline'&&lastTS) syncLastSeen('offline',Math.floor(Date.now()/1000)-lastTS);
+},1000);
+
+// Long-press status card → log sheet
+let lpT=null;
+document.getElementById('statusCard').addEventListener('pointerdown',()=>{lpT=setTimeout(openLog,550)});
+['pointerup','pointercancel','pointermove'].forEach(e=>
+  document.getElementById('statusCard').addEventListener(e,()=>clearTimeout(lpT)));
+
+// ── SMART RESULT SHEET ──
+// Context detection: parse lastResultText to determine what happened
+function parseResultContext(txt) {
+  if (!txt || txt === '—') return 'empty';
+  // patterns (Arabic)
+  if (/نتائج البحث\s*[:：]?\s*(\d+)/.test(txt))   return 'searchDone';
+  if (/بعد الصقل\s*[:：]?\s*(\d+)/.test(txt))     return 'refineDone';
+  if (/عدد النتائج\s*[:：]?\s*(\d+)/.test(txt))   return 'countDone';
+  if (/تم التعديل/.test(txt))                      return 'editDone';
+  if (/تجميد.*على/.test(txt))                      return 'freezeDone';
+  if (/رفع التجميد/.test(txt))                     return 'unfreezeDone';
+  if (/تم مسح/.test(txt))                          return 'clearDone';
+  if (/أول.*نتيجة/.test(txt))                      return 'resultsList';
+  if (/تم تعيين النطاق/.test(txt))                 return 'rangeDone';
+  if (/انتظار/.test(txt))                          return 'sleepDone';
+  return 'generic';
+}
+
+// Define contextual action sets per context
+function getContextActions(ctx) {
+  const ar = L==='ar';
+  // each action: { label_ar, label_en, cls, icon, cmd }
+  const A = {
+    refine:    { ar:'صقل النتائج',   en:'Refine',       cls:'bc', ico:'ph/funnel-fill.svg?color=%2300d4ff',              cmd:{c:'refine',v:'',t:4},    needsVal:true  },
+    editAll:   { ar:'تعديل الكل',    en:'Edit All',     cls:'bg', ico:'ph/pencil-simple-fill.svg?color=%2300ff9d',       cmd:{c:'edit',v:'',t:4},      needsVal:true  },
+    freeze:    { ar:'تجميد',         en:'Freeze',       cls:'by', ico:'ph/lock-fill.svg?color=%23ffd700',                cmd:{c:'freeze',v:''},        needsVal:true  },
+    clear:     { ar:'مسح',           en:'Clear',        cls:'br', ico:'ph/trash-fill.svg?color=%23ff4060',               cmd:{c:'clear'}               },
+    count:     { ar:'عدد النتائج',   en:'Count',        cls:'bc', ico:'ph/hash-fill.svg?color=%2300d4ff',                cmd:{c:'count'}               },
+    getRes15:  { ar:'أول 15 نتيجة',  en:'Get 15',       cls:'bg', ico:'ph/list-numbers-fill.svg?color=%2300ff9d',        cmd:{c:'getResults',v:'15'}   },
+    getRes50:  { ar:'أول 50 نتيجة',  en:'Get 50',       cls:'bm', ico:'ph/list-numbers-fill.svg?color=%234a5568',        cmd:{c:'getResults',v:'50'}   },
+    unfreeze:  { ar:'رفع التجميد',   en:'Unfreeze',     cls:'bg', ico:'ph/lock-open-fill.svg?color=%2300ff9d',           cmd:{c:'unfreeze'}            },
+    search:    { ar:'بحث جديد',      en:'New search',   cls:'bc', ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff',    cmd:{c:'search',v:'',t:4},    needsVal:true  },
+    goto:      { ar:'فتح GG',        en:'Open GG',      cls:'bc', ico:'ph/arrow-up-right-fill.svg?color=%2300d4ff',      cmd:{c:'goto'}                },
+    exportR:   { ar:'تصدير النتائج', en:'Export',       cls:'bm', ico:'ph/export-fill.svg?color=%234a5568',              cmd:{c:'exportResults'}       },
+    freezeList:{ ar:'تجميد القائمة', en:'Freeze list',  cls:'by', ico:'ph/list-fill.svg?color=%23ffd700',                cmd:{c:'freezeList',v:''},    needsVal:true  },
+  };
+  const sets = {
+    searchDone:  [A.refine, A.count, A.getRes15, A.editAll, A.freeze, A.clear, A.exportR],
+    refineDone:  [A.refine, A.count, A.getRes15, A.editAll, A.freeze, A.clear, A.exportR],
+    countDone:   [A.search, A.refine, A.getRes15, A.getRes50, A.clear, A.exportR],
+    editDone:    [A.freeze, A.freezeList, A.count, A.getRes15, A.unfreeze, A.exportR],
+    freezeDone:  [A.unfreeze, A.count, A.getRes15, A.exportR, A.clear],
+    unfreezeDone:[A.editAll, A.freeze, A.count, A.clear],
+    clearDone:   [A.search, A.goto],
+    resultsList: [A.refine, A.editAll, A.freeze, A.count, A.clear, A.exportR],
+    rangeDone:   [A.search, A.count, A.goto],
+    sleepDone:   [A.count, A.getRes15, A.goto],
+    generic:     [A.count, A.getRes15, A.refine, A.clear, A.goto],
+    empty:       [A.search, A.goto],
+  };
+  return sets[ctx] || sets.generic;
+}
+
+function openResultSheet() {
+  const txt = lastResultText || '—';
+  document.getElementById('rdVal').textContent = txt;
+  document.getElementById('rdTime').textContent = lastResultTime ? (L==='ar'?`الوقت: ${lastResultTime}`:`Time: ${lastResultTime}`) : '';
+  const ctx = parseResultContext(txt);
+  const actions = getContextActions(ctx);
+
+  // ctx label
+  const ctxLabels = {
+    searchDone:'نتائج بحث',refineDone:'بعد الصقل',countDone:'عدد النتائج',
+    editDone:'تم التعديل',freezeDone:'تجميد',unfreezeDone:'رفع تجميد',
+    clearDone:'تم المسح',resultsList:'قائمة نتائج',rangeDone:'نطاق',
+    sleepDone:'انتظار',generic:'نتيجة',empty:'لا توجد نتيجة'
+  };
+  const ctxLabelsEn = {
+    searchDone:'Search result',refineDone:'After refine',countDone:'Count',
+    editDone:'Edited',freezeDone:'Frozen',unfreezeDone:'Unfrozen',
+    clearDone:'Cleared',resultsList:'Results list',rangeDone:'Range set',
+    sleepDone:'Sleep done',generic:'Result',empty:'No result'
+  };
+  document.getElementById('rdTitle').textContent = L==='ar' ? (ctxLabels[ctx]||'نتيجة') : (ctxLabelsEn[ctx]||'Result');
+
+  // Build contextual buttons - actions that need value show an inline input
+  const ctx_el = document.getElementById('rdCtx');
+  ctx_el.innerHTML = `
+    <div class="rd-label" style="margin-bottom:8px">${L==='ar'?'إجراءات مقترحة':'Suggested actions'}</div>
+    <div id="rdActsGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:7px"></div>
+    <div id="rdValInput" style="display:none;margin-top:10px">
+      <div class="cd" style="margin-bottom:5px" id="rdValLbl"></div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center">
+        <input type="text" id="rdValInp" placeholder="" style="margin-bottom:0">
+        <button class="eb bc" style="width:auto;padding:10px 14px" id="rdValExec">
+          <img src="https://api.iconify.design/ph/play-fill.svg?color=%2300d4ff" alt="">
+        </button>
+      </div>
+    </div>`;
+
+  const grid = document.getElementById('rdActsGrid');
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = `eb ${a.cls}`;
+    btn.innerHTML = `<img src="https://api.iconify.design/ph/${a.ico.replace('ph/','')}" style="width:15px;height:15px"><span>${L==='ar'?a.ar:a.en}</span>`;
+    btn.onclick = () => {
+      if (a.needsVal) {
+        // show inline input
+        const vi = document.getElementById('rdValInput');
+        vi.style.display = 'block';
+        document.getElementById('rdValLbl').textContent = L==='ar'?a.ar:a.en;
+        document.getElementById('rdValInp').value = '';
+        document.getElementById('rdValInp').placeholder = a.cmd.v !== undefined ? (L==='ar'?'أدخل القيمة':'Enter value') : '';
+        document.getElementById('rdValExec').onclick = () => {
+          const v = document.getElementById('rdValInp').value.trim();
+          if (!v) return;
+          const cmd = {...a.cmd, v};
+          doCmd(cmd, null);
+          vi.style.display = 'none';
+          closeSheet('rdOverlay');
+        };
+        hap('light');
+      } else {
+        doCmd({...a.cmd}, null);
+        closeSheet('rdOverlay');
+      }
+    };
+    grid.appendChild(btn);
+  });
+
+  openSheet('rdOverlay');
+  hap('light');
+}
+
+// ── EXPORT COMMANDS ──
+function doExport(type, btn) {
+  hap('light');
+  const cid = detectedChatId || tg?.initDataUnsafe?.user?.id;
+  if (!cid) { showToast(L==='ar'?'لم يُكتشف Chat ID بعد':'Chat ID not ready yet','warn'); return; }
+  sendCmd({c:type, cid:String(cid)}, btn);
+}
+function doExportN(btn) {
+  hap('light');
+  const cid = detectedChatId || tg?.initDataUnsafe?.user?.id;
+  if (!cid) { showToast(L==='ar'?'لم يُكتشف Chat ID بعد':'Chat ID not ready yet','warn'); return; }
+  const v = document.getElementById('exportN').value.trim() || '30';
+  sendCmd({c:'exportResults', v, cid:String(cid)}, btn);
+}
+
+// ── LOG SHEET ──
+const reqLog=[];
+const CLBL={search:'SEARCH',refine:'REFINE',edit:'EDIT',freeze:'FREEZE',
+  freezeList:'FREEZE LIST',unfreeze:'UNFREEZE',clear:'CLEAR',count:'COUNT',
+  goto:'OPEN GG',hide:'HIDE',getResults:'GET RESULTS',ranges:'RANGES',sleep:'SLEEP',editAddr:'EDIT ADDR'};
+
+function openLog(){
+  document.getElementById('rlTitle').textContent=L==='ar'?'سجل الطلبات':'REQUEST LOG';
+  renderLog();openSheet('rlOverlay');hap('medium');
+}
+function renderLog(){
+  const b=document.getElementById('rlBody');
+  const empty=document.getElementById('rlEmpty');
+  if(!reqLog.length){empty.textContent=L==='ar'?'لا توجد طلبات بعد':'No requests yet';b.innerHTML='';b.appendChild(empty);return}
+  empty.style.display='none';
+  b.innerHTML=reqLog.map((e,i)=>`
+    <div class="rl-item" style="}s">
+      <div class="rl-dot ${e.st}"></div>
+      <div class="rl-info">
+        <div class="rl-cmd">${CLBL[e.c]||e.c}</div>
+        ${e.v?`<div class="rl-val">→ ${e.v}</div>`:''}
+        <div class="rl-t">${e.t}</div>
+      </div>
+      <div class="rl-st ${e.st}">${e.st==='ok'?'<img src="https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d" style="width:12px;height:12px;vertical-align:middle"> OK':e.st==='err'?'<img src="https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060" style="width:12px;height:12px;vertical-align:middle"> ERR':'<img src="https://api.iconify.design/ph/dots-three-fill.svg?color=%23ffd700" style="width:12px;height:12px;vertical-align:middle">'} ${e.msg?`<br><small style="opacity:.6;font-size:9px">${e.msg}</small>`:''}</div>
+    </div>`).join('');
+}
+
+// ── SHEETS ──
+function openSheet(id){document.getElementById(id).classList.add('open')}
+function closeSheet(id,ev){if(ev&&ev.target.id!==id)return;document.getElementById(id).classList.remove('open')}
+
+// ── SEND CMD ──
+const WORKER = 'https://scriptshelljson.elsayed-ashrafsy.workers.dev';
+const SECRET = 'gg_secret_2025';
+
+async function sendCmd(cmd,btn){
+  if(btn) setBtnLoading(btn, true);
+  const entry={c:cmd.c,v:cmd.v||'',st:'pend',msg:'',t:nowStr()};
+  reqLog.unshift(entry);if(reqLog.length>40)reqLog.pop();
+  if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
+  try{
+    const text='CMD:'+JSON.stringify(cmd);
+    const r=await fetch(`${WORKER}/cmd?secret=${SECRET}`,{
+      method:'POST', body:text, cache:'no-store',
+      headers:{'Content-Type':'text/plain'}
+    });
+    const d=await r.json();
+    if(d.ok){
+      entry.st='ok';hap('success');
+      setTimeout(fetchResult,1500);setTimeout(fetchResult,3000);
+    }else{
+      entry.st='err';entry.msg='worker error';
+      showToast((L==='ar'?'خطأ: ':'Error: ')+JSON.stringify(d),'err');
+    }
+  }catch(ex){entry.st='err';entry.msg='network';showToast(L==='ar'?'خطأ في الاتصال':'Connection error','err')}
+  if(document.getElementById('rlOverlay').classList.contains('open'))renderLog();
+  if(btn) setBtnLoading(btn, false);
+}
+
+// ── COMMANDS ──
+function doCmd(cmd,btn){
+  if(cmd.c==='clear'){
+    showConfirm(
+      L==='ar'?'مسح النتائج':'Clear results',
+      L==='ar'?'هل تريد مسح كل النتائج؟':'Clear all results?'
+    ).then(ok=>{ if(ok){ hap('light'); sendCmd(cmd,btn); } });
+    return;
+  }
+  hap('light');sendCmd(cmd,btn);
+}
+function doSearch(btn){
+  const v=document.getElementById('sVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة البحث':'Enter search value','warn');return}
+  hap('light');sendCmd({c:'search',v,t:T.s},btn);
+}
+function doRefine(btn){
+  const v=document.getElementById('rVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة الصقل':'Enter refine value','warn');return}
+  hap('light');sendCmd({c:'refine',v,t:T.r},btn);
+}
+function doEdit(btn){
+  const v=document.getElementById('eVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
+  hap('light');sendCmd({c:'edit',v,t:T.e},btn);
+  if(fzMode)setTimeout(()=>sendCmd({c:'freeze',v},null),950);
+}
+function doFreeze(btn){
+  const v=document.getElementById('fVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
+  hap('light');sendCmd({c:'freeze',v},btn);
+}
+function doFreezeList(btn){
+  const v=document.getElementById('fVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
+  hap('light');sendCmd({c:'freezeList',v},btn);
+}
+function doSleep(btn){
+  const v=document.getElementById('sleepVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل المدة':'Enter duration','warn');return}
+  hap('light');sendCmd({c:'sleep',v},btn);
+}
+function doGetN(btn){
+  const v=document.getElementById('qResN').value.trim()||'30';
+  hap('light');sendCmd({c:'getResults',v},btn);
+}
+function doCustomRange(btn){
+  const v=document.getElementById('customRange').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل قيمة النطاق':'Enter range value','warn');return}
+  hap('light');sendCmd({c:'ranges',v},btn);
+}
+function doGS(btn){ // group search
+  const v=document.getElementById('gsVal').value.trim();
+  const g=document.getElementById('gsSize').value.trim()||'0';
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'search',v,t:T.gs,g},btn);
+}
+function doGR(btn){ // group refine
+  const v=document.getElementById('grVal').value.trim();
+  const g=document.getElementById('grSize').value.trim()||'256';
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'refine',v,t:T.gr,g},btn);
+}
+function doEditAddr(btn){ // edit by address
+  const addr=document.getElementById('addrVal').value.trim();
+  const val =document.getElementById('addrNew').value.trim();
+  if(!addr||!val){showToast(L==='ar'?'أدخل العنوان والقيمة':'Enter address and value','warn');return}
+  hap('light');sendCmd({c:'editAddr',addr,v:val,t:T.ad},btn);
+}
+function doFLV(btn){ // freeze list on value
+  const v=document.getElementById('flVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيمة':'Enter value','warn');return}
+  hap('light');sendCmd({c:'freezeList',v},btn);
+}
+function doMV(btn){ // multi-value search
+  const v=document.getElementById('mvVal').value.trim();
+  if(!v){showToast(L==='ar'?'أدخل القيم':'Enter values','warn');return}
+  hap('light');sendCmd({c:'search',v,t:T.mv},btn);
+}
+
+// ── HAPTIC ──
+function hap(t){
+  if(!tg?.HapticFeedback)return;
+  if(t==='light'||t==='medium'||t==='heavy')tg.HapticFeedback.impactOccurred(t);
+  else if(t==='success'||t==='error'||t==='warning')tg.HapticFeedback.notificationOccurred(t);
+  else if(t==='selection')tg.HapticFeedback.selectionChanged();
+}
+
+const TICONS={ok:'https://api.iconify.design/ph/check-circle-fill.svg?color=%2300ff9d',
+  err:'https://api.iconify.design/ph/x-circle-fill.svg?color=%23ff4060',
+  warn:'https://api.iconify.design/ph/warning-fill.svg?color=%23ffd700',
+  info:'https://api.iconify.design/ph/lightning-fill.svg?color=%23e2e8f0'};
+let toastT=null;
+function showToast(msg,type='info'){
+  document.getElementById('tIco').src=TICONS[type]||TICONS.info;
+  document.getElementById('tMsg').textContent=msg;
+  const el=document.getElementById('toast');el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2700);
+}
+
+// ── THEME — auto-detect + manual toggle ──
+let dark = true;
+
+function applyTheme(isDark){
+  dark = isDark;
+  document.body.classList.toggle('light', !isDark);
+  const ico = document.getElementById('themeIco');
+  if(ico) ico.src = isDark
+    ? 'https://api.iconify.design/ph/moon-fill.svg?color=%23e2e8f0'
+    : 'https://api.iconify.design/ph/sun-fill.svg?color=%231a1f2e';
+  // مطابقة هيدر تيليجرام
+  if(tg?.setHeaderColor)     tg.setHeaderColor(isDark ? '#06090f' : '#f0f4ff');
+  if(tg?.setBackgroundColor) tg.setBackgroundColor(isDark ? '#06090f' : '#f0f4ff');
+}
+
+function toggleTheme(b){
+  applyTheme(!dark);
+  bump(b); hap('light');
+}
+
+function initTheme(){
+  // كشف ثيم تيليجرام التلقائي
+  const tgDark = tg?.colorScheme === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(tgDark);
+  // متابعة تغيير ثيم تيليجرام لحظياً
+  if(tg) tg.onEvent('themeChanged', ()=>{ applyTheme(tg.colorScheme === 'dark'); });
+}
+
+// ── RADIAL BUBBLE NAV ──
+const NAV_ITEMS = [
+  {id:'cSearch',    ico:'ph/magnifying-glass-fill.svg?color=%2300d4ff', cls:'bc', ar:'بحث',    en:'Search', fn:()=>navTo('cSearch')},
+  {id:'cRefine',    ico:'ph/funnel-fill.svg?color=%2300d4ff',            cls:'bc', ar:'صقل',    en:'Refine', fn:()=>navTo('cRefine')},
+  {id:'cEF',        ico:'ph/pencil-simple-fill.svg?color=%2300ff9d',     cls:'bg', ar:'تعديل',  en:'Edit',   fn:()=>navTo('cEF')},
+  {id:'cEFf',       ico:'ph/snowflake.svg?color=%23ffd700',              cls:'by', ar:'تجميد',  en:'Freeze', fn:()=>{navTo('cEF');setTimeout(()=>swTab('f'),300)}},
+  {id:'cQuick',     ico:'ph/lightning-fill.svg?color=%2300d4ff',         cls:'bc', ar:'سريع',   en:'Quick',  fn:()=>navTo('cQuick')},
+  {id:'cAdv',       ico:'ph/cpu-fill.svg?color=%23b57aff',               cls:'bp', ar:'متقدم',  en:'Adv',    fn:()=>navTo('cAdv')},
+  {id:'cExport',    ico:'ph/export-fill.svg?color=%2300ff9d',            cls:'bg', ar:'تصدير',  en:'Export', fn:()=>navTo('cExport')},
+  {id:'cScript',    ico:'ph/code-fill.svg?color=%2300d4ff',              cls:'bc', ar:'سكريبت', en:'Script', fn:()=>navTo('cScript')},
+  {id:'cAutoExec',  ico:'ph/shuffle-fill.svg?color=%23b57aff',           cls:'bp', ar:'تلقائي', en:'Auto',   fn:()=>navTo('cAutoExec')},
+];
+
+let navOpen = false;
+let navDragging = false;
+let bubbleEls = [];
+let closeBtnEl = null;
+
+function toggleNav() {
+  navOpen ? closeNav() : openNav();
+}
+
+// كشف السحب لتفعيل الفقاعات
+document.addEventListener('pointerdown', e => {
+  if(e.target.id === 'navBtn' || e.target.id === 'navIco') navDragging = false;
+});
+document.addEventListener('pointermove', e => {
+  if(navOpen && e.buttons > 0) navDragging = true;
+});
+document.addEventListener('pointerup', () => {
+  setTimeout(() => { navDragging = false; }, 100);
+});
+
+function openNav() {
+  navOpen = true;
+  hap('medium');
+
+  // تغيير أيقونة زر الهيدر
+  const navIco = document.getElementById('navIco');
+  navIco.src = 'https://api.iconify.design/ph/dots-six-fill.svg?color=%23ff4060';
+  document.getElementById('navBtn').style.borderColor = 'rgba(255,64,96,0.4)';
+
+  document.getElementById('navBackdrop').classList.add('open');
+
+  // الـ X بالظبط مكان زر الهيدر
+  const btnEl = document.getElementById('navBtn');
+  const rect  = btnEl.getBoundingClientRect();
+  const cx    = rect.left + rect.width / 2;
+  const cy    = rect.top  + rect.height / 2 + 85;
+
+  const count = NAV_ITEMS.length;
+  // نصف دائرة كاملة حول الـ X — radius ثابت 110px
+  const R = 115;
+  const n10 = NAV_ITEMS.length;
+  const positions = Array.from({length: n10}, (_, i) => {
+    const deg = -60 + (255 / (n10 - 1)) * i;
+    const rad = deg * Math.PI / 180;
+    return { dx: Math.cos(rad) * R, dy: Math.sin(rad) * R };
+  });
+
+  bubbleEls.forEach(b=>b.remove());
+  bubbleEls = [];
+
+  NAV_ITEMS.forEach((item, i) => {
+    const pos = positions[i % positions.length];
+    const dx = pos.dx;
+    const dy = pos.dy;
+    const b = document.createElement('button');
+    b.className = `nav-bubble ${item.cls}`;
+    b.style.left = (cx + dx) + 'px';
+    b.style.top  = (cy + dy) + 'px';
+    b.style.transitionDelay = '0ms';
+    b.innerHTML = `<img src="https://api.iconify.design/${item.ico}"><span>${L==='ar'?item.ar:item.en}</span>`;
+    b.onclick = () => { item.fn(); };
+    // تفعيل بالسحب والوقوف على الفقاعة
+    b.addEventListener('pointerenter', () => {
+      if(navDragging){ item.fn(); closeNav(); }
+    });
+    document.body.appendChild(b);
+    bubbleEls.push(b);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('show')));
+  });
+
+  // زر الإغلاق X في نفس مكان الزر
+  if(closeBtnEl) closeBtnEl.remove();
+  closeBtnEl = document.createElement('button');
+  closeBtnEl.className = 'nav-close-btn';
+  closeBtnEl.style.left = cx + 'px';
+  closeBtnEl.style.top  = cy + 'px';
+  closeBtnEl.innerHTML  = `<img src="https://api.iconify.design/ph/x-bold.svg?color=%23ff4060">`;
+  closeBtnEl.onclick    = closeNav;
+  document.body.appendChild(closeBtnEl);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>closeBtnEl.classList.add('show')));
+}
+
+function closeNav() {
+  if(!navOpen) return;
+  navOpen = false;
+  hap('light');
+
+  // رجع أيقونة الهيدر
+  document.getElementById('navIco').src = 'https://api.iconify.design/ph/dots-six-fill.svg?color=%23e2e8f0';
+  document.getElementById('navBtn').style.borderColor = '';
+
+  document.getElementById('navBackdrop').classList.remove('open');
+
+  // إخفاء الفقاعات
+  [...bubbleEls, closeBtnEl].filter(Boolean).forEach((b,i)=>{
+    b.style.transitionDelay = (i * 25) + 'ms';
+    b.classList.remove('show');
+  });
+  setTimeout(()=>{
+    bubbleEls.forEach(b=>b.remove()); bubbleEls=[];
+    if(closeBtnEl){ closeBtnEl.remove(); closeBtnEl=null; }
+  }, 500);
+}
+
+function navTo(id) {
+  closeNav();
+  setTimeout(()=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    el.style.transition = 'box-shadow .3s';
+    el.style.boxShadow  = '0 0 0 2px var(--cyan), 0 0 30px rgba(0,212,255,0.4)';
+    setTimeout(()=>{ el.style.boxShadow=''; }, 1000);
+    hap('light');
+  }, 250);
+}
+
+// ── ONLINE SOUND ──
+let prevState = 'offline';
+function playOnlineSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // نغمتان صاعدتان تدلان على الاتصال
+    const notes = [523, 659, 784]; // C5, E5, G5
+    notes.forEach((freq, i) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type      = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.12 + 0.04);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + i * 0.12 + 0.22);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.25);
+    });
+  } catch {}
+}
+
+// ── LOADING INDICATOR on buttons ──
+function setBtnLoading(btn, on) {
+  if (!btn) return;
+  if (on) {
+    btn.classList.add('loading');
+    // أضف spinner بجانب النص
+    const sp = document.createElement('span');
+    sp.className = 'btn-spinner';
+    sp.dataset.spinner = '1';
+    btn.appendChild(sp);
   } else {
-    av.textContent = first[0] || "؟";
-    av.style.background = AVATAR_COLORS[Math.abs(user.id) % 7];
+    btn.classList.remove('loading');
+    const sp = btn.querySelector('[data-spinner]');
+    if (sp) sp.remove();
+  }
+}
+
+// ── CONFIRM DIALOG ──
+let confirmResolve = null;
+function showConfirm(title, msg) {
+  return new Promise(resolve => {
+    confirmResolve = (val) => {
+      document.getElementById('confirmOverlay').classList.remove('open');
+      confirmResolve = null;
+      resolve(val);
+    };
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent   = msg;
+    document.getElementById('confirmOverlay').classList.add('open');
+    hap('warning');
+  });
+}
+
+// ── PRESETS ──
+let presets = JSON.parse(localStorage.getItem('gg_presets') || '[]');
+
+function savePresets() {
+  localStorage.setItem('gg_presets', JSON.stringify(presets));
+}
+
+function savePreset(btn) {
+  const name = document.getElementById('presetName').value.trim();
+  if (!name) { showToast(L==='ar'?'أدخل اسم الـ preset':'Enter preset name','warn'); return; }
+  // نجمع القيم الحالية
+  const cmds = [];
+  const sv = document.getElementById('sVal').value.trim();
+  const rv = document.getElementById('rVal').value.trim();
+  const ev = document.getElementById('eVal').value.trim();
+  const fv = document.getElementById('fVal').value.trim();
+  if (sv) cmds.push({c:'search', v:sv, t:T.s, label: L==='ar'?`بحث: ${sv}`:`Search: ${sv}`});
+  if (rv) cmds.push({c:'refine', v:rv, t:T.r, label: L==='ar'?`صقل: ${rv}`:`Refine: ${rv}`});
+  if (ev) cmds.push({c:'edit',   v:ev, t:T.e, label: L==='ar'?`تعديل: ${ev}`:`Edit: ${ev}`});
+  if (fv) cmds.push({c:'freeze', v:fv,        label: L==='ar'?`تجميد: ${fv}`:`Freeze: ${fv}`});
+  if (!cmds.length) { showToast(L==='ar'?'ملأ حقل واحد على الأقل':'Fill at least one field','warn'); return; }
+  presets.unshift({ id: Date.now(), name, cmds });
+  if (presets.length > 20) presets.pop();
+  savePresets();
+  document.getElementById('presetName').value = '';
+  renderPresets();
+  hap('success');
+  showToast(L==='ar'?`تم حفظ: ${name}`:`Saved: ${name}`, 'ok');
+}
+
+function runPreset(id) {
+  const p = presets.find(x=>x.id===id);
+  if (!p) return;
+  hap('medium');
+  p.cmds.forEach((cmd, i) => {
+    setTimeout(() => sendCmd(cmd, null), i * 600);
+  });
+  showToast(L==='ar'?`تشغيل: ${p.name}`:`Running: ${p.name}`, 'info');
+}
+
+async function deletePreset(id) {
+  const confirmed = await showConfirm(
+    L==='ar'?'حذف preset':'Delete preset',
+    L==='ar'?'هل تريد حذف هذا الـ preset؟':'Delete this preset?'
+  );
+  if (!confirmed) return;
+  presets = presets.filter(x=>x.id!==id);
+  savePresets();
+  renderPresets();
+}
+
+function renderPresets() {
+  const list  = document.getElementById('presetList');
+  const empty = document.getElementById('presetEmpty');
+  if (!presets.length) {
+    empty.textContent = L==='ar'?'لا توجد presets بعد':'No presets yet';
+    list.innerHTML = ''; list.appendChild(empty);
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = presets.map(p => `
+    <div class="preset-item" onclick="runPreset(${p.id})">
+      <div class="preset-item-icon"><img src="https://api.iconify.design/ph/play-fill.svg?color=%2300d4ff" alt=""></div>
+      <div class="preset-item-info">
+        <div class="preset-item-name">${p.name}</div>
+        <div class="preset-item-cmds">${p.cmds.map(c=>c.label).join(' → ')}</div>
+      </div>
+      <button class="preset-del" onclick="event.stopPropagation();deletePreset(${p.id})">
+        <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      </button>
+    </div>`).join('');
+}
+// ── SCRIPT INJECT ──
+let savedScripts = JSON.parse(localStorage.getItem('gg_scripts')||'[]');
+
+function saveScriptsList(){ localStorage.setItem('gg_scripts', JSON.stringify(savedScripts)); }
+
+function loadScriptFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('scriptCode').value = e.target.result;
+    const name = file.name.replace(/\.(lua|txt)$/i,'');
+    document.getElementById('scriptSaveName').value = name;
+    document.getElementById('fileUploadTxt').textContent = file.name;
+    hap('success');
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function saveScript(btn){
+  const name = document.getElementById('scriptSaveName').value.trim();
+  const code = document.getElementById('scriptCode').value.trim();
+  if(!name){ showToast(L==='ar'?'أدخل اسماً':'Enter a name','warn'); return; }
+  if(!code){ showToast(L==='ar'?'الكود فارغ':'Code is empty','warn'); return; }
+  const idx = savedScripts.findIndex(s=>s.name===name);
+  if(idx>=0) savedScripts[idx] = {id:savedScripts[idx].id, name, code};
+  else savedScripts.unshift({id:Date.now(), name, code});
+  if(savedScripts.length>20) savedScripts.pop();
+  saveScriptsList(); renderSavedScripts();
+  document.getElementById('scriptSaveName').value='';
+  hap('success'); showToast(L==='ar'?`حُفظ: ${name}`:`Saved: ${name}`,'ok');
+}
+
+function renderSavedScripts(){
+  const el = document.getElementById('scriptSavedList');
+  if(!el) return;
+  if(!savedScripts.length){
+    el.innerHTML = `<div class="preset-empty" id="scriptEmpty">${L==='ar'?'لا توجد سكريبتات محفوظة':'No saved scripts'}</div>`;
+    return;
+  }
+  el.innerHTML = savedScripts.map(s=>`
+    <div class="script-saved-item" onclick="loadScriptById(${s.id})">
+      <img src="https://api.iconify.design/ph/file-code-fill.svg?color=%2300d4ff" style="width:15px;height:15px;flex-shrink:0">
+      <span class="script-saved-name">${s.name}</span>
+      <span class="script-saved-size">${s.code.length}c</span>
+      <button class="preset-del" onclick="event.stopPropagation();deleteScriptById(${s.id})">
+        <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      </button>
+    </div>`).join('');
+}
+
+function loadScriptById(id){
+  const s = savedScripts.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('scriptCode').value = s.code;
+  document.getElementById('scriptSaveName').value = s.name;
+  hap('light');
+}
+
+async function deleteScriptById(id){
+  const ok = await showConfirm(
+    L==='ar'?'حذف سكريبت':'Delete script',
+    L==='ar'?'هل تريد حذف هذا السكريبت؟':'Delete this script?'
+  );
+  if(!ok) return;
+  savedScripts = savedScripts.filter(x=>x.id!==id);
+  saveScriptsList();
+  renderSavedScripts();
+}
+
+// سويتش Sx
+let sxMode = false;
+function toggleSx(row){
+  sxMode = !sxMode;
+  row.classList.toggle('on', sxMode);
+  // تغيير ألوان السويتش للأخضر
+  if(sxMode){
+    row.style.background='rgba(0,255,157,0.12)';
+    row.style.borderColor='rgba(0,255,157,0.42)';
+    row.style.boxShadow='0 0 15px rgba(0,255,157,0.15)';
+  } else {
+    row.style.background='rgba(0,255,157,0.06)';
+    row.style.borderColor='rgba(0,255,157,0.18)';
+    row.style.boxShadow='';
+  }
+  hap(sxMode?'medium':'light');
+}
+
+// تشفير base64 يدعم Unicode/عربية
+function toBase64Unicode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+// حقن بدون انتظار — قطعة واحدة عبر setMyDescription
+async function injectScript(btn){
+  let code = document.getElementById('scriptCode').value.trim();
+  if(!code){ showToast(L==='ar'?'الكود فارغ':'Empty code','warn'); return; }
+
+  const encoded = toBase64Unicode(code);
+  const CHUNK = 60; // صغير ليتناسب مع حد short_description
+  const chunks = [];
+  for(let i=0; i<encoded.length; i+=CHUNK) chunks.push(encoded.slice(i,i+CHUNK));
+  const n = chunks.length;
+  const DELAY = 3200; // أكثر من 3 ثواني بأمان
+
+  setBtnLoading(btn, true);
+
+  // عداد تنازلي
+  let injectTimer = null;
+  function startCountdown(sec){
+    clearInterval(injectTimer);
+    let s = sec;
+    const orig = btn.innerHTML;
+    injectTimer = setInterval(()=>{
+      s--;
+      if(btn) btn.innerHTML = `<span>⏳ ${s}s</span>`;
+      if(s <= 0) clearInterval(injectTimer);
+    }, 1000);
   }
 
-  document.getElementById("fullName").textContent    = (first + " " + last).trim() || "مجهول";
-  document.getElementById("username").textContent    = uname ? "@" + uname : "";
-  document.getElementById("userId").textContent      = user.id;
-  document.getElementById("firstName").textContent   = first || "—";
-  document.getElementById("lastName").textContent    = last  || "—";
-  document.getElementById("usernameVal").textContent = uname || "لا يوجد";
-  document.getElementById("langCode").textContent    = lang + " " + langFlag(lang);
-  document.getElementById("isPremium").textContent   = isPrem ? "✅ نعم" : "❌ لا";
-  document.getElementById("regDate").textContent     = "~ " + estimateRegDate(user.id);
-
-  if (uname) document.getElementById("copyUsernameBtn").style.display = "block";
-}
-
-function fillEnv() {
-  const platform    = tg?.platform    || "unknown";
-  const version     = tg?.version     || "—";
-  const colorScheme = tg?.colorScheme || "light";
-
-  document.getElementById("badgeRow").innerHTML = [
-    { icon: "📱", text: platform },
-    { icon: "🔧", text: "v" + version },
-    { icon: colorScheme === "dark" ? "🌙" : "☀️", text: colorScheme === "dark" ? "داكن" : "فاتح" },
-  ].map(b => `<div class="badge">${b.icon} ${b.text}</div>`).join("");
-}
-
-function fillTheme() {
-  const colors = [
-    { label: "الخلفية",          var: "--tg-theme-bg-color",            fallback: "#ffffff" },
-    { label: "النص",             var: "--tg-theme-text-color",          fallback: "#000000" },
-    { label: "الزرار",           var: "--tg-theme-button-color",        fallback: "#2AABEE" },
-    { label: "الخلفية الثانوية", var: "--tg-theme-secondary-bg-color",  fallback: "#f4f4f5" },
-  ];
-  document.getElementById("themeGrid").innerHTML = colors.map(c => {
-    const val = getComputedStyle(document.documentElement).getPropertyValue(c.var).trim() || c.fallback;
-    return `
-      <div class="color-chip" style="background:var(--tg-theme-secondary-bg-color,#f4f4f5)">
-        <div class="chip-dot" style="background:${val}; box-shadow:0 2px 8px ${val}66"></div>
-        <span style="color:var(--tg-theme-hint-color,#999); font-size:11px">${c.label}</span>
-      </div>`;
-  }).join("");
-}
-
-function showDemo() {
-  const av = document.getElementById("avatar");
-  av.textContent = "م";
-  av.style.background = "#2AABEE";
-  document.getElementById("fullName").textContent    = "مستخدم تجريبي";
-  document.getElementById("username").textContent    = "@demo_user";
-  document.getElementById("userId").textContent      = "123456789";
-  document.getElementById("firstName").textContent   = "مستخدم";
-  document.getElementById("lastName").textContent    = "تجريبي";
-  document.getElementById("usernameVal").textContent = "@demo_user";
-  document.getElementById("copyUsernameBtn").style.display = "block";
-  document.getElementById("langCode").textContent    = "ar 🇸🇦";
-  document.getElementById("isPremium").textContent   = "❌ لا";
-  document.getElementById("regDate").textContent     = "~ يناير 2019";
-  document.getElementById("badgeRow").innerHTML = `
-    <div class="badge">📱 browser</div>
-    <div class="badge">☀️ فاتح</div>
-    <div class="badge">🧪 وضع تجريبي</div>`;
-  fillTheme();
-}
-
-function copyVal(id) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard?.writeText(text).catch(() => {});
-  tg?.HapticFeedback?.impactOccurred("light");
-  const t = document.getElementById("toast");
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2000);
-}
-
-function estimateRegDate(userId) {
-  const refs = [
-    { id: 100000000,  date: new Date("2014-01-01") },
-    { id: 500000000,  date: new Date("2017-06-01") },
-    { id: 1000000000, date: new Date("2019-01-01") },
-    { id: 1500000000, date: new Date("2020-06-01") },
-    { id: 2000000000, date: new Date("2021-06-01") },
-    { id: 5000000000, date: new Date("2023-01-01") },
-    { id: 7000000000, date: new Date("2024-01-01") },
-    { id: 9000000000, date: new Date("2025-01-01") },
-  ];
-  for (let i = 1; i < refs.length; i++) {
-    if (userId <= refs[i].id) {
-      const p = refs[i-1], n = refs[i];
-      const r = (userId - p.id) / (n.id - p.id);
-      return new Date(p.date.getTime() + r * (n.date.getTime() - p.date.getTime()))
-        .toLocaleDateString("ar-EG", { year: "numeric", month: "long" });
+  for(let i=0; i<n; i++){
+    showToast(L==='ar'?`قطعة ${i+1}/${n}`:`Chunk ${i+1}/${n}`,'info');
+    // نبعت عبر sendCmd العادي (same channel = no race condition)
+    const cmd = {c:'scriptChunk', i, n, d:chunks[i], sx:sxMode?1:0};
+    const text = 'CMD:'+JSON.stringify(cmd);
+    await fetch(`${WORKER}/cmd?secret=${SECRET}`,{
+      method:'POST', body:text, cache:'no-store',
+      headers:{'Content-Type':'text/plain'}
+    });
+    if(i < n-1){
+      startCountdown(Math.ceil(DELAY/1000));
+      await new Promise(r=>setTimeout(r, DELAY));
     }
   }
-  return "2025+";
+  clearInterval(injectTimer);
+  setBtnLoading(btn, false);
+  showToast(L==='ar'?'✅ تم الحقن':'✅ Injected','ok');
+  hap('success');
 }
 
-function langFlag(code) {
-  const flags = { ar:"🇸🇦", en:"🇺🇸", ru:"🇷🇺", de:"🇩🇪", fr:"🇫🇷", tr:"🇹🇷", es:"🇪🇸", it:"🇮🇹", zh:"🇨🇳", ja:"🇯🇵", uk:"🇺🇦", fa:"🇮🇷" };
-  return flags[code] || "🌍";
+// ── AUTO EXECUTE ──
+let aeSteps=[], aeRunning=false, aeStopFlag=false, aeStepId=0;
+let aeSequences = JSON.parse(localStorage.getItem('gg_ae_seqs')||'[]');
+
+function saveAeSeqs(){ localStorage.setItem('gg_ae_seqs', JSON.stringify(aeSequences)); }
+
+const AE_CMDS=[
+  {v:'search',    ar:'بحث',         en:'Search',      needsVal:true, needsType:true },
+  {v:'refine',    ar:'صقل',         en:'Refine',      needsVal:true, needsType:true },
+  {v:'edit',      ar:'تعديل الكل',  en:'Edit All',    needsVal:true, needsType:true },
+  {v:'freeze',    ar:'تجميد',       en:'Freeze',      needsVal:true, needsType:false},
+  {v:'unfreeze',  ar:'رفع التجميد', en:'Unfreeze',    needsVal:false,needsType:false},
+  {v:'clear',     ar:'مسح النتائج', en:'Clear',       needsVal:false,needsType:false},
+  {v:'count',     ar:'عدد النتائج', en:'Count',       needsVal:false,needsType:false},
+  {v:'sleep',     ar:'انتظار (ms)', en:'Sleep (ms)',  needsVal:true, needsType:false},
+  {v:'goto',      ar:'فتح GG',      en:'Open GG',     needsVal:false,needsType:false},
+  {v:'hide',      ar:'إخفاء GG',    en:'Hide GG',     needsVal:false,needsType:false},
+  {v:'getResults',ar:'جلب نتائج',   en:'Get results', needsVal:true, needsType:false},
+  {v:'ranges',    ar:'تعيين نطاق',  en:'Set ranges',  needsVal:true, needsType:false},
+];
+
+// حفظ التسلسل الحالي
+function aeSaveSeq(btn){
+  const name = document.getElementById('aeSeqName').value.trim();
+  if(!name){ showToast(L==='ar'?'أدخل اسم التسلسل':'Enter sequence name','warn'); return; }
+  if(!aeSteps.length){ showToast(L==='ar'?'لا توجد خطوات':'No steps to save','warn'); return; }
+  const delay = parseInt(document.getElementById('aeDelay').value)||800;
+  const repeat = parseInt(document.getElementById('aeRepeat').value)||1;
+  const idx = aeSequences.findIndex(s=>s.name===name);
+  const seq = {id: idx>=0 ? aeSequences[idx].id : Date.now(), name,
+    steps: JSON.parse(JSON.stringify(aeSteps)), delay, repeat};
+  if(idx>=0) aeSequences[idx]=seq;
+  else aeSequences.unshift(seq);
+  if(aeSequences.length>15) aeSequences.pop();
+  saveAeSeqs(); renderAeSeqList();
+  document.getElementById('aeSeqName').value='';
+  hap('success'); showToast(L==='ar'?`حُفظ: ${name}`:`Saved: ${name}`,'ok');
 }
 
-init();
+function renderAeSeqList(){
+  const el = document.getElementById('aeSeqList');
+  if(!el) return;
+  if(!aeSequences.length){
+    el.innerHTML = `<div class="preset-empty" style="margin-bottom:6px">${L==='ar'?'لا توجد تسلسلات محفوظة':'No saved sequences'}</div>`;
+    return;
+  }
+  el.innerHTML = aeSequences.map(s=>`
+    <div class="ae-seq-item" onclick="aeLoadSeq(${s.id})">
+      <img src="https://api.iconify.design/ph/list-bullets-fill.svg?color=%2300d4ff" style="width:14px;height:14px;flex-shrink:0">
+      <span class="ae-seq-name">${s.name}</span>
+      <span class="ae-seq-info">${s.steps.length} خطوة · ${s.delay}ms · ×${s.repeat}</span>
+      <button class="preset-del" onclick="event.stopPropagation();aeDeleteSeq(${s.id})">
+        <img src="https://api.iconify.design/ph/trash-fill.svg?color=%23ff4060" alt="">
+      </button>
+    </div>`).join('');
+}
+
+function aeLoadSeq(id){
+  const seq = aeSequences.find(x=>x.id===id);
+  if(!seq) return;
+  aeSteps = JSON.parse(JSON.stringify(seq.steps));
+  aeStepId = Math.max(0, ...aeSteps.map(s=>s.id));
+  document.getElementById('aeDelay').value = seq.delay;
+  document.getElementById('aeRepeat').value = seq.repeat;
+  renderAeSteps(); hap('medium');
+  showToast(L==='ar'?`تم تحميل: ${seq.name}`:`Loaded: ${seq.name}`,'ok');
+}
+
+async function aeDeleteSeq(id){
+  const ok = await showConfirm(
+    L==='ar'?'حذف تسلسل':'Delete sequence',
+    L==='ar'?'حذف هذا التسلسل؟':'Delete this sequence?'
+  );
+  if(!ok) return;
+  aeSequences = aeSequences.filter(x=>x.id!==id);
+  saveAeSeqs(); renderAeSeqList();
+}
+
+function updateEditorInfo(ta){
+  const lines = ta.value.split('\n').length;
+  const el = document.getElementById('editorLines');
+  if(el) el.textContent = lines + (L==='ar'?' سطر':' lines');
+}
+
+function aeAddStep(){
+  aeSteps.push({id:++aeStepId, cmd:'search', val:'', type:4});
+  renderAeSteps(); hap('light');
+}
+function aeRemoveStep(id){ aeSteps=aeSteps.filter(s=>s.id!==id); renderAeSteps(); }
+function aeUpdate(id,f,v){ const s=aeSteps.find(x=>x.id===id); if(s) s[f]=v; }
+
+function renderAeSteps(){
+  const el=document.getElementById('aeStepsList');
+  if(!aeSteps.length){
+    el.innerHTML=`<div class="preset-empty" style="margin-bottom:8px">${L==='ar'?'لا توجد خطوات — أضف خطوة':'No steps — add a step'}</div>`;
+    return;
+  }
+  el.innerHTML=aeSteps.map((s,i)=>{
+    const def=AE_CMDS.find(c=>c.v===s.cmd)||AE_CMDS[0];
+    const opts=AE_CMDS.map(c=>`<option value="${c.v}"${c.v===s.cmd?' selected':''}>${L==='ar'?c.ar:c.en}</option>`).join('');
+    const tOpts=[{v:4,n:'DWORD'},{v:16,n:'FLOAT'},{v:32,n:'QWORD'},{v:1,n:'BYTE'},{v:2,n:'WORD'}]
+      .map(t=>`<option value="${t.v}"${t.v==s.type?' selected':''}>${t.n}</option>`).join('');
+    return `<div class="ae-step" id="ae-s-${s.id}">
+      <div class="ae-step-head">
+        <span class="ae-step-num">STEP ${i+1}</span>
+        <button class="ae-del" onclick="aeRemoveStep(${s.id})"><img src="https://api.iconify.design/ph/x-fill.svg?color=%23ff4060" alt=""></button>
+      </div>
+      <select class="ae-select" onchange="aeUpdate(${s.id},'cmd',this.value);renderAeSteps()">${opts}</select>
+      ${def.needsVal?`<input type="text" class="ae-select" value="${s.val||''}" placeholder="${L==='ar'?'القيمة':'Value'}" style="margin-bottom:9px;-webkit-user-select:text;user-select:text;background:rgba(0,212,255,0.03);color:var(--text)" oninput="aeUpdate(${s.id},'val',this.value)">`:'' }
+      ${def.needsType?`<select class="ae-select" onchange="aeUpdate(${s.id},'type',parseInt(this.value))">${tOpts}</select>`:''}
+      <div class="ae-progress-wrap"><div class="ae-dot" id="ae-d-${s.id}"></div><div class="ae-bar-wrap"><div class="ae-bar" id="ae-b-${s.id}"></div></div></div>
+    </div>`;
+  }).join('');
+}
+
+async function aeRun(btn){
+  if(aeRunning){showToast(L==='ar'?'جاري التشغيل':'Already running','warn');return}
+  if(!aeSteps.length){showToast(L==='ar'?'أضف خطوات':'Add steps','warn');return}
+  const d=parseInt(document.getElementById('aeDelay').value)||800;
+  const rep=parseInt(document.getElementById('aeRepeat').value)||1;
+  aeRunning=true;aeStopFlag=false;
+  const dot=document.getElementById('aeDot'),bar=document.getElementById('aeBar'),txt=document.getElementById('aeStatusTxt');
+  dot.className='ae-dot run';bar.style.width='0%';txt.textContent='0%';
+  const total=aeSteps.length*rep; let done=0;
+  for(let r=0;r<rep;r++){
+    for(const s of aeSteps){
+      if(aeStopFlag)break;
+      const sd=document.getElementById(`ae-d-${s.id}`),sb=document.getElementById(`ae-b-${s.id}`);
+      if(sd)sd.className='ae-dot run';if(sb)sb.style.width='50%';
+      const cmd={c:s.cmd};
+      if(s.val)cmd.v=s.val;
+      if(s.type&&s.type!==0)cmd.t=s.type;
+      await sendCmd(cmd,null);
+      await new Promise(res=>setTimeout(res,d));
+      done++;
+      if(sd)sd.className='ae-dot done';if(sb)sb.style.width='100%';
+      bar.style.width=Math.round((done/total)*100)+'%';
+      txt.textContent=`${done}/${total}`;
+    }
+    if(aeStopFlag)break;
+  }
+  aeRunning=false;
+  dot.className=aeStopFlag?'ae-dot fail':'ae-dot done';
+  txt.textContent=aeStopFlag?(L==='ar'?'موقوف':'Stopped'):(L==='ar'?'انتهى':'Done');
+  if(!aeStopFlag)hap('success');
+}
+
+function aeStop(){
+  aeStopFlag=true;aeRunning=false;
+  const dot=document.getElementById('aeDot'),txt=document.getElementById('aeStatusTxt');
+  if(dot)dot.className='ae-dot fail';
+  if(txt)txt.textContent=L==='ar'?'موقوف':'Stopped';
+  hap('warning');
+}
+
+function nowStr(){const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0')}
+
+// ── REVEAL ──
+function reveal(){
+  document.getElementById('skWrap').style.display='none';
+  const w=document.getElementById('mainWrap');w.style.display='block';
+  w.querySelectorAll('.card').forEach((c,i)=>{c.classList.add('in')});
+}
+
+// ── INIT ──
+// تشغيل الصوت عند فتح الموقع
+(function(){
+  const a = new Audio('https://image2url.com/r2/default/audio/1775375578685-5137f8ed-3cd7-405d-9578-adb6c93a5848.mp3');
+  a.volume = 0.8;
+  a.play().catch(()=>{
+    // لو المتصفح منع التشغيل التلقائي، نشغّل عند أول لمسة
+    document.addEventListener('touchstart', ()=>a.play(), {once:true});
+  });
+})();
+initTheme();
+applyL();
+renderSavedScripts();
+renderAeSteps();
+renderAeSeqList();
+setTimeout(reveal,200);
+setTimeout(()=>{
+  const el = document.getElementById('detectedCid');
+  if(el) el.textContent = detectedChatId;
+},1100);
+checkStatus();fetchResult();
+setInterval(checkStatus,6000);
+setInterval(fetchResult,4000);
 </script>
 </body>
 </html>
