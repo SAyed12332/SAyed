@@ -6,7 +6,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
@@ -1999,15 +1998,22 @@ function reveal(){
 }
 
 // ── INIT ──
-// تشغيل الصوت عند فتح الموقع
-(function(){
-  const a = new Audio('https://image2url.com/r2/default/audio/1775375578685-5137f8ed-3cd7-405d-9578-adb6c93a5848.mp3');
-  a.volume = 0.8;
-  a.play().catch(()=>{
-    // لو المتصفح منع التشغيل التلقائي، نشغّل عند أول لمسة
-    document.addEventListener('touchstart', ()=>a.play(), {once:true});
-  });
-})();
+// تشغيل الصوت — نستنى أول interaction من المستخدم
+const _introAudio = new Audio('https://image2url.com/r2/default/audio/1775375578685-5137f8ed-3cd7-405d-9578-adb6c93a5848.mp3');
+_introAudio.volume = 1.0;
+function _playIntro(){
+  _introAudio.play().catch(()=>{});
+}
+// نجرب نشغل مباشرة
+_playIntro();
+// fallback — أول لمسة أو كليك
+['touchstart','click','touchend'].forEach(ev=>{
+  document.addEventListener(ev, _playIntro, {once:true, passive:true});
+});
+// fallback تاني — لما tg يكون جاهز
+if(window.Telegram?.WebApp){
+  window.Telegram.WebApp.onEvent('viewportChanged', _playIntro);
+}
 initTheme();
 applyL();
 renderSavedScripts();
