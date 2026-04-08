@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -667,6 +662,31 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .load-bar-wrap{width:200px;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;}
 .load-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .05s;}
 
+
+/* ═══ SMOOTH TRANSITIONS ═══ */
+.screen.active { animation: screenSlideIn 0.18s ease-out; }
+@keyframes screenSlideIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.avatar-ring img.tg-photo {
+  border-radius: 50%; width: 84px; height: 84px;
+  object-fit: cover; display: block;
+}
+.btn-buy-stars {
+  padding: 6px 12px; border-radius: 10px;
+  border: 1px solid rgba(255,208,30,0.5);
+  cursor: pointer; font-family: 'Cairo', sans-serif;
+  font-size: 11px; font-weight: 700;
+  background: linear-gradient(135deg, rgba(255,180,0,0.2), rgba(255,120,0,0.15));
+  color: #FFD060; transition: .2s;
+  display: flex; align-items: center; gap: 3px;
+}
+.btn-buy-stars:active { transform: scale(.92); }
+.nav-btn { transition: color .15s, transform .1s; }
+.nav-btn:active { transform: scale(0.92); }
+.cat-btn { transition: background .15s, border-color .15s, color .15s, transform .1s; }
+
 /* responsive canvas sizes */
 @media(max-height:650px){
   .joystick-area{width:100px;height:100px;}
@@ -871,6 +891,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <!-- Avatar + name -->
     <div class="profile-avatar-section">
       <div class="avatar-ring" id="avatarRing">
+        <img id="tgPhotoImg" class="tg-photo" style="display:none;" alt="" />
         <canvas id="avatarCanvas" width="84" height="84"></canvas>
         <div class="avatar-level-badge" id="avatarLevelBadge">1</div>
       </div>
@@ -1148,6 +1169,94 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <script>
 'use strict';
+
+// SOUND ENGINE
+const SFX = {
+  _ctx: null, _muted: false,
+  ctx() {
+    if (!this._ctx) { try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+    if (this._ctx && this._ctx.state === 'suspended') this._ctx.resume();
+    return this._ctx;
+  },
+  _osc(freq, dur, vol=0.22, type='sine', slide=null) {
+    const ctx = this.ctx(); if (!ctx||this._muted) return;
+    try {
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type=type; const t=ctx.currentTime;
+      o.frequency.setValueAtTime(freq, t);
+      if (slide) o.frequency.exponentialRampToValueAtTime(slide, t+dur);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol, t+0.005);
+      g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+      o.start(t); o.stop(t+dur);
+    } catch(e){}
+  },
+  _noise(dur, vol=0.12, fc=600) {
+    const ctx=this.ctx(); if(!ctx||this._muted) return;
+    try {
+      const sr=ctx.sampleRate, buf=ctx.createBuffer(1,Math.ceil(sr*dur),sr);
+      const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+      const src=ctx.createBufferSource(); src.buffer=buf;
+      const f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=fc; f.Q.value=1.5;
+      const g=ctx.createGain();
+      src.connect(f); f.connect(g); g.connect(ctx.destination);
+      const t=ctx.currentTime;
+      g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      src.start(t); src.stop(t+dur);
+    } catch(e){}
+  },
+  play(type) {
+    if (this._muted) return;
+    const ctx=this.ctx(); if(!ctx) return;
+    try {
+      switch(type) {
+        case 'click': this._osc(900,0.07,0.1,'sine'); break;
+        case 'nav': this._osc(600,0.08,0.1,'sine'); setTimeout(()=>this._osc(900,0.07,0.08,'sine'),50); break;
+        case 'attack': this._osc(180,0.12,0.28,'sawtooth',40); this._noise(0.1,0.18,800); break;
+        case 'special':
+          [180,270,360,480,600].forEach((f,i)=>setTimeout(()=>this._osc(f,0.25,0.18,'sine'),i*35));
+          this._noise(0.35,0.22,400); break;
+        case 'hit': this._osc(140,0.09,0.28,'square'); this._noise(0.07,0.25,900); break;
+        case 'crit': this._osc(440,0.04,0.32,'square'); this._osc(880,0.08,0.28,'sine'); this._noise(0.1,0.28,1200); break;
+        case 'death': this._osc(350,0.4,0.28,'sawtooth',25); this._noise(0.25,0.18,300); break;
+        case 'levelup': [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>this._osc(f,0.2,0.2,'sine'),i*90)); break;
+        case 'buy': this._osc(523,0.09,0.16,'sine'); setTimeout(()=>this._osc(784,0.12,0.16,'sine'),70); setTimeout(()=>this._osc(1047,0.15,0.16,'sine'),140); break;
+        case 'wave': this._osc(220,0.3,0.28,'sawtooth',330); setTimeout(()=>this._osc(440,0.25,0.22,'sawtooth',550),150); this._noise(0.2,0.12,200); break;
+        case 'wave_complete': [784,1047,1319].forEach((f,i)=>setTimeout(()=>this._osc(f,0.3,0.18,'sine'),i*100)); break;
+        case 'hurt': this._osc(100,0.18,0.4,'square',60); this._noise(0.12,0.3,250); break;
+        case 'gameover': [440,330,220,165,110].forEach((f,i)=>setTimeout(()=>this._osc(f,0.35,0.28,'sawtooth',f*0.7),i*180)); break;
+        case 'equip': this._osc(660,0.06,0.18,'sine'); setTimeout(()=>this._osc(990,0.1,0.18,'sine'),60); break;
+        case 'error': this._osc(200,0.1,0.18,'square',150); setTimeout(()=>this._osc(150,0.1,0.18,'square',100),100); break;
+        case 'boss': [55,65,80,100].forEach((f,i)=>setTimeout(()=>this._osc(f,0.5,0.28,'sawtooth'),i*120)); this._noise(0.4,0.25,150); break;
+      }
+    } catch(e){}
+  }
+};
+
+// TELEGRAM STARS CONFIG
+const STARS_BACKEND = ''; // Set backend URL here for real payments
+function buyWithTelegramStars(itemId, cat) {
+  const item = findItem(itemId); if (!item) return;
+  SFX.play('click');
+  if (TG && STARS_BACKEND) {
+    TG.openInvoice(STARS_BACKEND+'/invoice?item='+itemId, (status)=>{
+      if (status==='paid'){ S.owned[itemId]=true; saveState(); SFX.play('buy'); showToast('تم الشراء! ⭐','success'); renderShop(cat); updateAllStarsDisplays(); }
+      else if (status!=='cancelled') showToast('فشل الشراء','error');
+    });
+  } else if (TG && TG.showPopup) {
+    TG.showPopup({
+      title: '⭐ ' + item.name,
+      message: 'شراء "'+item.name+'" بـ '+item.price+' ⭐ نجمة؟',
+      buttons:[{id:'buy',type:'default',text:'⭐ شراء ('+item.price+')'},{id:'cancel',type:'cancel',text:'إلغاء'}]
+    }, (btnId)=>{
+      if (btnId==='buy') {
+        if (S.stars<item.price){ SFX.play('error'); showToast('نجوم غير كافية! ⭐','error'); return; }
+        S.stars-=item.price; S.owned[itemId]=true; saveState(); updateAllStarsDisplays();
+        SFX.play('buy'); showToast('تم الشراء! ⭐','success'); renderShop(cat);
+      }
+    });
+  } else { openBuyModal(itemId, cat); }
+}
 
 // ══════════════════════════════════════════════════════
 // TELEGRAM INIT
@@ -1864,6 +1973,7 @@ btnSpecial.addEventListener('mousedown',doSpecial);
 
 function doAttack(){
   if(!gameRunning) return;
+  SFX.play('attack');
   player.attacking=true;
   setTimeout(()=>{player.attacking=false;},300);
   // Melee hit
@@ -1881,6 +1991,7 @@ function doAttack(){
 
 function doSpecial(){
   if(!gameRunning||specialCd>0) return;
+  SFX.play('special');
   specialCd=specialMaxCd;
   player.special=true;
   setTimeout(()=>{player.special=false;},600);
@@ -1906,6 +2017,7 @@ function doSpecial(){
 }
 
 function damageEnemy(en,dmg,crit){
+  SFX.play(crit?'crit':'hit');
   en.hp-=dmg;
   const col=crit?'#FFD060':en.type==='boss'?'#FF4040':'#FF6060';
   spawnFloat(en.x,en.y-en.r,crit?`${dmg}!!`:`-${dmg}`,col,crit?16:12);
@@ -1919,6 +2031,7 @@ function damageEnemy(en,dmg,crit){
 }
 
 function killEnemy(en){
+  SFX.play(en.type==='boss'?'boss':'death');
   const starsDrop=en.type==='boss'?30:en.type==='tank'?8:en.type==='fast'?4:2;
   addSessionStars(starsDrop);
   score+= en.type==='boss'?500:en.type==='tank'?100:en.type==='fast'?30:10;
@@ -1963,7 +2076,8 @@ function checkWaveDone(){
     nextWaveTimer=180;
     const waveBonus=wave*5;
     addSessionStars(waveBonus);
-    spawnFloat(canvasW/2,canvasH/2-80,'موجة مكتملة! +'+waveBonus,'#FFD060',18);
+    SFX.play('wave_complete');
+  spawnFloat(canvasW/2,canvasH/2-80,'موجة مكتملة! +'+waveBonus,'#FFD060',18);
   }
 }
 
@@ -1981,6 +2095,7 @@ function spawnWave(){
   ann.classList.add('show');
   setTimeout(()=>ann.classList.remove('show'),2200);
 
+  SFX.play('wave');
   const spawnDelay=Math.max(10,40-wave);
   let spawned=0;
   const spawnInterval=setInterval(()=>{
@@ -2052,6 +2167,7 @@ function gameLoop(){
         const dmg=Math.max(1,Math.round(en.atk-def*.3));
         player.hp=Math.max(0,player.hp-dmg);
         player.invincible=30;
+        SFX.play('hurt');
         updateHpBar();
         if(player.hp<=0) gameOver();
       } else {
@@ -2140,32 +2256,82 @@ function renderGame(){
 }
 
 function drawGameBg(){
-  // Dark stone floor
-  gCtx.fillStyle='#0a0812';
-  gCtx.fillRect(0,0,canvasW,canvasH);
-
-  // Subtle grid (dungeon tiles)
-  gCtx.strokeStyle='rgba(80,60,120,0.06)';
-  gCtx.lineWidth=1;
-  for(let x=0;x<canvasW;x+=64){
-    gCtx.beginPath(); gCtx.moveTo(x,0); gCtx.lineTo(x,canvasH); gCtx.stroke();
-  }
-  for(let y=0;y<canvasH;y+=64){
-    gCtx.beginPath(); gCtx.moveTo(0,y); gCtx.lineTo(canvasW,y); gCtx.stroke();
-  }
-
-  // Vignette
-  const vg=gCtx.createRadialGradient(canvasW/2,canvasH/2,canvasH*.2,canvasW/2,canvasH/2,canvasH*.8);
-  vg.addColorStop(0,'transparent');
-  vg.addColorStop(1,'rgba(0,0,0,.55)');
-  gCtx.fillStyle=vg; gCtx.fillRect(0,0,canvasW,canvasH);
-
-  // Corner atmospheric glows
-  [[0,0,'#3a0060'],[canvasW,0,'#003060'],[0,canvasH,'#200040'],[canvasW,canvasH,'#400020']].forEach(([cx,cy,col])=>{
-    const rg=gCtx.createRadialGradient(cx,cy,0,cx,cy,canvasW*.4);
-    rg.addColorStop(0,col+'25'); rg.addColorStop(1,'transparent');
-    gCtx.fillStyle=rg; gCtx.fillRect(0,0,canvasW,canvasH);
+  const ctx=gCtx, W=canvasW, H=canvasH, t=gameFrame;
+  // Sky gradient
+  const skyG=ctx.createLinearGradient(0,0,0,H);
+  skyG.addColorStop(0,'#040208'); skyG.addColorStop(0.35,'#08040f');
+  skyG.addColorStop(0.65,'#100816'); skyG.addColorStop(1,'#160010');
+  ctx.fillStyle=skyG; ctx.fillRect(0,0,W,H);
+  // Blood moon
+  const mp=0.08+0.03*Math.sin(t*0.015);
+  const moonG=ctx.createRadialGradient(W/2,0,0,W/2,0,H*0.55);
+  moonG.addColorStop(0,`rgba(160,0,50,${mp*1.8})`); moonG.addColorStop(0.4,`rgba(80,0,30,${mp})`); moonG.addColorStop(1,'transparent');
+  ctx.fillStyle=moonG; ctx.fillRect(0,0,W,H*0.6);
+  // Floor
+  const floorY=H*0.62;
+  const flG=ctx.createLinearGradient(0,floorY,0,H);
+  flG.addColorStop(0,'#180c1c'); flG.addColorStop(1,'#0c0510');
+  ctx.fillStyle=flG; ctx.fillRect(0,floorY,W,H-floorY);
+  // Floor tiles
+  ctx.strokeStyle='rgba(100,70,140,0.09)'; ctx.lineWidth=0.8;
+  for(let x=0;x<W;x+=56){ctx.beginPath();ctx.moveTo(x,floorY);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=floorY;y<H;y+=56){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // Glowing floor cracks
+  [[W*0.18,W*0.06],[W*0.52,W*0.08],[W*0.78,W*0.05]].forEach(([cx,cw],i)=>{
+    const glow=0.25+0.15*Math.sin(t*0.04+i*2.1);
+    const crG=ctx.createLinearGradient(cx-cw,floorY,cx+cw,floorY);
+    crG.addColorStop(0,'transparent'); crG.addColorStop(0.5,`rgba(180,0,255,${glow})`); crG.addColorStop(1,'transparent');
+    ctx.fillStyle=crG; ctx.fillRect(cx-cw,floorY+1,cw*2,5);
   });
+  // Pillars
+  [W*0.07,W*0.93,W*0.22,W*0.78].forEach((px)=>{
+    const pbG=ctx.createLinearGradient(px-12,0,px+12,0);
+    pbG.addColorStop(0,'#0d0818'); pbG.addColorStop(0.3,'#1e1235'); pbG.addColorStop(0.7,'#1e1235'); pbG.addColorStop(1,'#0d0818');
+    ctx.fillStyle=pbG; ctx.fillRect(px-12,0,24,H);
+    ctx.strokeStyle='rgba(120,80,200,0.12)'; ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(px-12,0);ctx.lineTo(px-12,H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(px+12,0);ctx.lineTo(px+12,H);ctx.stroke();
+    for(let y=H*0.15;y<H*0.85;y+=90){ctx.strokeStyle='rgba(100,70,160,0.18)';ctx.strokeRect(px-14,y,28,6);}
+  });
+  // Wall runes
+  ctx.save(); ctx.globalAlpha=0.06+0.03*Math.sin(t*0.03); ctx.strokeStyle='#A060FF'; ctx.lineWidth=1;
+  [[W*0.35,H*0.2],[W*0.65,H*0.25],[W*0.5,H*0.15]].forEach(([rx,ry])=>{
+    ctx.beginPath();ctx.moveTo(rx,ry-12);ctx.lineTo(rx-8,ry+8);ctx.lineTo(rx+8,ry+8);ctx.closePath();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rx-10,ry);ctx.lineTo(rx+10,ry);ctx.stroke();
+  });
+  ctx.restore();
+  // Torches
+  [[W*0.22,H*0.28],[W*0.78,H*0.28],[W*0.22,H*0.55],[W*0.78,H*0.55]].forEach(([tx,ty])=>_drawTorch(ctx,tx,ty,t));
+  // Floating mist
+  for(let i=0;i<5;i++){
+    const mx=((t*(0.2+i*0.06)+i*(W/5))%(W+140))-70;
+    const my=floorY+12+Math.sin(t*0.018+i)*16;
+    const mg=ctx.createRadialGradient(mx,my,0,mx,my,60+i*12);
+    mg.addColorStop(0,'rgba(70,30,100,0.05)'); mg.addColorStop(1,'transparent');
+    ctx.fillStyle=mg; ctx.fillRect(mx-60,my-25,120,50);
+  }
+  // Vignette
+  const vg=ctx.createRadialGradient(W/2,H/2,H*0.08,W/2,H/2,H*0.85);
+  vg.addColorStop(0,'transparent'); vg.addColorStop(1,'rgba(0,0,0,0.72)');
+  ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+}
+
+function _drawTorch(ctx,x,y,frame){
+  ctx.fillStyle='#2a1a08'; ctx.fillRect(x-3,y+2,6,14);
+  ctx.fillStyle='#503010'; ctx.beginPath(); ctx.arc(x,y+2,5,0,Math.PI*2); ctx.fill();
+  for(let layer=0;layer<3;layer++){
+    const flick=Math.sin(frame*0.18+layer*1.3+x*0.01)*2.5;
+    const scale=1-layer*0.25, fy=y-8-layer*3, fh=(12+flick)*scale, fw=(7-layer*1.5)*scale;
+    const cs=[['rgba(255,220,60,0.95)','rgba(255,100,0,0.7)','rgba(180,20,0,0.4)'],['rgba(255,170,30,0.8)','rgba(220,60,0,0.5)','transparent'],['rgba(255,255,100,0.6)','rgba(255,140,0,0.3)','transparent']];
+    const fG=ctx.createRadialGradient(x+flick*0.4,fy,0,x+flick*0.4,fy,fh);
+    fG.addColorStop(0,cs[layer][0]); fG.addColorStop(0.5,cs[layer][1]); fG.addColorStop(1,cs[layer][2]);
+    ctx.save(); ctx.globalAlpha=1-layer*0.2; ctx.fillStyle=fG;
+    ctx.beginPath(); ctx.ellipse(x+flick*0.3,fy,fw,fh,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+  const tg=ctx.createRadialGradient(x,y,0,x,y,65);
+  const ga=0.05+0.025*Math.sin(frame*0.12+x*0.02);
+  tg.addColorStop(0,`rgba(255,140,30,${ga})`); tg.addColorStop(1,'transparent');
+  ctx.fillStyle=tg; ctx.fillRect(x-65,y-65,130,130);
 }
 
 function drawCdRing(){
@@ -2210,6 +2376,7 @@ function updateAllStarsDisplays(){
 }
 
 function showLevelUp(stars){
+  SFX.play('levelup');
   const lu=document.getElementById('levelUp');
   document.getElementById('luSub').textContent='ATK + SPD + HP';
   document.getElementById('luStars').textContent='+ '+stars+' نجمة';
@@ -2223,6 +2390,7 @@ function showLevelUp(stars){
 // GAME FLOW
 // ══════════════════════════════════════════════════════
 function startGame(){
+  SFX.play('click');
   resizeCanvas();
   showScreen('game');
   const stats=getPlayerStats();
@@ -2254,6 +2422,7 @@ function startGame(){
 
 function gameOver(){
   gameRunning=false;
+  SFX.play('gameover');
   S.highScore=Math.max(S.highScore,score);
   S.bestWave=Math.max(S.bestWave,wave);
   S.totalKills+=sessionKills;
@@ -2304,7 +2473,9 @@ function drawGoSkull(){
 // ══════════════════════════════════════════════════════
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const _el=document.getElementById(id);
+  void _el.offsetWidth;
+  _el.classList.add('active');
   const navbar=document.getElementById('navbar');
   if(id==='game'||id==='gameover'){
     navbar.classList.add('hidden');
@@ -2323,6 +2494,7 @@ function showScreen(id){
 }
 
 function navTo(id){
+  SFX.play('nav');
   showScreen(id);
 }
 
@@ -2342,16 +2514,34 @@ let avatarImg=null;
 let avatarLoaded=false;
 
 function loadTelegramAvatar(){
-  const photoUrl=TG_USER.photo_url;
-  if(photoUrl){
-    const img=new Image();
-    img.crossOrigin='anonymous';
-    img.onload=()=>{avatarImg=img; avatarLoaded=true; drawAllAvatars();};
-    img.onerror=()=>{avatarLoaded=false; drawAllAvatars();};
-    img.src=photoUrl;
-  } else {
-    avatarLoaded=false; drawAllAvatars();
+  const photoUrl = TG_USER.photo_url || TG?.initDataUnsafe?.user?.photo_url;
+  drawAllAvatars();
+  if (!photoUrl) { avatarLoaded=false; return; }
+
+  // Show in profile <img> element (avoids CORS on canvas)
+  const imgEl = document.getElementById('tgPhotoImg');
+  if (imgEl) {
+    imgEl.onload = () => {
+      imgEl.style.display='block';
+      const cv = document.getElementById('avatarCanvas');
+      if (cv) cv.style.display='none';
+    };
+    imgEl.onerror = () => { imgEl.style.display='none'; };
+    imgEl.src = photoUrl;
   }
+
+  // Also load into canvas var for HUD
+  const tryImg = (url, cors) => new Promise(res => {
+    const img = new Image();
+    if (cors) img.crossOrigin='anonymous';
+    img.onload=()=>res(img); img.onerror=()=>res(null);
+    img.src = url;
+  });
+  (async () => {
+    let img = await tryImg(photoUrl, true);
+    if (!img) img = await tryImg(photoUrl, false);
+    if (img) { avatarImg=img; avatarLoaded=true; drawHudAvatar(); }
+  })();
 }
 
 function drawSilhouette(ctx,w,h){
@@ -2423,7 +2613,7 @@ function renderShop(cat){
           <div class="item-desc">${item.desc}</div>
           <div class="item-footer">
             <div class="item-price"><canvas width="14" height="14" id="ps_${item.id}"></canvas>${item.price}</div>
-            <button class="btn-buy can-buy" onclick="buyPowerup('${item.id}')">
+            <button class="btn-buy-stars" onclick="buyPowerup('${item.id}')">
               ${count>0?`(${count}) `:''}شراء
             </button>
           </div>
@@ -2457,7 +2647,7 @@ function renderShop(cat){
     const btnHtml=equipped?`<button class="btn-buy btn-equipped" disabled>مجهز</button>`:
                   owned?`<button class="btn-buy btn-equip" onclick="equipItem('${item.id}','${cat}')">تجهيز</button>`:
                   locked?`<button class="btn-buy" disabled>مغلق</button>`:
-                  `<button class="btn-buy can-buy" onclick="openBuyModal('${item.id}','${cat}')">شراء</button>`;
+                  `<button class="btn-buy-stars" onclick="buyWithTelegramStars('${item.id}','${cat}')">⭐ ${item.price}</button>`;
 
     card.innerHTML=`
       <div class="item-img-wrap">
@@ -2505,7 +2695,8 @@ function confirmBuy(){
   S.owned[item.id]=true;
   saveState();
   updateAllStarsDisplays();
-  showToast('تم شراء '+item.name+'!','success');
+  SFX.play('buy');
+  showToast('تم الشراء! ⭐','success');
   closeBuyModal();
   renderShop(cat);
 }
@@ -2513,7 +2704,8 @@ function confirmBuy(){
 function equipItem(itemId, cat){
   S.equipped[cat]=itemId;
   saveState();
-  showToast('تم تجهيز العنصر!','success');
+  SFX.play('equip');
+  showToast('تم تجهيز العنصر! ⚔️','success');
   renderShop(cat);
   updateProfileEquipment();
 }
@@ -2878,3 +3070,5 @@ bootApp();
 </script>
 </body>
 </html>
+
+
