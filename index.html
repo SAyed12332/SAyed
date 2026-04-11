@@ -2,6 +2,10 @@
 
 
 
+
+
+
+
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -68,6 +72,7 @@ img {
 <script>
 let thumbFile, docFile;
 
+// اختيار صورة
 document.getElementById("thumb").onchange = (e) => {
   thumbFile = e.target.files[0];
   let reader = new FileReader();
@@ -82,6 +87,7 @@ document.getElementById("thumb").onchange = (e) => {
   status("تم اختيار الصورة ✅");
 };
 
+// اختيار ملف
 document.getElementById("doc").onchange = (e) => {
   docFile = e.target.files[0];
   status("تم اختيار الملف ✅");
@@ -91,6 +97,7 @@ function status(txt){
   document.getElementById("status").innerText = txt;
 }
 
+// تجهيز ملف تجريبي
 function prepare(){
   if(!thumbFile || !docFile){
     status("اختار صورة وملف الأول ❌");
@@ -111,21 +118,36 @@ function prepare(){
   status("تم تجهيز الملف ✅");
 }
 
+// الإرسال للبوت (المهم 🔥)
 function sendTG(){
-  if(window.Telegram){
-    Telegram.WebApp.sendData(JSON.stringify({
-      file: docFile?.name,
-      thumb: thumbFile?.name
+  if (window.Telegram && window.Telegram.WebApp) {
+
+    let tg = window.Telegram.WebApp;
+
+    tg.ready(); // مهم
+    tg.expand(); // يخلي الشاشة كاملة
+
+    tg.sendData(JSON.stringify({
+      file: docFile?.name || null,
+      thumb: thumbFile?.name || null
     }));
+
     status("اتبعت للبوت ✅");
+
   } else {
-    status("افتحه من تيليجرام ❗");
+    status("افتحه من زر البوت ❗");
   }
 }
 
+// مسح
 function resetAll(){
   location.reload();
 }
+
+// Debug (اختياري)
+console.log("Telegram:", window.Telegram);
+console.log("WebApp:", window.Telegram?.WebApp);
+
 </script>
 
 </body>
