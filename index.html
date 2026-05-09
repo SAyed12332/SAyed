@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -306,6 +310,21 @@ async function fetchFile() {
   setLoading(false);
 }
 
+async function getSha() {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}?ref=${BRANCH}&t=${Date.now()}`,
+      { headers: apiHeaders() }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      fileSha = data.sha || "";
+    } else if (res.status === 404) {
+      fileSha = ""; // ملف جديد
+    }
+  } catch(e) { /* تجاهل */ }
+}
+
 async function saveFile() {
   if (!token) { showToast("⚠️ أدخل التوكن أولاً", "warn"); return; }
   const content = document.getElementById("editorArea").value;
@@ -313,9 +332,13 @@ async function saveFile() {
   setLoading(true);
   document.getElementById("saveBtn").disabled = true;
   try {
+    // جيب الـ sha الحالي دايماً قبل الحفظ
+    if (!fileSha) await getSha();
+
     const encoded = btoa(unescape(encodeURIComponent(content)));
     const body = { message: msg, content: encoded, branch: BRANCH };
     if (fileSha) body.sha = fileSha;
+
     const res = await fetch(
       `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}`,
       { method:"PUT", headers: apiHeaders(), body: JSON.stringify(body) }
@@ -325,6 +348,24 @@ async function saveFile() {
       fileSha = data.content.sha;
       updateShaInfo();
       showToast("✅ تم الحفظ على GitHub!");
+    } else if (res.status === 409) {
+      // conflict: SHA قديم، جيب الجديد وحاول تاني
+      showToast("⚠️ SHA قديم، جاري التحديث...", "warn");
+      await getSha();
+      const body2 = { message: msg, content: encoded, branch: BRANCH };
+      if (fileSha) body2.sha = fileSha;
+      const res2 = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}`,
+        { method:"PUT", headers: apiHeaders(), body: JSON.stringify(body2) }
+      );
+      const data2 = await res2.json();
+      if (res2.ok) {
+        fileSha = data2.content.sha;
+        updateShaInfo();
+        showToast("✅ تم الحفظ على GitHub!");
+      } else {
+        showToast("❌ " + (data2.message || "فشل الحفظ"), "error");
+      }
     } else {
       showToast("❌ " + (data.message || "فشل الحفظ"), "error");
     }
