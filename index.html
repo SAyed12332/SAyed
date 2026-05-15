@@ -3,94 +3,906 @@
 
 
 
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- الكلمات الافتتاحية والوصف لظهورك في جوجل -->
-    <title>السيد أشرف | مطور برمجيات وسكربتات</title>
-    <meta name="description" content="الموقع الرسمي للمطور السيد أشرف. متخصص في برمجة بوتات تليجرام، سكربتات جيم جاردن، وتطوير تطبيقات الويب باستخدام بايثون ولوا.">
-    <meta name="keywords" content="السيد أشرف, el sayed ashraf, elsayedashraf, برمجة بوتات, سكربتات جيم جاردن, مطور بايثون, Lua Scripting, Telegram Bots">
-    <meta name="author" content="السيد أشرف">
 
-    <!-- تنسيق سريع وبسيط -->
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        h1 { color: #00ff88; margin-bottom: 10px; }
-        p { line-height: 1.6; color: #bbbbbb; }
-        .skills {
-            margin: 20px 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .skill-badge {
-            background: #333;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            border: 1px solid #00ff88;
-        }
-        .links a {
-            display: inline-block;
-            margin: 15px 10px;
-            color: #121212;
-            background: #00ff88;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .links a:hover { background: #00cc6e; transform: translateY(-3px); }
-        footer { margin-top: 30px; font-size: 0.8em; color: #666; }
-    </style>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Sayed Ashraf — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cyan:    #00f5ff;
+      --magenta: #ff0080;
+      --green:   #39ff14;
+      --dark:    #040410;
+      --dark2:   #08081a;
+      --glass:         rgba(0,245,255,0.04);
+      --glass-border:  rgba(0,245,255,0.18);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      background: var(--dark);
+      color: #dde0f5;
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ---- STAR CANVAS ---- */
+    #starCanvas {
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      z-index:0; pointer-events:none;
+    }
+
+    /* ---- CUSTOM CURSOR ---- */
+    #cur  { position:fixed; width:22px; height:22px; border:2px solid var(--cyan); border-radius:50%; pointer-events:none; z-index:9999; transition:transform .15s,border-color .3s,box-shadow .3s; box-shadow:0 0 12px var(--cyan); }
+    #curD { position:fixed; width:5px;  height:5px;  background:var(--cyan); border-radius:50%; pointer-events:none; z-index:9999; box-shadow:0 0 8px var(--cyan); }
+
+    /* ---- SCANLINES ---- */
+    .scanlines { position:fixed; inset:0; pointer-events:none; z-index:50; background:repeating-linear-gradient(0deg,rgba(0,0,0,.022) 0px,rgba(0,0,0,.022) 1px,transparent 1px,transparent 4px); }
+
+    /* ---- NAV ---- */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      padding:1.4rem 3rem;
+      display:flex; justify-content:space-between; align-items:center;
+      background:rgba(4,4,16,.82);
+      backdrop-filter:blur(22px);
+      border-bottom:1px solid rgba(0,245,255,.1);
+    }
+    .nav-logo {
+      font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.1rem;
+      color:var(--cyan); text-shadow:0 0 22px var(--cyan); letter-spacing:4px;
+    }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      color:rgba(221,224,245,.65); text-decoration:none; font-size:.8rem;
+      letter-spacing:2.5px; text-transform:uppercase; font-weight:600;
+      transition:color .3s,text-shadow .3s; position:relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-5px; left:0; width:0; height:1px;
+      background:var(--cyan); box-shadow:0 0 8px var(--cyan); transition:width .3s;
+    }
+    .nav-links a:hover { color:var(--cyan); text-shadow:0 0 12px var(--cyan); }
+    .nav-links a:hover::after { width:100%; }
+
+    /* ---- SHARED ---- */
+    section { position:relative; z-index:1; }
+
+    .section-header { text-align:center; margin-bottom:5rem; }
+    .section-tag {
+      font-size:.72rem; letter-spacing:5px; text-transform:uppercase;
+      color:var(--green); text-shadow:0 0 12px var(--green); margin-bottom:.8rem;
+    }
+    .section-title {
+      font-family:'Orbitron',sans-serif; font-size:clamp(2rem,5vw,3.2rem);
+      font-weight:700; color:#fff; text-shadow:0 0 24px rgba(255,255,255,.15);
+      display:inline-block; position:relative;
+    }
+    .section-title::after {
+      content:''; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%);
+      width:55%; height:2px;
+      background:linear-gradient(to right,transparent,var(--cyan),transparent);
+      box-shadow:0 0 12px var(--cyan);
+    }
+
+    .fade-in { opacity:0; transform:translateY(32px); transition:opacity .8s ease, transform .8s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+
+    /* ---- BUTTONS ---- */
+    .btn {
+      padding:.9rem 2.4rem; font-family:'Orbitron',sans-serif; font-size:.72rem;
+      font-weight:700; letter-spacing:3px; text-transform:uppercase;
+      text-decoration:none; border:none; cursor:pointer; position:relative;
+      transition:all .3s; display:inline-block;
+      clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+    }
+    .btn-primary { background:var(--cyan); color:var(--dark); box-shadow:0 0 30px rgba(0,245,255,.45); }
+    .btn-primary:hover { background:#fff; box-shadow:0 0 55px rgba(0,245,255,.8),0 0 100px rgba(0,245,255,.25); transform:translateY(-2px); }
+    .btn-secondary { background:transparent; color:var(--magenta); border:1px solid var(--magenta); box-shadow:0 0 20px rgba(255,0,128,.25); }
+    .btn-secondary:hover { background:rgba(255,0,128,.1); box-shadow:0 0 44px rgba(255,0,128,.55); transform:translateY(-2px); }
+
+    /* ---- HERO ---- */
+    #hero {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      text-align:center; padding:2rem; overflow:hidden;
+    }
+
+    /* neon grid floor */
+    .neon-grid {
+      position:absolute; bottom:0; left:0; right:0; height:50%;
+      background-image:
+        linear-gradient(rgba(0,245,255,.13) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,245,255,.13) 1px,transparent 1px);
+      background-size:60px 60px;
+      transform:perspective(520px) rotateX(60deg);
+      transform-origin:bottom;
+      mask-image:linear-gradient(to top,black 10%,transparent);
+      animation:gridPulse 4s ease-in-out infinite;
+    }
+    @keyframes gridPulse {
+      0%,100% { opacity:.8; }
+      50%      { opacity:1; }
+    }
+
+    /* floating orbs */
+    .orb { position:absolute; border-radius:50%; filter:blur(65px); animation:orbFloat 9s ease-in-out infinite; }
+    .orb-1 { width:340px; height:340px; background:radial-gradient(circle,rgba(0,245,255,.28),transparent); top:8%;  left:3%;  animation-delay:0s;   }
+    .orb-2 { width:260px; height:260px; background:radial-gradient(circle,rgba(255,0,128,.22),transparent); top:15%; right:4%; animation-delay:-3.5s; }
+    .orb-3 { width:210px; height:210px; background:radial-gradient(circle,rgba(57,255,20,.18),transparent);  bottom:28%;left:18%; animation-delay:-7s;  }
+    @keyframes orbFloat {
+      0%,100% { transform:translateY(0) scale(1); }
+      33%      { transform:translateY(-35px) scale(1.06); }
+      66%      { transform:translateY(22px)  scale(.95); }
+    }
+
+    /* hero text */
+    .hero-content { position:relative; z-index:2; }
+    .hero-tag {
+      font-size:.75rem; letter-spacing:6px; text-transform:uppercase;
+      color:var(--magenta); text-shadow:0 0 18px var(--magenta); margin-bottom:1.8rem;
+      animation:fadeInDown 1s ease both;
+    }
+    .hero-title {
+      font-family:'Orbitron',sans-serif; font-size:clamp(3rem,9vw,7.5rem);
+      font-weight:900; line-height:1; margin-bottom:1.2rem;
+    }
+    .glitch {
+      position:relative; display:inline-block; color:#fff;
+      text-shadow:0 0 36px rgba(0,245,255,.4);
+    }
+    .glitch::before,.glitch::after {
+      content:attr(data-text); position:absolute; top:0; left:0; width:100%;
+    }
+    .glitch::before {
+      color:var(--cyan); animation:g1 5s infinite;
+      clip-path:polygon(0 0,100% 0,100% 35%,0 35%);
+    }
+    .glitch::after {
+      color:var(--magenta); animation:g2 5s infinite;
+      clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);
+    }
+    @keyframes g1 { 0%,88%,100%{transform:none;opacity:0} 90%{transform:translate(-4px,-3px);opacity:.9} 93%{transform:translate(4px,3px);opacity:.6} 96%{transform:translate(-2px,1px);opacity:.8} 99%{opacity:0} }
+    @keyframes g2 { 0%,86%,100%{transform:none;opacity:0} 88%{transform:translate(4px,3px);opacity:.9} 91%{transform:translate(-4px,-3px);opacity:.6} 94%{transform:translate(2px,-1px);opacity:.8} 97%{opacity:0} }
+
+    .hero-line2 {
+      color:var(--cyan);
+      text-shadow:0 0 50px var(--cyan),0 0 100px rgba(0,245,255,.28);
+    }
+    .hero-subtitle {
+      font-size:clamp(.95rem,2.5vw,1.35rem); font-weight:300; letter-spacing:3px;
+      color:rgba(221,224,245,.65); margin-bottom:3rem;
+      animation:fadeInUp 1s ease .35s both;
+    }
+    .hero-subtitle span { color:var(--cyan); text-shadow:0 0 12px var(--cyan); }
+    .hero-buttons { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; animation:fadeInUp 1s ease .65s both; }
+
+    .scroll-ind {
+      position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:.5rem;
+      color:rgba(221,224,245,.35); font-size:.65rem; letter-spacing:3.5px;
+      animation:scrollBounce 2.5s ease-in-out infinite;
+    }
+    .scroll-line { width:1px; height:50px; background:linear-gradient(to bottom,var(--cyan),transparent); }
+    @keyframes scrollBounce { 0%,100%{opacity:.35;transform:translateX(-50%) translateY(0)} 50%{opacity:.8;transform:translateX(-50%) translateY(6px)} }
+
+    /* ---- ABOUT ---- */
+    #about { padding:9rem 2rem; max-width:1200px; margin:0 auto; }
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+    .about-text { font-size:1.08rem; line-height:1.95; color:rgba(221,224,245,.78); font-weight:300; }
+    .about-text p { margin-bottom:1.1rem; }
+    .about-text strong { color:var(--cyan); font-weight:600; text-shadow:0 0 8px rgba(0,245,255,.4); }
+
+    .skills-list { display:flex; flex-direction:column; gap:1.3rem; }
+    .skill-label { display:flex; justify-content:space-between; font-size:.8rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:.45rem; color:rgba(221,224,245,.75); }
+    .skill-label span:last-child { color:var(--cyan); text-shadow:0 0 6px var(--cyan); }
+    .skill-bar { height:4px; background:rgba(0,245,255,.1); border-radius:2px; overflow:visible; position:relative; }
+    .skill-fill {
+      height:100%; background:linear-gradient(to right,var(--cyan),var(--magenta));
+      border-radius:2px; width:0; transition:width 1.6s ease;
+      box-shadow:0 0 10px var(--cyan); position:relative;
+    }
+    .skill-fill::after {
+      content:''; position:absolute; right:0; top:50%; transform:translateY(-50%);
+      width:9px; height:9px; border-radius:50%; background:#fff;
+      box-shadow:0 0 10px var(--cyan),0 0 20px var(--cyan);
+    }
+
+    /* ---- PROJECTS ---- */
+    #projects {
+      padding:9rem 2rem;
+      background:linear-gradient(to bottom,transparent,rgba(0,245,255,.025),transparent);
+      position:relative; overflow:hidden;
+    }
+    #projects::before,#projects::after {
+      content:''; position:absolute; left:0; right:0; height:1px;
+      background:linear-gradient(to right,transparent,var(--cyan),transparent);
+      box-shadow:0 0 14px var(--cyan);
+    }
+    #projects::before { top:0; }
+    #projects::after  { bottom:0; }
+
+    .projects-wrap { max-width:1200px; margin:0 auto; }
+    .projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:2rem; }
+
+    .proj-card {
+      background:var(--glass); border:1px solid var(--glass-border);
+      backdrop-filter:blur(18px); padding:2rem;
+      position:relative; transition:all .4s; overflow:hidden;
+      clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%);
+    }
+    .proj-card::before {
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg,rgba(0,245,255,.06),transparent);
+      opacity:0; transition:opacity .4s;
+    }
+    /* corner accent */
+    .proj-card::after {
+      content:''; position:absolute; top:0; right:0; width:22px; height:22px;
+      border-top:2px solid var(--cyan); border-right:2px solid var(--cyan);
+      box-shadow:3px -3px 10px var(--cyan);
+    }
+    .proj-card:hover { border-color:var(--cyan); box-shadow:0 0 40px rgba(0,245,255,.18),inset 0 0 30px rgba(0,245,255,.04); transform:translateY(-6px); }
+    .proj-card:hover::before { opacity:1; }
+
+    /* neon line at top */
+    .proj-card .card-top-line {
+      position:absolute; top:0; left:0; right:22px; height:2px;
+      background:linear-gradient(to right,var(--magenta),var(--cyan));
+      box-shadow:0 0 8px var(--cyan);
+    }
+
+    .proj-cat { font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--magenta); text-shadow:0 0 10px var(--magenta); margin-bottom:.7rem; }
+    .proj-title { font-family:'Orbitron',sans-serif; font-size:1.05rem; font-weight:600; color:#fff; margin-bottom:.75rem; }
+    .proj-desc { font-size:.88rem; line-height:1.75; color:rgba(221,224,245,.6); margin-bottom:1.4rem; font-weight:300; }
+    .proj-tags { display:flex; flex-wrap:wrap; gap:.45rem; margin-bottom:1.4rem; }
+    .proj-tag { padding:.22rem .7rem; font-size:.68rem; letter-spacing:1px; background:rgba(57,255,20,.08); border:1px solid rgba(57,255,20,.28); color:var(--green); text-shadow:0 0 5px var(--green); }
+
+    .btn-dl {
+      display:flex; align-items:center; justify-content:center; gap:.5rem;
+      width:100%; padding:.7rem 1.4rem;
+      background:transparent; border:1px solid var(--cyan); color:var(--cyan);
+      text-shadow:0 0 8px var(--cyan); box-shadow:0 0 14px rgba(0,245,255,.18);
+      font-family:'Orbitron',sans-serif; font-size:.68rem; letter-spacing:2.5px;
+      cursor:pointer; text-decoration:none; transition:all .3s;
+    }
+    .btn-dl:hover { background:rgba(0,245,255,.1); box-shadow:0 0 32px rgba(0,245,255,.4); }
+
+    .empty-state {
+      grid-column:1/-1; text-align:center; padding:6rem 2rem;
+      color:rgba(221,224,245,.25);
+    }
+    .empty-icon { font-size:4.5rem; display:block; margin-bottom:1.2rem; filter:drop-shadow(0 0 20px var(--cyan)); opacity:.25; }
+
+    /* ---- CONTACT ---- */
+    #contact { padding:9rem 2rem; max-width:700px; margin:0 auto; text-align:center; }
+    .contact-intro { font-size:1.05rem; line-height:1.9; color:rgba(221,224,245,.65); font-weight:300; margin:1.5rem auto 2.5rem; max-width:500px; }
+    .contact-email {
+      font-family:'Orbitron',sans-serif; font-size:clamp(.85rem,2vw,1.2rem);
+      color:var(--cyan); text-shadow:0 0 22px var(--cyan); letter-spacing:2px;
+      display:block; text-decoration:none; transition:all .3s; margin-bottom:3rem;
+    }
+    .contact-email:hover { text-shadow:0 0 50px var(--cyan),0 0 100px rgba(0,245,255,.3); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align:center; padding:2.5rem;
+      border-top:1px solid rgba(0,245,255,.1);
+      color:rgba(221,224,245,.28); font-size:.75rem; letter-spacing:2px;
+    }
+    footer em { color:var(--magenta); font-style:normal; }
+
+    /* ---- ADMIN OVERLAY ---- */
+    #adminOverlay {
+      position:fixed; inset:0; background:rgba(4,4,16,.97);
+      backdrop-filter:blur(28px); z-index:800; display:none; overflow-y:auto;
+    }
+    #adminOverlay.open { display:block; }
+
+    .adm-wrap { max-width:940px; margin:0 auto; padding:3rem 2rem 5rem; }
+    .adm-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:3rem; padding-bottom:1.5rem; border-bottom:1px solid rgba(0,245,255,.18); }
+    .adm-title { font-family:'Orbitron',sans-serif; font-size:1.4rem; color:var(--cyan); text-shadow:0 0 22px var(--cyan); letter-spacing:4px; }
+
+    .btn-x { background:transparent; border:1px solid var(--magenta); color:var(--magenta); padding:.5rem 1.5rem; font-family:'Orbitron',sans-serif; font-size:.68rem; letter-spacing:2px; cursor:pointer; transition:all .3s; }
+    .btn-x:hover { background:rgba(255,0,128,.12); box-shadow:0 0 22px rgba(255,0,128,.4); }
+
+    /* auth gate */
+    #authGate { display:flex; flex-direction:column; align-items:center; gap:1.6rem; padding:5rem 2rem; text-align:center; }
+    .auth-ico { font-size:4.5rem; filter:drop-shadow(0 0 24px var(--cyan)); }
+    .auth-h { font-family:'Orbitron',sans-serif; font-size:1.5rem; color:#fff; margin-bottom:.4rem; }
+    .auth-sub { color:rgba(221,224,245,.45); font-size:.88rem; letter-spacing:1px; }
+    .auth-form { display:flex; flex-direction:column; gap:1rem; width:100%; max-width:420px; }
+
+    /* form inputs */
+    .ni {
+      background:rgba(0,245,255,.05); border:1px solid rgba(0,245,255,.28);
+      color:#fff; padding:.9rem 1.2rem; font-family:'Rajdhani',sans-serif; font-size:1rem;
+      outline:none; transition:all .3s; width:100%;
+    }
+    .ni:focus { border-color:var(--cyan); box-shadow:0 0 18px rgba(0,245,255,.2); background:rgba(0,245,255,.08); }
+    .ni::placeholder { color:rgba(221,224,245,.28); }
+    textarea.ni { resize:vertical; min-height:90px; }
+
+    /* dashboard */
+    #adminDash { display:none; }
+    #adminDash.open { display:block; }
+
+    .adm-sec { background:var(--glass); border:1px solid var(--glass-border); padding:2rem; margin-bottom:2rem; }
+    .adm-sec-title { font-family:'Orbitron',sans-serif; font-size:.95rem; color:var(--green); text-shadow:0 0 12px var(--green); letter-spacing:2px; margin-bottom:1.6rem; text-transform:uppercase; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .fg { display:flex; flex-direction:column; gap:.4rem; }
+    .fg.full { grid-column:1/-1; }
+    .flabel { font-size:.72rem; letter-spacing:2px; text-transform:uppercase; color:rgba(221,224,245,.45); }
+
+    .file-drop {
+      border:2px dashed rgba(0,245,255,.28); padding:2rem; text-align:center;
+      color:rgba(221,224,245,.38); cursor:pointer; transition:all .3s;
+      font-size:.9rem; letter-spacing:1px;
+    }
+    .file-drop:hover,.file-drop.drag { border-color:var(--cyan); background:rgba(0,245,255,.05); color:var(--cyan); }
+    .file-drop input { display:none; }
+
+    .or-div { text-align:center; color:rgba(221,224,245,.28); font-size:.72rem; letter-spacing:3px; margin:.5rem 0; }
+
+    .file-ok { color:var(--green); font-size:.84rem; margin-top:.5rem; display:none; }
+
+    /* alert */
+    .alert { padding:.9rem 1.4rem; font-size:.83rem; letter-spacing:1px; margin-top:1rem; display:none; border-radius:0; }
+    .alert.ok  { background:rgba(57,255,20,.09);  border:1px solid rgba(57,255,20,.3);  color:var(--green); }
+    .alert.err { background:rgba(255,0,128,.09);  border:1px solid rgba(255,0,128,.3);  color:var(--magenta); }
+    .alert.vis { display:block; }
+
+    /* project list in admin */
+    .adm-list { display:flex; flex-direction:column; gap:1rem; }
+    .adm-item { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; background:rgba(0,0,0,.3); border:1px solid rgba(0,245,255,.1); }
+    .adm-item-name { font-family:'Orbitron',sans-serif; font-size:.84rem; color:#fff; }
+    .adm-item-cat  { font-size:.73rem; color:var(--magenta); letter-spacing:1px; margin-top:.25rem; }
+    .btn-del { background:transparent; border:1px solid rgba(255,0,128,.3); color:var(--magenta); padding:.4rem 1rem; font-size:.68rem; letter-spacing:1.5px; cursor:pointer; transition:all .3s; font-family:'Orbitron',sans-serif; }
+    .btn-del:hover { background:rgba(255,0,128,.14); border-color:var(--magenta); box-shadow:0 0 18px rgba(255,0,128,.35); }
+
+    .no-projs { text-align:center; color:rgba(221,224,245,.3); font-size:.88rem; padding:2rem; letter-spacing:1px; }
+
+    /* keyframes */
+    @keyframes fadeInDown { from{opacity:0;transform:translateY(-22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeInUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-9px)} 40%{transform:translateX(9px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+
+    /* responsive */
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem;}
+      .nav-links{gap:1.2rem;}
+      .about-grid{grid-template-columns:1fr;}
+      .form-row{grid-template-columns:1fr;}
+    }
+    @media(max-width:480px){ .nav-links{display:none;} }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>السيد أشرف</h1>
-        <p>مرحباً بك في موقعي الشخصي. أنا مبرمج شغوف بتطوير الحلول الذكية، متخصص في بناء البوتات والسكربتات المتقدمة.</p>
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="curD"></div>
 
-        <div class="skills">
-            <span class="skill-badge">Python</span>
-            <span class="skill-badge">Lua Scripting</span>
-            <span class="skill-badge">Telegram Bots</span>
-            <span class="skill-badge">Web Development</span>
-            <span class="skill-badge">GameGuardian Scripts</span>
-        </div>
+<!-- Scanlines -->
+<div class="scanlines"></div>
 
-        <div class="links">
-            <!-- ضيف روابط حساباتك هنا -->
-            <a href="https://github.com/sayed12332" target="_blank">جيت هاب</a>
-            <a href="https://t.me/ELSAyedAshRaf" target="_blank">تليجرام</a>
-        </div>
+<!-- Star Canvas -->
+<canvas id="starCanvas"></canvas>
 
-        <footer>
-            جميع الحقوق محفوظة © 2026 | السيد أشرف
-        </footer>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">EL·SAYED</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#" onclick="openAdmin();return false;" style="color:var(--magenta);text-shadow:0 0 10px var(--magenta);">⬡ Admin</a></li>
+  </ul>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section id="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="neon-grid"></div>
+
+  <div class="hero-content">
+    <p class="hero-tag">⬡ &nbsp; Portfolio &nbsp; · &nbsp; 2025 &nbsp; ⬡</p>
+    <h1 class="hero-title">
+      <span class="glitch" data-text="EL SAYED">EL SAYED</span><br>
+      <span class="glitch hero-line2" data-text="ASHRAF">ASHRAF</span>
+    </h1>
+    <p class="hero-subtitle">
+      Full Stack Developer &nbsp;·&nbsp; <span>Creative Engineer</span> &nbsp;·&nbsp; Problem Solver
+    </p>
+    <div class="hero-buttons">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact"  class="btn btn-secondary">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section id="about">
+  <div class="section-header fade-in">
+    <p class="section-tag">// 01 about</p>
+    <h2 class="section-title">WHO AM I</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>I'm <strong>El Sayed Ashraf</strong>, a passionate developer who crafts innovative digital experiences from the ground up. I thrive at the intersection of design and engineering.</p>
+      <p>My work spans <strong>full-stack web development</strong>, <strong>Telegram Mini Apps</strong>, and <strong>creative digital solutions</strong> that push the boundaries of what's possible on the web.</p>
+      <p>Every project I take on is built with precision, purpose, and a relentless drive for <strong>quality</strong> — because good enough is never enough.</p>
+    </div>
+    <div class="skills-list fade-in">
+      <div class="skill-item">
+        <div class="skill-label"><span>JavaScript / TypeScript</span><span>90%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="90"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>React / Next.js</span><span>85%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="85"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>Node.js / APIs</span><span>80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="80"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>UI / UX Design</span><span>88%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="88"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>Telegram Mini Apps</span><span>95%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-w="95"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROJECTS ========== -->
+<section id="projects">
+  <div class="projects-wrap">
+    <div class="section-header fade-in">
+      <p class="section-tag">// 02 projects</p>
+      <h2 class="section-title">MY WORK</h2>
+    </div>
+    <div class="projects-grid" id="projGrid">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact">
+  <div class="section-header fade-in">
+    <p class="section-tag">// 03 contact</p>
+    <h2 class="section-title">LET'S CONNECT</h2>
+  </div>
+  <p class="contact-intro fade-in">
+    Have a project in mind? Want to collaborate on something extraordinary?<br>
+    Drop me a message and let's build something great together.
+  </p>
+  <a href="mailto:elsayed.ashrafsy@gmail.com" class="contact-email fade-in">
+    elsayed.ashrafsy@gmail.com
+  </a>
+  <div class="fade-in">
+    <a href="mailto:elsayed.ashrafsy@gmail.com" class="btn btn-primary">Send Message</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Designed &amp; built by <em>El Sayed Ashraf</em> &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; 2025</p>
+</footer>
+
+<!-- ========== ADMIN OVERLAY ========== -->
+<div id="adminOverlay">
+  <div class="adm-wrap">
+    <div class="adm-head">
+      <div class="adm-title">⬡ CONTROL PANEL</div>
+      <button class="btn-x" onclick="closeAdmin()">✕ CLOSE</button>
     </div>
 
+    <!-- Auth Gate -->
+    <div id="authGate">
+      <div class="auth-ico">🔐</div>
+      <div>
+        <h2 class="auth-h">RESTRICTED ACCESS</h2>
+        <p class="auth-sub">Authorized personnel only. Enter your credentials to proceed.</p>
+      </div>
+      <div class="auth-form" id="authForm">
+        <input class="ni" id="aEmail" type="email" placeholder="Email address" />
+        <input class="ni" id="aPass"  type="password" placeholder="Password" />
+        <button class="btn btn-primary" onclick="doLogin()" style="clip-path:none;width:100%">ACCESS SYSTEM</button>
+        <div class="alert err" id="authErr">⚠ Invalid credentials. Access denied.</div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="adminDash">
+
+      <!-- Add Project -->
+      <div class="adm-sec">
+        <div class="adm-sec-title">+ Add New Project</div>
+        <div class="form-row">
+          <div class="fg">
+            <label class="flabel">Project Title *</label>
+            <input class="ni" id="pTitle" type="text" placeholder="My Awesome Project" />
+          </div>
+          <div class="fg">
+            <label class="flabel">Category</label>
+            <input class="ni" id="pCat" type="text" placeholder="Web App / Bot / Game..." />
+          </div>
+          <div class="fg full">
+            <label class="flabel">Description</label>
+            <textarea class="ni" id="pDesc" placeholder="Brief description of the project..."></textarea>
+          </div>
+          <div class="fg full">
+            <label class="flabel">Tags (comma separated)</label>
+            <input class="ni" id="pTags" type="text" placeholder="React, Node.js, Telegram" />
+          </div>
+
+          <!-- file upload -->
+          <div class="fg full">
+            <label class="flabel">Upload File (max ~4MB, stored in browser)</label>
+            <div class="file-drop" id="fileDrop" onclick="document.getElementById('fInput').click()">
+              <input type="file" id="fInput" />
+              <p>📁 &nbsp;Click to choose a file &nbsp;— or drag &amp; drop here</p>
+            </div>
+            <div class="file-ok" id="fileOk"></div>
+          </div>
+
+          <div class="fg full">
+            <div class="or-div">— OR LINK AN EXTERNAL URL —</div>
+            <label class="flabel">Download / GitHub / Drive URL</label>
+            <input class="ni" id="pUrl" type="url" placeholder="https://github.com/your-repo" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="addProject()" style="margin-top:1.5rem;clip-path:none;">
+          ⬡ &nbsp;PUBLISH PROJECT
+        </button>
+        <div class="alert ok"  id="addOk">✓ Project published successfully!</div>
+        <div class="alert err" id="addErr">⚠ Title is required.</div>
+      </div>
+
+      <!-- Manage Projects -->
+      <div class="adm-sec">
+        <div class="adm-sec-title">⬡ Manage Projects</div>
+        <div class="adm-list" id="admList"></div>
+      </div>
+
+    </div><!-- /adminDash -->
+  </div>
+</div><!-- /adminOverlay -->
+
+
+<script>
+// ============================================================
+//  CONFIG  — change the password here!
+// ============================================================
+const CFG = {
+  email:    'elsayed.ashrafsy@gmail.com',
+  password: 'ElSayed@2024!',        // ← change this
+  storeKey: 'esap_projects'
+};
+
+// ============================================================
+//  STAR FIELD
+// ============================================================
+const canvas = document.getElementById('starCanvas');
+const ctx    = canvas.getContext('2d');
+let stars    = [];
+let mX = 0, mY = 0;
+
+function resizeCanvas(){
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function mkStars(){
+  stars = [];
+  const n = Math.floor(canvas.width * canvas.height / 1800);
+  for(let i=0;i<n;i++){
+    stars.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.4+.2,
+      a: Math.random()*.8+.2,
+      spd: Math.random()*.25+.04,
+      tw: Math.random()*Math.PI*2,
+      tws:(Math.random()-.5)*.03,
+      col: Math.random()>.96?'#00f5ff': Math.random()>.92?'#ff0080':'#fff'
+    });
+  }
+  // bright accent stars
+  for(let i=0;i<18;i++){
+    stars.push({
+      x:Math.random()*canvas.width, y:Math.random()*canvas.height,
+      r:Math.random()*2.8+1.5, a:1,
+      spd:.015, tw:Math.random()*Math.PI*2, tws:(Math.random()-.5)*.04,
+      col:Math.random()>.5?'#00f5ff':'#ff0080', glow:true
+    });
+  }
+}
+
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const px = (mX/window.innerWidth-.5)*22;
+  const py = (mY/window.innerHeight-.5)*22;
+  stars.forEach(s=>{
+    s.tw += s.tws;
+    const af = s.a*(0.5+0.5*Math.sin(s.tw));
+    ctx.save();
+    ctx.globalAlpha = af;
+    if(s.glow){
+      const g=ctx.createRadialGradient(s.x+px*s.spd*2,s.y+py*s.spd*2,0,s.x+px*s.spd*2,s.y+py*s.spd*2,s.r*5);
+      g.addColorStop(0,s.col); g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;
+      ctx.beginPath();
+      ctx.arc(s.x+px*s.spd*2,s.y+py*s.spd*2,s.r*5,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.fillStyle=s.col;
+    ctx.beginPath();
+    ctx.arc(s.x+px*s.spd,s.y+py*s.spd,s.r,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+// shooting stars
+function shoot(){
+  const sx=Math.random()*canvas.width;
+  const sy=Math.random()*canvas.height*.45;
+  const len=Math.random()*160+70;
+  const ang=Math.PI/4+(Math.random()-.5)*.5;
+  let p=0;
+  (function draw(){
+    if(p>=1)return; p+=.022;
+    const cx=sx+Math.cos(ang)*len*p, cy=sy+Math.sin(ang)*len*p;
+    const g=ctx.createLinearGradient(cx,cy,cx-Math.cos(ang)*len*.3,cy-Math.sin(ang)*len*.3);
+    g.addColorStop(0,'rgba(255,255,255,.95)');
+    g.addColorStop(1,'transparent');
+    ctx.save(); ctx.globalAlpha=(1-p)*.65;
+    ctx.strokeStyle=g; ctx.lineWidth=1.8;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.lineTo(cx-Math.cos(ang)*len*.3,cy-Math.sin(ang)*len*.3);
+    ctx.stroke(); ctx.restore();
+    requestAnimationFrame(draw);
+  })();
+}
+setInterval(shoot, 2800+Math.random()*3500);
+
+resizeCanvas(); mkStars(); drawStars();
+window.addEventListener('resize',()=>{ resizeCanvas(); mkStars(); });
+document.addEventListener('mousemove',e=>{ mX=e.clientX; mY=e.clientY; });
+
+// ============================================================
+//  CUSTOM CURSOR
+// ============================================================
+const cur=document.getElementById('cur'), curD=document.getElementById('curD');
+let cx=0,cy=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{ tx=e.clientX; ty=e.clientY; curD.style.cssText=`left:${tx-2.5}px;top:${ty-2.5}px`; });
+(function anim(){
+  cx+=(tx-cx)*.12; cy+=(ty-cy)*.12;
+  cur.style.cssText=`left:${cx-11}px;top:${cy-11}px`;
+  requestAnimationFrame(anim);
+})();
+document.querySelectorAll('a,button,.btn,.file-drop,.btn-dl').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cur.style.transform='scale(2)'; cur.style.borderColor='var(--magenta)'; cur.style.boxShadow='0 0 18px var(--magenta)'; });
+  el.addEventListener('mouseleave',()=>{ cur.style.transform='scale(1)'; cur.style.borderColor='var(--cyan)'; cur.style.boxShadow='0 0 12px var(--cyan)'; });
+});
+
+// ============================================================
+//  SCROLL ANIMATIONS
+// ============================================================
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.skill-fill').forEach(b=>{
+        setTimeout(()=>{ b.style.width=b.dataset.w+'%'; },250);
+      });
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// ============================================================
+//  PROJECTS DATA
+// ============================================================
+function getProjects(){ try{ return JSON.parse(localStorage.getItem(CFG.storeKey)||'[]'); }catch{ return []; } }
+function setProjects(p){ localStorage.setItem(CFG.storeKey,JSON.stringify(p)); }
+
+function esc(s){
+  const d=document.createElement('div'); d.textContent=s; return d.innerHTML;
+}
+
+function renderProjects(){
+  const grid=document.getElementById('projGrid');
+  const projs=getProjects();
+  if(!projs.length){
+    grid.innerHTML=`<div class="empty-state">
+      <span class="empty-icon">📡</span>
+      <p style="font-family:'Orbitron',sans-serif;font-size:1rem;margin-bottom:.5rem">NO PROJECTS YET</p>
+      <p style="font-size:.85rem;letter-spacing:1px">Use the admin panel to add your projects.</p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = projs.map((p,i)=>`
+    <div class="proj-card fade-in" style="animation-delay:${i*.1}s">
+      <div class="card-top-line"></div>
+      <div class="proj-cat">${esc(p.cat||'Project')}</div>
+      <h3 class="proj-title">${esc(p.title)}</h3>
+      <p class="proj-desc">${esc(p.desc||'')}</p>
+      <div class="proj-tags">${(p.tags||[]).map(t=>`<span class="proj-tag">${esc(t.trim())}</span>`).join('')}</div>
+      ${(p.url||p.file)?`
+        <a class="btn-dl"
+          ${p.file
+            ?`href="javascript:void(0)" onclick="dlFile('${p.id}')"`
+            :`href="${esc(p.url)}" target="_blank" rel="noopener"`}>
+          ⬇ &nbsp;DOWNLOAD
+        </a>`:''
+      }
+    </div>
+  `).join('');
+  grid.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+}
+
+function dlFile(id){
+  const p=getProjects().find(x=>x.id===id);
+  if(!p||!p.file)return;
+  const a=document.createElement('a'); a.href=p.file; a.download=p.fname||p.title; a.click();
+}
+
+// ============================================================
+//  ADMIN
+// ============================================================
+let authed = false;
+let pendingFile = null;
+
+function openAdmin(){
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(authed){ showDash(); }
+  else { document.getElementById('authGate').style.display='flex'; document.getElementById('adminDash').classList.remove('open'); }
+}
+function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow=''; }
+
+function doLogin(){
+  const em=document.getElementById('aEmail').value.trim();
+  const pw=document.getElementById('aPass').value;
+  if(em===CFG.email && pw===CFG.password){
+    authed=true; showDash();
+    document.getElementById('authErr').classList.remove('vis');
+  } else {
+    document.getElementById('authErr').classList.add('vis');
+    document.getElementById('aPass').value='';
+    const f=document.getElementById('authForm');
+    f.style.animation='none'; f.offsetHeight; f.style.animation='shake .4s ease';
+  }
+}
+
+function showDash(){
+  document.getElementById('authGate').style.display='none';
+  document.getElementById('adminDash').classList.add('open');
+  renderAdmList();
+}
+
+function renderAdmList(){
+  const projs=getProjects();
+  const list=document.getElementById('admList');
+  if(!projs.length){ list.innerHTML='<div class="no-projs">No projects yet.</div>'; return; }
+  list.innerHTML=projs.map(p=>`
+    <div class="adm-item">
+      <div>
+        <div class="adm-item-name">${esc(p.title)}</div>
+        <div class="adm-item-cat">${esc(p.cat||'—')} · ${new Date(p.date).toLocaleDateString()}</div>
+      </div>
+      <button class="btn-del" onclick="delProject('${p.id}')">✕ DELETE</button>
+    </div>
+  `).join('');
+}
+
+// file input
+document.getElementById('fInput').addEventListener('change',function(e){
+  handleFile(e.target.files[0]);
+});
+
+function handleFile(file){
+  if(!file)return;
+  if(file.size>4.5*1024*1024){ alert('File exceeds 4MB. Please upload to GitHub/Drive and paste the link instead.'); return; }
+  const r=new FileReader();
+  r.onload=ev=>{
+    pendingFile={ data:ev.target.result, name:file.name };
+    const el=document.getElementById('fileOk');
+    el.style.display='block';
+    el.textContent='✓ Ready: '+file.name;
+    document.getElementById('pUrl').value='';
+    document.getElementById('pUrl').disabled=true;
+    document.getElementById('pUrl').style.opacity='.4';
+  };
+  r.readAsDataURL(file);
+}
+
+// drag & drop
+const fdrop=document.getElementById('fileDrop');
+fdrop.addEventListener('dragover',e=>{ e.preventDefault(); fdrop.classList.add('drag'); });
+fdrop.addEventListener('dragleave',()=>fdrop.classList.remove('drag'));
+fdrop.addEventListener('drop',e=>{ e.preventDefault(); fdrop.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
+
+function addProject(){
+  const title=document.getElementById('pTitle').value.trim();
+  const cat  =document.getElementById('pCat').value.trim();
+  const desc =document.getElementById('pDesc').value.trim();
+  const tags =document.getElementById('pTags').value.split(',').filter(t=>t.trim());
+  const url  =document.getElementById('pUrl').value.trim();
+  const ok   =document.getElementById('addOk');
+  const err  =document.getElementById('addErr');
+  ok.classList.remove('vis'); err.classList.remove('vis');
+
+  if(!title){ err.classList.add('vis'); return; }
+
+  const proj={
+    id:   Date.now().toString(),
+    title, cat, desc, tags,
+    url:  url||null,
+    file: pendingFile?pendingFile.data:null,
+    fname:pendingFile?pendingFile.name:null,
+    date: new Date().toISOString()
+  };
+
+  const projs=getProjects(); projs.unshift(proj); setProjects(projs);
+
+  // reset form
+  ['pTitle','pCat','pDesc','pTags','pUrl'].forEach(id=>{ document.getElementById(id).value=''; });
+  document.getElementById('pUrl').disabled=false;
+  document.getElementById('pUrl').style.opacity='1';
+  document.getElementById('fInput').value='';
+  document.getElementById('fileOk').style.display='none';
+  pendingFile=null;
+
+  ok.classList.add('vis');
+  setTimeout(()=>ok.classList.remove('vis'),3000);
+  renderAdmList(); renderProjects();
+}
+
+function delProject(id){
+  if(!confirm('Delete this project? Cannot be undone.'))return;
+  setProjects(getProjects().filter(p=>p.id!==id));
+  renderAdmList(); renderProjects();
+}
+
+// keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  const ov=document.getElementById('adminOverlay');
+  if(e.key==='Escape' && ov.classList.contains('open')) closeAdmin();
+  if(e.key==='Enter'  && ov.classList.contains('open') && !authed) doLogin();
+});
+
+// init
+renderProjects();
+console.log('%c⬡  EL SAYED ASHRAF  ·  Portfolio  ⬡','color:#00f5ff;font-size:20px;font-weight:900;text-shadow:0 0 20px #00f5ff;');
+console.log('%cBuilt with passion & precision','color:#ff0080;font-size:12px;');
+</script>
 </body>
 </html>
