@@ -1,493 +1,91 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Rollance Updates Manager</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#0d1117;--surface:#161b22;--border:#30363d;
-    --text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;
-    --green:#238636;--green2:#3fb950;--red:#f85149;
-    --warning:#f59e0b;--card:#1c2128;
-  }
-  body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;font-size:14px}
-  ::-webkit-scrollbar{width:5px;height:5px}
-  ::-webkit-scrollbar-track{background:var(--surface)}
-  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- الكلمات الافتتاحية والوصف لظهورك في جوجل -->
+    <title>السيد أشرف | مطور برمجيات وسكربتات</title>
+    <meta name="description" content="الموقع الرسمي للمطور السيد أشرف. متخصص في برمجة بوتات تليجرام، سكربتات جيم جاردن، وتطوير تطبيقات الويب باستخدام بايثون ولوا.">
+    <meta name="keywords" content="السيد أشرف, el sayed ashraf, elsayedashraf, برمجة بوتات, سكربتات جيم جاردن, مطور بايثون, Lua Scripting, Telegram Bots">
+    <meta name="author" content="السيد أشرف">
 
-  /* LOGIN */
-  #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;animation:fadeIn .4s}
-  .login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 28px;width:100%;max-width:420px}
-  .login-icon{text-align:center;font-size:48px;margin-bottom:8px}
-  .login-title{text-align:center;font-size:22px;font-weight:900;margin-bottom:4px}
-  .login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px}
-  .login-hint{background:var(--card);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.9}
-  .login-hint b{color:var(--accent)}
-
-  /* MAIN */
-  #mainScreen{display:none;flex-direction:column;min-height:100vh}
-
-  /* HEADER */
-  .header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
-  .header-info{display:flex;align-items:center;gap:8px}
-  .header-title{font-weight:900;font-size:15px}
-  .header-repo{font-size:10px;color:var(--muted);direction:ltr}
-  .header-btns{display:flex;gap:6px}
-
-  /* COMMIT BAR */
-  .commit-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:7px 14px;display:flex;align-items:center;gap:8px}
-  .commit-label{color:var(--muted);font-size:12px;white-space:nowrap}
-
-  /* TABS */
-  .tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 14px;overflow-x:auto}
-  .tab{background:none;border:none;color:var(--muted);padding:10px 14px;font-size:13px;font-family:'Cairo',sans-serif;font-weight:400;border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;transition:all .2s}
-  .tab.active{color:var(--accent);font-weight:700;border-bottom-color:var(--accent)}
-
-  /* CONTENT */
-  .tab-content{display:none;padding:14px;flex:1;animation:fadeIn .25s}
-  .tab-content.active{display:block}
-
-  /* EDITOR */
-  .quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-  .editor-area{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75;direction:ltr;resize:none;min-height:360px}
-  .editor-meta{color:var(--muted);font-size:11px;margin-top:6px;display:flex;gap:14px}
-
-  /* TEMPLATES */
-  .tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:16px}
-  .tpl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Cairo',sans-serif;font-size:13px;color:#c9d1d9;line-height:1.7}
-  .tpl-card:hover{border-color:var(--accent);color:var(--accent)}
-  .tpl-card.selected{background:#1f3a2b;border-color:var(--green2);color:var(--green2);font-weight:700}
-  .tpl-form{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-  .preview-code{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;overflow-x:auto}
-  .preview-code pre{color:#7ee787;font-family:'JetBrains Mono',monospace;font-size:11.5px;white-space:pre-wrap;direction:ltr;line-height:1.6}
-
-  /* PREVIEW */
-  .raw-url-bar{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px;direction:ltr;word-break:break-all;color:var(--accent)}
-  .preview-area{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;white-space:pre-wrap;direction:ltr;line-height:1.7;min-height:300px;overflow-x:auto}
-  .preview-btns{display:flex;gap:8px;margin-top:10px}
-
-  /* SHARED */
-  .btn{border:none;border-radius:8px;font-family:'Cairo',sans-serif;cursor:pointer;font-weight:600;padding:8px 14px;font-size:13px;transition:all .15s}
-  .btn-primary{background:var(--green);color:#fff}
-  .btn-primary:hover{background:#2ea043}
-  .btn-secondary{background:var(--card);border:1px solid var(--border);color:#c9d1d9}
-  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
-  .btn-danger{background:var(--card);border:1px solid var(--red);color:var(--red)}
-  .btn-blue{background:#1f6feb;color:#fff}
-  .btn-blue:hover{background:#388bfd}
-  .btn-sm{padding:5px 11px;font-size:12px;border-radius:6px}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .btn-full{width:100%;padding:12px;font-size:15px}
-
-  label{color:var(--muted);font-size:12px;display:block;margin-bottom:5px}
-  input,textarea{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 12px;font-size:13px;font-family:'Cairo',sans-serif;width:100%}
-  input:focus,textarea:focus{border-color:var(--accent);outline:none}
-
-  /* TOAST */
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:10px;font-weight:700;font-size:14px;z-index:9999;box-shadow:0 4px 24px #0008;animation:fadeIn .3s;white-space:nowrap}
-  .toast.ok{background:#00c896;color:#fff}
-  .toast.error{background:var(--red);color:#fff}
-  .toast.warn{background:var(--warning);color:#000}
-
-  /* LOADER */
-  .loader-overlay{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:9998;display:none}
-  .loader{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
-
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 #00c89633}50%{box-shadow:0 0 0 8px #00c89600}}
-</style>
+    <!-- تنسيق سريع وبسيط -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 { color: #00ff88; margin-bottom: 10px; }
+        p { line-height: 1.6; color: #bbbbbb; }
+        .skills {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .skill-badge {
+            background: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #00ff88;
+        }
+        .links a {
+            display: inline-block;
+            margin: 15px 10px;
+            color: #121212;
+            background: #00ff88;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .links a:hover { background: #00cc6e; transform: translateY(-3px); }
+        footer { margin-top: 30px; font-size: 0.8em; color: #666; }
+    </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <div class="login-box">
-    <div class="login-icon">⚙️</div>
-    <div class="login-title">Rollance Updates Manager</div>
-    <div class="login-sub">إدارة قسم التحديثات مباشرة من GitHub</div>
-    <div class="login-hint">
-      📌 اعمل توكن من:<br>
-      GitHub → Settings → Developer settings →<br>
-      Personal access tokens → Fine-grained<br>
-      ✅ أعطيه صلاحية <b>Contents: Read &amp; Write</b>
-    </div>
-    <label>GitHub Personal Access Token</label>
-    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx" style="direction:ltr;margin-bottom:14px" />
-    <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()" style="animation:pulse 2s infinite">
-      🔓 تسجيل الدخول وتحميل الملف
-    </button>
-  </div>
-</div>
+    <div class="container">
+        <h1>السيد أشرف</h1>
+        <p>مرحباً بك في موقعي الشخصي. أنا مبرمج شغوف بتطوير الحلول الذكية، متخصص في بناء البوتات والسكربتات المتقدمة.</p>
 
-<!-- MAIN -->
-<div id="mainScreen">
-  <!-- Header -->
-  <div class="header">
-    <div class="header-info">
-      <span style="font-size:20px">⚙️</span>
-      <div>
-        <div class="header-title">Rollance Updates Manager</div>
-        <div class="header-repo" id="repoPath">SAyed12332/SAyed › Updates_section…</div>
-      </div>
-    </div>
-    <div class="header-btns">
-      <button class="btn btn-secondary btn-sm" onclick="fetchFile()">🔄 تحميل</button>
-      <button class="btn btn-primary btn-sm" id="saveBtn" onclick="saveFile()">💾 حفظ</button>
-      <button class="btn btn-danger btn-sm" onclick="doLogout()">خروج</button>
-    </div>
-  </div>
-
-  <!-- Commit bar -->
-  <div class="commit-bar">
-    <span class="commit-label">📝 Commit:</span>
-    <input id="commitMsg" value="تحديث قسم التحديثات" style="padding:5px 10px;font-size:12px">
-  </div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('editor',this)">✏️ المحرر</button>
-    <button class="tab" onclick="switchTab('templates',this)">📦 القوالب</button>
-    <button class="tab" onclick="switchTab('preview',this)">👁️ معاينة</button>
-  </div>
-
-  <!-- EDITOR TAB -->
-  <div id="tab-editor" class="tab-content active">
-    <div class="quick-btns">
-      <button class="btn btn-secondary btn-sm" onclick="insertAtCursor('gg.alert(\"\", \"حسناً\")')">gg.alert()</button>
-      <button class="btn btn-secondary btn-sm" onclick="insertAtCursor('gg.toast(\"\")')">gg.toast()</button>
-      <button class="btn btn-secondary btn-sm" onclick="insertAtCursor('os.exit()')">os.exit()</button>
-      <button class="btn btn-secondary btn-sm" onclick="insertAtCursor('━━━━━━━━━━━━━━━━━━━━━━━')">━━━ فاصل ━━━</button>
-      <button class="btn btn-secondary btn-sm" onclick="insertAtCursor('-- ')">-- تعليق</button>
-      <button class="btn btn-danger btn-sm" style="margin-right:auto" onclick="clearEditor()">🗑️ مسح</button>
-    </div>
-    <textarea class="editor-area" id="editorArea" spellcheck="false" rows="22"></textarea>
-    <div class="editor-meta">
-      <span id="lineCount">📄 0 سطر</span>
-      <span id="charCount">🔤 0 حرف</span>
-      <span id="shaInfo" style="direction:ltr"></span>
-    </div>
-  </div>
-
-  <!-- TEMPLATES TAB -->
-  <div id="tab-templates" class="tab-content">
-    <div class="tpl-grid" id="tplGrid"></div>
-    <div class="tpl-form">
-      <div class="form-grid">
-        <div>
-          <label>رقم الإصدار</label>
-          <input id="tplVer" value="2.1" placeholder="2.1" style="direction:ltr">
+        <div class="skills">
+            <span class="skill-badge">Python</span>
+            <span class="skill-badge">Lua Scripting</span>
+            <span class="skill-badge">Telegram Bots</span>
+            <span class="skill-badge">Web Development</span>
+            <span class="skill-badge">GameGuardian Scripts</span>
         </div>
-        <div>
-          <label>القالب المختار</label>
-          <div id="tplSelected" style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:13px;color:var(--muted)">لم يتم الاختيار</div>
+
+        <div class="links">
+            <!-- ضيف روابط حساباتك هنا -->
+            <a href="https://github.com/sayed12332" target="_blank">جيت هاب</a>
+            <a href="https://t.me/ELSAyedAshRaf" target="_blank">تليجرام</a>
         </div>
-      </div>
-      <div>
-        <label>وصف التحديث / التفاصيل</label>
-        <textarea id="tplDesc" rows="4" placeholder="اكتب تفاصيل التحديث هنا..."></textarea>
-      </div>
+
+        <footer>
+            جميع الحقوق محفوظة © 2026 | السيد أشرف
+        </footer>
     </div>
-    <div id="tplPreviewBox" style="display:none">
-      <div class="preview-code"><pre id="tplPreviewCode"></pre></div>
-    </div>
-    <button class="btn btn-blue btn-full" onclick="applyTemplate()">✅ تطبيق القالب في المحرر</button>
-  </div>
 
-  <!-- PREVIEW TAB -->
-  <div id="tab-preview" class="tab-content">
-    <div class="raw-url-bar" id="rawUrl"></div>
-    <div class="preview-area" id="previewArea">// الملف فارغ</div>
-    <div class="preview-btns">
-      <button class="btn btn-secondary" onclick="copyCode()">📋 نسخ الكود</button>
-      <button class="btn btn-primary" onclick="saveFile()">💾 حفظ الآن</button>
-    </div>
-  </div>
-</div>
-
-<!-- Loader -->
-<div class="loader-overlay" id="loader"><div class="loader"></div></div>
-
-<script>
-const OWNER = "SAyed12332";
-const REPO  = "SAyed";
-const FILE  = "Updates_section_for_the Rollance_script.lua";
-const BRANCH= "main";
-
-let token = localStorage.getItem("gh_token") || "";
-let fileSha = "";
-let selectedTpl = -1;
-
-const TEMPLATES = [
-  { icon:"🆕", label:"تحديث جديد",
-    code:(v,d)=>`-- ╔══════════════════════════════╗\n-- ║   🆕 تحديث v${v}              ║\n-- ╚══════════════════════════════╝\ngg.alert([[\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  🆕 تحديث جديد v${v}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${d}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  ❯_Deꪜ 𝐒𝐀𝐲𝐞𝐝\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n]], "حسناً")`},
-  { icon:"🔧", label:"إصلاح بق",
-    code:(v,d)=>`-- ╔══════════════════════════════╗\n-- ║   🔧 إصلاح v${v}              ║\n-- ╚══════════════════════════════╝\ngg.alert([[\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  🔧 إصلاح بق - v${v}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${d}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  ❯_Deꪜ 𝐒𝐀𝐲𝐞𝐝\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n]], "حسناً")`},
-  { icon:"⚠️", label:"تنبيه مهم",
-    code:(v,d)=>`-- ╔══════════════════════════════╗\n-- ║   ⚠️ تنبيه مهم               ║\n-- ╚══════════════════════════════╝\ngg.alert([[\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n  تنبيه مهم\n⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️\n\n${d}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  ❯_Deꪜ 𝐒𝐀𝐲𝐞𝐝\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n]], "حسناً")`},
-  { icon:"🎉", label:"ميزة جديدة",
-    code:(v,d)=>`-- ╔══════════════════════════════╗\n-- ║   🎉 ميزة جديدة v${v}         ║\n-- ╚══════════════════════════════╝\ngg.alert([[\n🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉\n  ميزة جديدة - v${v}\n🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉\n\n${d}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  ❯_Deꪜ 𝐒𝐀𝐲𝐞𝐝\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n]], "حسناً")`},
-  { icon:"🚫", label:"السكربت متوقف",
-    code:(_v,d)=>`-- ╔══════════════════════════════╗\n-- ║   🚫 إيقاف مؤقت              ║\n-- ╚══════════════════════════════╝\ngg.alert([[\n🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫\n  السكربت متوقف مؤقتاً\n🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫🚫\n\n${d}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  ❯_Deꪜ 𝐒𝐀𝐲𝐞𝐝\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n]], "حسناً")\nos.exit()`},
-  { icon:"✅", label:"كل شيء تمام",
-    code:()=>`-- السكربت يعمل بشكل طبيعي\n-- gg.toast("✅ السكربت محدث")`},
-];
-
-// ── TELEGRAM MINI APP SETUP ──
-if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
-  const tg = Telegram.WebApp;
-  tg.MainButton.setText("💾 حفظ على GitHub");
-  tg.MainButton.onClick(saveFile);
-  tg.BackButton.onClick(() => { if (!document.getElementById("loginScreen").style.display || document.getElementById("loginScreen").style.display !== "none") return; doLogout(); });
-}
-
-// ── AUTH ──
-window.onload = () => {
-  buildTemplates();
-  updateRawUrl();
-  if (token) { showMain(); fetchFile(); }
-  document.getElementById("tokenInput").addEventListener("keydown", e => e.key === "Enter" && doLogin());
-  document.getElementById("editorArea").addEventListener("input", updateMeta);
-};
-
-function doLogin() {
-  const t = document.getElementById("tokenInput").value.trim();
-  if (!t) { showToast("⚠️ أدخل التوكن أولاً", "warn"); return; }
-  token = t;
-  localStorage.setItem("gh_token", t);
-  showMain();
-  fetchFile();
-}
-
-function doLogout() {
-  localStorage.removeItem("gh_token");
-  token = ""; fileSha = "";
-  document.getElementById("mainScreen").style.display = "none";
-  document.getElementById("loginScreen").style.display = "flex";
-  document.getElementById("tokenInput").value = "";
-  if (window.Telegram && Telegram.WebApp) Telegram.WebApp.MainButton.hide();
-}
-
-function showMain() {
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("mainScreen").style.display = "flex";
-  if (window.Telegram && Telegram.WebApp) Telegram.WebApp.MainButton.show();
-}
-
-// ── API ──
-function apiHeaders() {
-  return { "Authorization": "Bearer " + token, "Accept": "application/vnd.github+json", "Content-Type": "application/json" };
-}
-
-async function fetchFile() {
-  setLoading(true);
-  try {
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}?ref=${BRANCH}&t=${Date.now()}`;
-    const res = await fetch(url, { headers: apiHeaders() });
-    if (res.status === 401) { showToast("❌ التوكن غير صحيح أو منتهي", "error"); setLoading(false); return; }
-    if (res.status === 404) { showToast("⚠️ الملف غير موجود، سيُنشأ عند الحفظ", "warn"); setLoading(false); return; }
-    const data = await res.json();
-    const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
-    document.getElementById("editorArea").value = decoded;
-    fileSha = data.sha;
-    updateMeta();
-    updateShaInfo();
-    showToast("✅ تم تحميل الملف");
-  } catch(e) {
-    showToast("❌ " + e.message, "error");
-  }
-  setLoading(false);
-}
-
-async function getSha() {
-  try {
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}?ref=${BRANCH}&t=${Date.now()}`,
-      { headers: apiHeaders() }
-    );
-    if (res.ok) {
-      const data = await res.json();
-      fileSha = data.sha || "";
-    } else if (res.status === 404) {
-      fileSha = ""; // ملف جديد
-    }
-  } catch(e) { /* تجاهل */ }
-}
-
-async function saveFile() {
-  if (!token) { showToast("⚠️ أدخل التوكن أولاً", "warn"); return; }
-  const content = document.getElementById("editorArea").value;
-  const msg = document.getElementById("commitMsg").value || "تحديث";
-  setLoading(true);
-  document.getElementById("saveBtn").disabled = true;
-  try {
-    // جيب الـ sha الحالي دايماً قبل الحفظ
-    if (!fileSha) await getSha();
-
-    const encoded = btoa(unescape(encodeURIComponent(content)));
-    const body = { message: msg, content: encoded, branch: BRANCH };
-    if (fileSha) body.sha = fileSha;
-
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}`,
-      { method:"PUT", headers: apiHeaders(), body: JSON.stringify(body) }
-    );
-    const data = await res.json();
-    if (res.ok) {
-      fileSha = data.content.sha;
-      updateShaInfo();
-      showToast("✅ تم الحفظ على GitHub!");
-    } else if (res.status === 409) {
-      // conflict: SHA قديم، جيب الجديد وحاول تاني
-      showToast("⚠️ SHA قديم، جاري التحديث...", "warn");
-      await getSha();
-      const body2 = { message: msg, content: encoded, branch: BRANCH };
-      if (fileSha) body2.sha = fileSha;
-      const res2 = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FILE)}`,
-        { method:"PUT", headers: apiHeaders(), body: JSON.stringify(body2) }
-      );
-      const data2 = await res2.json();
-      if (res2.ok) {
-        fileSha = data2.content.sha;
-        updateShaInfo();
-        showToast("✅ تم الحفظ على GitHub!");
-      } else {
-        showToast("❌ " + (data2.message || "فشل الحفظ"), "error");
-      }
-    } else {
-      showToast("❌ " + (data.message || "فشل الحفظ"), "error");
-    }
-  } catch(e) {
-    showToast("❌ " + e.message, "error");
-  }
-  setLoading(false);
-  document.getElementById("saveBtn").disabled = false;
-}
-
-// ── EDITOR ──
-function insertAtCursor(text) {
-  const el = document.getElementById("editorArea");
-  const s = el.selectionStart, e = el.selectionEnd;
-  el.value = el.value.slice(0,s) + text + el.value.slice(e);
-  el.selectionStart = el.selectionEnd = s + text.length;
-  el.focus();
-  updateMeta();
-}
-
-function clearEditor() {
-  if (!confirm("مسح كل محتوى المحرر؟")) return;
-  document.getElementById("editorArea").value = "";
-  updateMeta();
-}
-
-function updateMeta() {
-  const v = document.getElementById("editorArea").value;
-  document.getElementById("lineCount").textContent = "📄 " + v.split("\n").length + " سطر";
-  document.getElementById("charCount").textContent = "🔤 " + v.length + " حرف";
-}
-
-function updateShaInfo() {
-  document.getElementById("shaInfo").textContent = fileSha ? "SHA: " + fileSha.slice(0,10) + "…" : "";
-}
-
-// ── TEMPLATES ──
-function buildTemplates() {
-  const grid = document.getElementById("tplGrid");
-  grid.innerHTML = "";
-  TEMPLATES.forEach((t, i) => {
-    const btn = document.createElement("button");
-    btn.className = "tpl-card";
-    btn.innerHTML = t.icon + "<br>" + t.label;
-    btn.onclick = () => selectTemplate(i, btn);
-    grid.appendChild(btn);
-  });
-  document.getElementById("tplDesc").addEventListener("input", refreshTplPreview);
-  document.getElementById("tplVer").addEventListener("input", refreshTplPreview);
-}
-
-function selectTemplate(i, btn) {
-  document.querySelectorAll(".tpl-card").forEach(b => b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedTpl = i;
-  document.getElementById("tplSelected").textContent = TEMPLATES[i].icon + " " + TEMPLATES[i].label;
-  document.getElementById("tplSelected").style.color = "var(--green2)";
-  refreshTplPreview();
-}
-
-function refreshTplPreview() {
-  if (selectedTpl < 0) return;
-  const ver  = document.getElementById("tplVer").value  || "1.0";
-  const desc = document.getElementById("tplDesc").value || "...";
-  const code = TEMPLATES[selectedTpl].code(ver, desc);
-  document.getElementById("tplPreviewBox").style.display = "block";
-  document.getElementById("tplPreviewCode").textContent  = code;
-}
-
-function applyTemplate() {
-  if (selectedTpl < 0) { showToast("⚠️ اختر قالباً أولاً", "warn"); return; }
-  const ver  = document.getElementById("tplVer").value  || "1.0";
-  const desc = document.getElementById("tplDesc").value || "لا يوجد وصف";
-  const code = TEMPLATES[selectedTpl].code(ver, desc);
-  document.getElementById("editorArea").value = code;
-  updateMeta();
-  switchTab("editor", document.querySelector(".tab"));
-  showToast("✅ تم تطبيق القالب");
-}
-
-// ── PREVIEW ──
-function updateRawUrl() {
-  document.getElementById("rawUrl").innerHTML =
-    `🌐 Raw: <b>https://raw.githubusercontent.com/${OWNER}/${REPO}/refs/heads/${BRANCH}/${encodeURIComponent(FILE)}</b>`;
-}
-
-function showPreview() {
-  document.getElementById("previewArea").textContent =
-    document.getElementById("editorArea").value || "// الملف فارغ";
-}
-
-function copyCode() {
-  const code = document.getElementById("editorArea").value;
-  if (navigator.clipboard) navigator.clipboard.writeText(code).then(() => showToast("📋 تم النسخ"));
-  else { const ta = document.createElement("textarea"); ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); showToast("📋 تم النسخ"); }
-}
-
-// ── TABS ──
-function switchTab(name, btn) {
-  document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
-  document.getElementById("tab-"+name).classList.add("active");
-  document.querySelectorAll(".tab").forEach(el => { if(el.textContent.includes(name === "editor" ? "✏️" : name === "templates" ? "📦" : "👁️")) el.classList.add("active"); });
-  if (name === "preview") showPreview();
-}
-
-// ── UI HELPERS ──
-let toastTimer;
-function showToast(msg, type="ok") {
-  clearTimeout(toastTimer);
-  const old = document.querySelector(".toast");
-  if (old) old.remove();
-  const el = document.createElement("div");
-  el.className = "toast " + type;
-  el.textContent = msg;
-  document.body.appendChild(el);
-  toastTimer = setTimeout(() => el.remove(), 3200);
-}
-
-function setLoading(v) {
-  document.getElementById("loader").style.display = v ? "flex" : "none";
-}
-</script>
 </body>
 </html>
