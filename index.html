@@ -3,9 +3,6 @@
 
 
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -378,6 +375,42 @@
     @keyframes fadeInUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-9px)} 40%{transform:translateX(9px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 
+    /* ---- HAMBURGER ---- */
+    .ham-btn {
+      display:none; flex-direction:column; gap:5px; background:none;
+      border:none; cursor:pointer; padding:4px; z-index:201;
+    }
+    .ham-btn span {
+      display:block; width:26px; height:2px; background:var(--cyan);
+      box-shadow:0 0 8px var(--cyan); border-radius:2px;
+      transition:all .35s ease;
+    }
+    .ham-btn.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .ham-btn.open span:nth-child(2){ opacity:0; transform:scaleX(0); }
+    .ham-btn.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    /* mobile drawer */
+    .mobile-menu {
+      display:none; position:fixed; inset:0; top:64px;
+      background:rgba(4,4,16,.97); backdrop-filter:blur(28px);
+      flex-direction:column; align-items:center; justify-content:center;
+      gap:2.5rem; z-index:190; list-style:none;
+      border-top:1px solid rgba(0,245,255,.12);
+      opacity:0; transform:translateY(-10px);
+      transition:opacity .3s ease, transform .3s ease;
+      pointer-events:none;
+    }
+    .mobile-menu.open {
+      display:flex; opacity:1; transform:translateY(0); pointer-events:all;
+    }
+    .mobile-menu a {
+      font-family:'Orbitron',sans-serif; font-size:1.1rem; letter-spacing:4px;
+      text-transform:uppercase; text-decoration:none; color:rgba(221,224,245,.75);
+      transition:all .3s; padding:.5rem 1rem; position:relative;
+    }
+    .mobile-menu a:hover { color:var(--cyan); text-shadow:0 0 14px var(--cyan); }
+    .mobile-menu .admin-link { color:var(--magenta); text-shadow:0 0 12px var(--magenta); }
+
     /* responsive */
     @media(max-width:768px){
       nav{padding:1rem 1.5rem;}
@@ -385,7 +418,10 @@
       .about-grid{grid-template-columns:1fr;}
       .form-row{grid-template-columns:1fr;}
     }
-    @media(max-width:480px){ .nav-links{display:none;} }
+    @media(max-width:520px){
+      .nav-links{display:none;}
+      .ham-btn{display:flex;}
+    }
   </style>
 </head>
 <body>
@@ -407,9 +443,20 @@
     <li><a href="#about">About</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#" onclick="openAdmin();return false;" style="color:var(--magenta);text-shadow:0 0 10px var(--magenta);">⬡ Admin</a></li>
+    <li><a href="#admin" style="color:var(--magenta);text-shadow:0 0 10px var(--magenta);">⬡ Admin</a></li>
   </ul>
+  <button class="ham-btn" id="hamBtn" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile Drawer -->
+<ul class="mobile-menu" id="mobileMenu">
+  <li><a href="#about"    onclick="closeMenu()">About</a></li>
+  <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+  <li><a href="#contact"  onclick="closeMenu()">Contact</a></li>
+  <li><a href="#admin" class="admin-link" onclick="closeMenu()">⬡ Admin</a></li>
+</ul>
 
 <!-- ========== HERO ========== -->
 <section id="hero">
@@ -786,7 +833,11 @@ function openAdmin(){
   if(authed){ showDash(); }
   else { document.getElementById('authGate').style.display='flex'; document.getElementById('adminDash').classList.remove('open'); }
 }
-function closeAdmin(){ document.getElementById('adminOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeAdmin(){
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow='';
+  if(location.hash==='#admin') history.pushState(null,'',location.pathname);
+}
 
 function doLogin(){
   const em=document.getElementById('aEmail').value.trim();
@@ -899,8 +950,36 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'  && ov.classList.contains('open') && !authed) doLogin();
 });
 
-// init
+// ============================================================
+//  HAMBURGER MENU
+// ============================================================
+function toggleMenu(){
+  const btn=document.getElementById('hamBtn');
+  const menu=document.getElementById('mobileMenu');
+  const isOpen=menu.classList.toggle('open');
+  btn.classList.toggle('open',isOpen);
+  document.body.style.overflow=isOpen?'hidden':'';
+}
+function closeMenu(){
+  document.getElementById('hamBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ============================================================
+//  HASH ROUTING  — supports sayed.sytes.net/#admin
+// ============================================================
+function checkHash(){
+  if(location.hash==='#admin'){ openAdmin(); }
+  else { closeAdmin(); }
+}
+window.addEventListener('hashchange', checkHash);
+
+// ============================================================
+//  INIT
+// ============================================================
 renderProjects();
+checkHash();
 console.log('%c⬡  EL SAYED ASHRAF  ·  Portfolio  ⬡','color:#00f5ff;font-size:20px;font-weight:900;text-shadow:0 0 20px #00f5ff;');
 console.log('%cBuilt with passion & precision','color:#ff0080;font-size:12px;');
 </script>
