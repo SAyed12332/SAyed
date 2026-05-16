@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#5a00b4"/>
   <title>ELSAyed AshRaf — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
@@ -13,7 +14,10 @@
       --dp-glow:rgba(90,0,180,.65);--dark:#020208;
       --glass:rgba(0,245,255,.04);--gb:rgba(0,245,255,.14);
     }
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    ::-webkit-scrollbar{width:6px;background:#020208}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(#5a00b4,#9933ff);border-radius:3px}
+    ::-webkit-scrollbar-track{background:#020208}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#9933ff #020208}
     html{scroll-behavior:smooth;}
     body{background:var(--dark);color:#dde0f5;font-family:'Rajdhani',sans-serif;overflow-x:hidden;
       user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;}
@@ -45,18 +49,12 @@
     .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
     .ham-btn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-
-    /* COMPACT MOBILE MENU — small slide-down only */
-    .mobile-menu{
-      display:flex;position:fixed;top:62px;left:0;right:0;
+    .mobile-menu{display:flex;position:fixed;top:62px;left:0;right:0;
       background:rgba(4,2,14,.97);backdrop-filter:blur(22px);
       flex-direction:column;align-items:center;justify-content:center;
       gap:1.1rem;z-index:190;list-style:none;
-      border-bottom:1px solid rgba(90,0,180,.22);
-      padding:1.3rem 2rem;
-      opacity:0;transform:translateY(-110%);
-      transition:opacity .28s ease,transform .28s ease;pointer-events:none;
-    }
+      border-bottom:1px solid rgba(90,0,180,.22);padding:1.3rem 2rem;
+      opacity:0;transform:translateY(-110%);transition:opacity .28s ease,transform .28s ease;pointer-events:none;}
     .mobile-menu.open{opacity:1;transform:translateY(0);pointer-events:all;}
     .mobile-menu a{font-family:'Orbitron',sans-serif;font-size:.78rem;letter-spacing:3px;
       text-transform:uppercase;text-decoration:none;color:rgba(221,224,245,.68);transition:all .25s;}
@@ -95,9 +93,9 @@
     .hero-tag::after{content:'█';animation:blink .9s step-end infinite;font-size:.8em;vertical-align:middle;margin-left:3px;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-    /* NAME — shimmer gradient + glitch */
-    .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,6.5vw,5rem);
-      font-weight:700;line-height:1.1;margin-bottom:1.1rem;white-space:nowrap;
+    /* NAME — Rajdhani (plain) + shimmer left→right + professional glitch */
+    .hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(2.4rem,9vw,5.8rem);
+      font-weight:600;line-height:1.05;margin-bottom:1.1rem;white-space:nowrap;
       animation:fadeInUp .9s ease .1s both;}
     .glitch{position:relative;display:inline-block;
       background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);
@@ -105,22 +103,35 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
       filter:drop-shadow(0 0 18px rgba(100,0,200,.7)) drop-shadow(0 0 45px rgba(100,0,200,.3));
       animation:nameShimmer 4.5s linear infinite;}
-    @keyframes nameShimmer{0%{background-position:0% center}100%{background-position:250% center}}
-    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;
+    /* shimmer: left to right */
+    @keyframes nameShimmer{0%{background-position:250% center}100%{background-position:0% center}}
+    /* professional glitch: no colored bands, only positional shifts */
+    .glitch::before,.glitch::after{
+      content:attr(data-text);position:absolute;top:0;left:0;width:100%;
+      background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);
+      background-size:250% auto;
       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-    .glitch::before{background:linear-gradient(100deg,#00f5ff,#0099ff);
-      animation:g1 6s infinite;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);}
-    .glitch::after{background:linear-gradient(100deg,#ff0080,#cc0044);
-      animation:g2 6s infinite;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);}
-    @keyframes g1{0%,88%,100%{transform:none;opacity:0}90%{transform:translate(-4px,-3px);opacity:.85}93%{transform:translate(4px,3px);opacity:.5}96%{transform:translate(-2px,1px);opacity:.75}99%{opacity:0}}
-    @keyframes g2{0%,86%,100%{transform:none;opacity:0}88%{transform:translate(4px,3px);opacity:.85}91%{transform:translate(-4px,-3px);opacity:.5}94%{transform:translate(2px,-1px);opacity:.75}97%{opacity:0}}
+    .glitch::before{animation:g1 6s infinite;}
+    .glitch::after{animation:g2 6s infinite;}
+    @keyframes g1{
+      0%,87%,100%{transform:none;opacity:0}
+      88%{transform:translate(-4px,0) skewX(-3deg);opacity:.65}
+      89%{transform:translate(4px,0) skewX(2deg);opacity:.4}
+      90%{transform:translate(-1px,0);opacity:.18}
+      90.5%{opacity:0}
+    }
+    @keyframes g2{
+      0%,83%,100%{transform:none;opacity:0}
+      84%{transform:translate(4px,0) skewX(3deg);opacity:.5}
+      85%{transform:translate(-2px,0);opacity:.25}
+      85.5%{opacity:0}
+    }
 
     .hero-subtitle{font-size:clamp(.75rem,1.7vw,.95rem);font-weight:500;letter-spacing:2px;
       color:rgba(221,224,245,.55);margin-bottom:2.8rem;animation:fadeInUp 1s ease .3s both;}
     .hero-subtitle span{color:var(--cyan);text-shadow:0 0 10px var(--cyan);}
     .hero-buttons{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;
       animation:fadeInUp 1s ease .5s both;}
-
     .btn-hex{display:inline-flex;align-items:center;gap:.55rem;padding:.88rem 2.2rem;
       font-family:'Orbitron',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:2.5px;
       text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;
@@ -135,33 +146,15 @@
       box-shadow:0 0 16px rgba(255,0,128,.2);}
     .btn-secondary:hover{background:rgba(255,0,128,.09);box-shadow:0 0 42px rgba(255,0,128,.5);transform:translateY(-2px);}
 
-    /* ABOUT */
-    #about{padding:9rem 2rem;max-width:1200px;margin:0 auto;}
-    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+    /* ABOUT — single column, less top gap */
+    #about{padding:4rem 2rem 9rem;max-width:1200px;margin:0 auto;}
+    .about-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:start;}
     .about-text{font-size:1.05rem;line-height:1.95;color:rgba(221,224,245,.78);font-weight:300;}
     .about-text p{margin-bottom:1.1rem;}
     .about-text strong{color:var(--cyan);font-weight:600;text-shadow:0 0 8px rgba(0,245,255,.4);}
     .code-badge{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--green);
       text-shadow:0 0 8px var(--green);background:rgba(57,255,20,.07);
       border:1px solid rgba(57,255,20,.2);padding:.15rem .5rem;margin:0 .15rem;border-radius:2px;}
-    .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
-    .lang-card{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;
-      border:1px solid;transition:all .3s;cursor:default;}
-    .lang-card.lua{border-color:rgba(0,245,255,.18);background:rgba(0,245,255,.03);}
-    .lang-card.lua:hover{border-color:rgba(0,245,255,.42);}
-    .lang-card.py{border-color:rgba(57,255,20,.18);background:rgba(57,255,20,.03);}
-    .lang-card.py:hover{border-color:rgba(57,255,20,.42);}
-    .lang-card.php{border-color:rgba(136,146,190,.18);background:rgba(136,146,190,.03);}
-    .lang-card.php:hover{border-color:rgba(136,146,190,.42);}
-    .lang-card.cs{border-color:rgba(255,0,128,.18);background:rgba(255,0,128,.03);}
-    .lang-card.cs:hover{border-color:rgba(255,0,128,.42);}
-    .lang-icon{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-    .lang-icon svg{width:28px;height:28px;}
-    .lang-name{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;font-weight:600;}
-    .lang-card.lua .lang-name{color:var(--cyan);text-shadow:0 0 8px var(--cyan);}
-    .lang-card.py  .lang-name{color:var(--green);text-shadow:0 0 8px var(--green);}
-    .lang-card.php .lang-name{color:#8892be;text-shadow:0 0 8px #8892be;}
-    .lang-card.cs  .lang-name{color:var(--magenta);text-shadow:0 0 8px var(--magenta);}
 
     /* PROJECTS */
     #projects{padding:9rem 2rem;
@@ -173,12 +166,10 @@
     .projects-wrap{max-width:1200px;margin:0 auto;}
     .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:2rem;}
 
-    /* Card — NO clip-path, clean full corners */
     .proj-card{background:var(--glass);border:1px solid var(--gb);backdrop-filter:blur(18px);
       position:relative;transition:transform .4s,border-color .4s,box-shadow .4s;overflow:hidden;}
     .proj-card::before{content:'';position:absolute;inset:0;
-      background:linear-gradient(135deg,rgba(0,245,255,.06),transparent);
-      opacity:0;transition:opacity .4s;z-index:0;}
+      background:linear-gradient(135deg,rgba(0,245,255,.06),transparent);opacity:0;transition:opacity .4s;z-index:0;}
     .proj-card::after{content:'';position:absolute;top:0;right:0;width:20px;height:20px;
       border-top:2px solid var(--cyan);border-right:2px solid var(--cyan);
       box-shadow:3px -3px 10px var(--cyan);z-index:3;}
@@ -197,13 +188,12 @@
     .card-scan::after{content:'';position:absolute;top:0;left:-60%;width:60%;height:100%;
       background:linear-gradient(90deg,transparent,var(--cyan),transparent);
       box-shadow:0 0 12px var(--cyan);animation:scanT 2.6s linear infinite;}
-    .card-scan.ps::after{background:linear-gradient(90deg,transparent,var(--purple),transparent);
-      box-shadow:0 0 12px var(--purple);}
+    .card-scan.ps::after{background:linear-gradient(90deg,transparent,var(--purple),transparent);box-shadow:0 0 12px var(--purple);}
     @keyframes scanT{0%{left:-60%}100%{left:160%}}
     .card-top-line{position:absolute;top:0;left:0;right:0;height:2px;
-      background:linear-gradient(to right,var(--magenta),var(--cyan));
-      box-shadow:0 0 8px var(--cyan);z-index:2;}
-    .card-body{padding:1.5rem 1.8rem 1.8rem;position:relative;z-index:1;}
+      background:linear-gradient(to right,var(--magenta),var(--cyan));box-shadow:0 0 8px var(--cyan);z-index:2;}
+    /* card-body: relative + extra bottom padding for clipped buttons */
+    .card-body{padding:1.5rem 1.8rem 2.8rem;position:relative;z-index:1;}
     .proj-cat{font-size:.64rem;letter-spacing:3px;text-transform:uppercase;color:var(--magenta);
       text-shadow:0 0 10px var(--magenta);margin-bottom:.7rem;}
     .proj-title{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:.75rem;}
@@ -212,7 +202,6 @@
     .proj-tag{padding:.22rem .7rem;font-size:.64rem;letter-spacing:1px;
       background:rgba(57,255,20,.07);border:1px solid rgba(57,255,20,.25);
       color:var(--green);text-shadow:0 0 5px var(--green);}
-
     .bot-badge{display:flex;align-items:center;gap:.8rem;padding:.75rem 1rem;margin-bottom:1.2rem;
       border:1px solid rgba(0,245,255,.12);background:rgba(0,245,255,.03);transition:border-color .3s;}
     .bot-badge:hover{border-color:rgba(0,245,255,.3);}
@@ -231,9 +220,25 @@
     .bot-badge.p .bot-open{color:var(--purple);border-color:rgba(191,0,255,.25);}
     .bot-badge.p .bot-open:hover{background:rgba(191,0,255,.1);border-color:var(--purple);}
 
-    .proj-actions{display:flex;gap:.75rem;margin-bottom:1.2rem;}
-    .btn-dl,.btn-demo{display:flex;align-items:center;justify-content:center;gap:.45rem;flex:1;
-      padding:.72rem .9rem;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:1.5px;
+    /* TECH BADGES */
+    .proj-tech{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.9rem;
+      border-top:1px solid rgba(0,245,255,.07);}
+    .pt-badge{display:flex;align-items:center;gap:.38rem;padding:.35rem .7rem;
+      font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1px;font-weight:600;
+      border:1px solid;transition:all .28s;cursor:default;}
+    .pt-py{color:var(--green);border-color:rgba(57,255,20,.3);background:rgba(57,255,20,.05);text-shadow:0 0 6px var(--green);}
+    .pt-py:hover{border-color:rgba(57,255,20,.52);background:rgba(57,255,20,.09);}
+    .pt-tg{color:var(--cyan);border-color:rgba(0,245,255,.25);background:rgba(0,245,255,.04);text-shadow:0 0 6px var(--cyan);}
+    .pt-tg:hover{border-color:rgba(0,245,255,.45);}
+    .pt-tts{color:var(--purple);border-color:rgba(191,0,255,.25);background:rgba(191,0,255,.04);text-shadow:0 0 6px var(--purple);}
+    .pt-tts:hover{border-color:rgba(191,0,255,.45);}
+    .pt-dot{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;flex-shrink:0;}
+
+    /* ACTION BUTTONS: absolute at card bottom, clipped by overflow:hidden */
+    .proj-actions{position:absolute;bottom:-0.85rem;left:1.8rem;right:1.8rem;
+      display:flex;gap:.6rem;z-index:5;}
+    .btn-dl,.btn-demo{display:flex;align-items:center;justify-content:center;gap:.4rem;flex:1;
+      padding:.52rem .75rem;font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:1.2px;
       cursor:pointer;transition:all .3s;border:none;background:transparent;
       user-select:none;-webkit-user-select:none;}
     .btn-dl{border:1px solid var(--cyan);color:var(--cyan);text-shadow:0 0 7px var(--cyan);}
@@ -242,30 +247,11 @@
     .btn-demo:hover{background:rgba(255,0,128,.09);box-shadow:0 0 26px rgba(255,0,128,.38);}
     .btn-demo.p{border-color:var(--purple);color:var(--purple);text-shadow:0 0 7px var(--purple);}
     .btn-demo.p:hover{background:rgba(191,0,255,.09);box-shadow:0 0 26px rgba(191,0,255,.38);}
-    .btn-dl svg,.btn-demo svg{width:13px;height:13px;flex-shrink:0;}
-
-    /* Tech badges below each card (like green squares) */
-    .proj-tech{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.9rem;
-      border-top:1px solid rgba(0,245,255,.07);}
-    .pt-badge{display:flex;align-items:center;gap:.38rem;padding:.35rem .7rem;
-      font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:1px;font-weight:600;
-      border:1px solid;transition:all .28s;cursor:default;}
-    .pt-py{color:var(--green);border-color:rgba(57,255,20,.3);background:rgba(57,255,20,.05);
-      text-shadow:0 0 6px var(--green);}
-    .pt-py:hover{border-color:rgba(57,255,20,.52);background:rgba(57,255,20,.09);}
-    .pt-tg{color:var(--cyan);border-color:rgba(0,245,255,.25);background:rgba(0,245,255,.04);
-      text-shadow:0 0 6px var(--cyan);}
-    .pt-tg:hover{border-color:rgba(0,245,255,.45);}
-    .pt-tts{color:var(--purple);border-color:rgba(191,0,255,.25);background:rgba(191,0,255,.04);
-      text-shadow:0 0 6px var(--purple);}
-    .pt-tts:hover{border-color:rgba(191,0,255,.45);}
-    .pt-dot{width:5px;height:5px;border-radius:50%;background:currentColor;
-      box-shadow:0 0 5px currentColor;flex-shrink:0;}
+    .btn-dl svg,.btn-demo svg{width:11px;height:11px;flex-shrink:0;}
 
     /* CONTACT */
     #contact{padding:9rem 2rem;max-width:680px;margin:0 auto;text-align:center;}
-    .contact-intro{font-size:1rem;line-height:1.9;color:rgba(221,224,245,.6);font-weight:300;
-      max-width:480px;margin:.8rem auto 0;}
+    .contact-intro{font-size:1rem;line-height:1.9;color:rgba(221,224,245,.6);font-weight:300;max-width:480px;margin:.8rem auto 0;}
     .contact-wrap{margin-top:3rem;display:flex;flex-direction:column;align-items:center;gap:1rem;}
     .contact-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
     .contact-hint{font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(221,224,245,.25);}
@@ -298,11 +284,9 @@
     .cm-close:hover{border-color:var(--magenta);color:var(--magenta);box-shadow:0 0 12px rgba(255,0,128,.3);}
     .cm-close svg{width:13px;height:13px;}
     .cf-row{margin-bottom:1.15rem;}
-    .cf-lbl{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;
-      color:rgba(221,224,245,.38);margin-bottom:.38rem;display:block;}
+    .cf-lbl{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(221,224,245,.38);margin-bottom:.38rem;display:block;}
     .cf-inp{width:100%;background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.18);
-      color:#fff;padding:.88rem 1.15rem;font-family:'Rajdhani',sans-serif;font-size:1rem;
-      outline:none;transition:all .3s;}
+      color:#fff;padding:.88rem 1.15rem;font-family:'Rajdhani',sans-serif;font-size:1rem;outline:none;transition:all .3s;}
     .cf-inp:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,245,255,.16);background:rgba(0,245,255,.06);}
     .cf-inp::placeholder{color:rgba(221,224,245,.2);}
     textarea.cf-inp{resize:vertical;min-height:115px;}
@@ -331,7 +315,7 @@
     @keyframes fadeInDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 
-    @media(max-width:900px){.about-grid{grid-template-columns:1fr;}.projects-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){.projects-grid{grid-template-columns:1fr;}}
     @media(max-width:768px){nav{padding:1rem 1.5rem;}.nav-links{gap:1.2rem;}
       .hero-title{white-space:normal;font-size:clamp(1.6rem,10vw,4rem);}}
     @media(max-width:520px){.nav-links{display:none;}.ham-btn{display:flex;}
@@ -370,7 +354,7 @@
     <h1 class="hero-title">
       <span class="glitch" data-text="ELSAyed AshRaf">ELSAyed AshRaf</span>
     </h1>
-    <p class="hero-subtitle">Bot Engineer &nbsp;·&nbsp; <span>Script Developer</span> &nbsp;·&nbsp; Automation Expert</p>
+    <p class="hero-subtitle">Bot Engineer &nbsp;&middot;&nbsp; <span>Script Developer</span> &nbsp;&middot;&nbsp; Automation Expert</p>
     <div class="hero-buttons">
       <a href="#projects" class="btn-hex btn-primary">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -400,62 +384,17 @@
       <p>I specialize in <strong>Telegram bot development</strong> and backend scripting — from intelligent <strong>dashboard controllers</strong> to <strong>speech-powered bots</strong>. My philosophy: if it can be automated, it <em>should</em> be automated.</p>
       <p>Working with <span class="code-badge">Lua</span><span class="code-badge">Python</span><span class="code-badge">PHP</span><span class="code-badge">C#</span>, I craft tools that solve real problems. Every line I write has a purpose — no bloat, just results.</p>
     </div>
-    <div class="fade-in">
-      <div class="lang-grid">
-        <div class="lang-card lua">
-          <div class="lang-icon">
-            <svg viewBox="0 0 28 28" fill="none">
-              <circle cx="20" cy="8" r="4.5" fill="rgba(0,245,255,.12)" stroke="#00f5ff" stroke-width="1.4"/>
-              <circle cx="20" cy="8" r="2" fill="#00f5ff"/>
-              <path d="M4 24 L13 6 L20 16 L13 24 Z" stroke="#00f5ff" stroke-width="1.4" fill="rgba(0,245,255,.07)"/>
-              <line x1="8" y1="15" x2="20" y2="15" stroke="rgba(0,245,255,.35)" stroke-width=".9"/>
-            </svg>
-          </div>
-          <span class="lang-name">LUA</span>
-        </div>
-        <div class="lang-card py">
-          <div class="lang-icon">
-            <svg viewBox="0 0 28 28" fill="none">
-              <path d="M9 5C9 5 9 2 14 2C19 2 19 5 19 5V12H9Z" fill="rgba(57,255,20,.09)" stroke="#39ff14" stroke-width="1.3"/>
-              <path d="M19 23C19 23 19 26 14 26C9 26 9 23 9 23V16H19Z" fill="rgba(57,255,20,.09)" stroke="#39ff14" stroke-width="1.3"/>
-              <line x1="9" y1="12" x2="19" y2="12" stroke="rgba(57,255,20,.28)" stroke-width=".9"/>
-              <line x1="9" y1="16" x2="19" y2="16" stroke="rgba(57,255,20,.28)" stroke-width=".9"/>
-              <circle cx="11.5" cy="8.5" r="1.5" fill="#39ff14"/>
-              <circle cx="16.5" cy="19.5" r="1.5" fill="#39ff14"/>
-            </svg>
-          </div>
-          <span class="lang-name">PYTHON</span>
-        </div>
-        <div class="lang-card php">
-          <div class="lang-icon">
-            <svg viewBox="0 0 28 28" fill="none">
-              <ellipse cx="14" cy="14" rx="12" ry="6.5" fill="rgba(136,146,190,.07)" stroke="#8892be" stroke-width="1.3"/>
-              <text x="5.5" y="18" font-family="monospace" font-size="9.5" font-weight="bold" fill="#8892be">PHP</text>
-            </svg>
-          </div>
-          <span class="lang-name">PHP</span>
-        </div>
-        <div class="lang-card cs">
-          <div class="lang-icon">
-            <svg viewBox="0 0 28 28" fill="none">
-              <path d="M14 3 L25 8.5 L25 19.5 L14 25 L3 19.5 L3 8.5 Z" fill="rgba(255,0,128,.07)" stroke="#ff0080" stroke-width="1.3"/>
-              <text x="6.5" y="18.5" font-family="monospace" font-size="9.5" font-weight="bold" fill="#ff0080">C#</text>
-            </svg>
-          </div>
-          <span class="lang-name">C#</span>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
 <section id="projects">
   <div class="projects-wrap">
     <div class="section-header fade-in">
-      <h2 class="section-title">أحدث المشاريع</h2>
+      <h2 class="section-title">&#x623;&#x62D;&#x62F;&#x62B; &#x627;&#x644;&#x645;&#x634;&#x627;&#x631;&#x64A;&#x639;</h2>
     </div>
     <div class="projects-grid">
 
+      <!-- CARD 1 -->
       <div class="proj-card fade-in">
         <div class="card-scan"></div>
         <div class="card-thumb">
@@ -482,7 +421,7 @@
             <polyline points="16,85 42,62 68,72 94,44 120,68 146,58" fill="none" stroke="rgba(0,245,255,.6)" stroke-width="1.5"/>
             <circle cx="94" cy="44" r="3" fill="#00f5ff" filter="url(#glow1)"/>
             <rect x="158" y="18" width="66" height="16" rx="8" fill="rgba(57,255,20,.12)" stroke="rgba(57,255,20,.4)" stroke-width=".7"/>
-            <text x="191" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#39ff14">● ONLINE</text>
+            <text x="191" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#39ff14">&#x25CF; ONLINE</text>
             <rect x="232" y="18" width="58" height="16" rx="8" fill="rgba(0,245,255,.09)" stroke="rgba(0,245,255,.35)" stroke-width=".7"/>
             <text x="261" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#00f5ff">ADMIN</text>
             <text x="158" y="58" font-family="monospace" font-size="8.5" fill="rgba(0,245,255,.65)">&gt; system.initialize()</text>
@@ -495,7 +434,7 @@
         </div>
         <div class="card-top-line"></div>
         <div class="card-body">
-          <div class="proj-cat">TELEGRAM BOT · DASHBOARD</div>
+          <div class="proj-cat">TELEGRAM BOT &middot; DASHBOARD</div>
           <h3 class="proj-title">Dashboard Script Bot</h3>
           <p class="proj-desc">A comprehensive Telegram dashboard bot with full admin controls, user management, and real-time monitoring. Built for power and reliability in Python.</p>
           <div class="proj-tags">
@@ -518,7 +457,11 @@
               <div class="bot-lbl">LIVE BOT DEMO</div>
               <div class="bot-nm">@dashbordScbot</div>
             </div>
-            <button class="bot-open" onclick="openBot(0)">OPEN →</button>
+            <button class="bot-open" onclick="openBot(0)">OPEN &#x2192;</button>
+          </div>
+          <div class="proj-tech">
+            <div class="pt-badge pt-py"><div class="pt-dot"></div>Python</div>
+            <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
           </div>
           <div class="proj-actions">
             <button class="btn-dl" onclick="secureDownload(0)">
@@ -533,13 +476,10 @@
               </svg>TRY BOT
             </button>
           </div>
-          <div class="proj-tech">
-            <div class="pt-badge pt-py"><div class="pt-dot"></div>Python</div>
-            <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
-          </div>
         </div>
       </div>
 
+      <!-- CARD 2 -->
       <div class="proj-card vc fade-in" style="animation-delay:.15s">
         <div class="card-scan ps"></div>
         <div class="card-thumb">
@@ -580,13 +520,13 @@
             <path d="M321 56 Q338 74 321 92" fill="none" stroke="rgba(191,0,255,.55)" stroke-width="1.3" stroke-linecap="round"/>
             <path d="M326 50 Q348 74 326 98" fill="none" stroke="rgba(191,0,255,.25)" stroke-width="1.1" stroke-linecap="round"/>
             <rect x="230" y="118" width="94" height="16" rx="8" fill="rgba(191,0,255,.1)" stroke="rgba(191,0,255,.38)" stroke-width=".7"/>
-            <text x="277" y="130" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#bf00ff">● TTS ACTIVE</text>
+            <text x="277" y="130" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#bf00ff">&#x25CF; TTS ACTIVE</text>
             <line x1="0" y1="1.5" x2="380" y2="1.5" stroke="rgba(191,0,255,.5)" stroke-width="1.5"/>
           </svg>
         </div>
         <div class="card-top-line" style="background:linear-gradient(to right,var(--purple),var(--magenta));box-shadow:0 0 8px var(--purple);"></div>
         <div class="card-body">
-          <div class="proj-cat" style="color:var(--purple);text-shadow:0 0 10px var(--purple);">TELEGRAM BOT · SPEECH</div>
+          <div class="proj-cat" style="color:var(--purple);text-shadow:0 0 10px var(--purple);">TELEGRAM BOT &middot; SPEECH</div>
           <h3 class="proj-title">Text To Speech Bot</h3>
           <p class="proj-desc">Advanced Telegram bot that converts text into natural-sounding speech with multiple voice options and language support. Powered by Python audio engines.</p>
           <div class="proj-tags">
@@ -605,7 +545,12 @@
               <div class="bot-lbl">LIVE BOT DEMO</div>
               <div class="bot-nm">@PBTSpeechBot</div>
             </div>
-            <button class="bot-open" onclick="openBot(1)">OPEN →</button>
+            <button class="bot-open" onclick="openBot(1)">OPEN &#x2192;</button>
+          </div>
+          <div class="proj-tech">
+            <div class="pt-badge pt-py"><div class="pt-dot"></div>Python</div>
+            <div class="pt-badge pt-tts"><div class="pt-dot"></div>TTS Engine</div>
+            <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
           </div>
           <div class="proj-actions">
             <button class="btn-dl" onclick="secureDownload(1)">
@@ -619,11 +564,6 @@
                 <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
               </svg>TRY BOT
             </button>
-          </div>
-          <div class="proj-tech">
-            <div class="pt-badge pt-py"><div class="pt-dot"></div>Python</div>
-            <div class="pt-badge pt-tts"><div class="pt-dot"></div>TTS Engine</div>
-            <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
           </div>
         </div>
       </div>
@@ -649,10 +589,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
         </svg>
-        تواصل عبر التيليجرام
+        &#x62A;&#x648;&#x627;&#x635;&#x644; &#x639;&#x628;&#x631; &#x627;&#x644;&#x62A;&#x64A;&#x644;&#x64A;&#x62C;&#x631;&#x627;&#x645;
       </button>
     </div>
-    <p class="contact-hint">// Telegram · Fast Response</p>
+    <p class="contact-hint">// Telegram &middot; Fast Response</p>
   </div>
 </section>
 
@@ -702,29 +642,27 @@
 </div>
 
 <footer>
-  <p>Designed &amp; built by <em>ELSAyed AshRaf</em> &nbsp;·&nbsp; All rights reserved &nbsp;·&nbsp; 2025</p>
+  <p>Designed &amp; built by <em>ELSAyed AshRaf</em> &nbsp;&middot;&nbsp; All rights reserved &nbsp;&middot;&nbsp; 2025</p>
 </footer>
 
 <script>
-// FULL PROTECTION — no copy, no inspect, no drag
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('dragstart',   e => e.preventDefault());
-document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('copy',  e => e.preventDefault());
-document.addEventListener('cut',   e => e.preventDefault());
-document.addEventListener('keydown', e => {
-  if((e.ctrlKey||e.metaKey) && ['u','s','a','c'].includes(e.key.toLowerCase())) e.preventDefault();
-  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j'].includes(e.key.toLowerCase()))) e.preventDefault();
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&['u','s','a','c'].includes(e.key.toLowerCase()))e.preventDefault();
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j'].includes(e.key.toLowerCase())))e.preventDefault();
 });
-document.addEventListener('touchstart', e=>{if(e.touches.length>1) e.preventDefault();},{passive:false});
+document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
 
-// PARTICLE NETWORK
 const cvs=document.getElementById('netCanvas'),ctx=cvs.getContext('2d');
 let pts=[],mouse={x:null,y:null};
 function resize(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;}
 function mkPts(){
   pts=[];const n=Math.floor(cvs.width*cvs.height/11000);
-  for(let i=0;i<n;i++) pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,
+  for(let i=0;i<n;i++)pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,
     vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*1.6+.4,
     col:Math.random()>.9?'#ff0080':Math.random()>.88?'#5a00b4':'#00f5ff'});
 }
@@ -767,7 +705,6 @@ document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;})
 resize();mkPts();drawNet();
 window.addEventListener('resize',()=>{resize();mkPts();});
 
-// HEXAGONS
 const hf=document.getElementById('hexField');
 const hc=['rgba(90,0,180,.05)','rgba(255,0,128,.04)','rgba(0,245,255,.04)','rgba(57,255,20,.03)'];
 for(let i=0;i<14;i++){
@@ -776,7 +713,6 @@ for(let i=0;i<14;i++){
   hf.appendChild(h);
 }
 
-// 3D CARD TILT
 document.querySelectorAll('.proj-card').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
@@ -787,7 +723,6 @@ document.querySelectorAll('.proj-card').forEach(card=>{
   card.addEventListener('mouseleave',()=>{card.style.transform='perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)';});
 });
 
-// HAMBURGER
 function toggleMenu(){
   const btn=document.getElementById('hamBtn'),menu=document.getElementById('mobileMenu');
   const open=menu.classList.toggle('open');btn.classList.toggle('open',open);
@@ -797,12 +732,10 @@ function closeMenu(){
   document.getElementById('mobileMenu').classList.remove('open');
 }
 
-// SCROLL ANIMATIONS
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
-// CONTACT MODAL
 function openContact(){
   document.getElementById('cm').classList.add('open');
   document.body.style.overflow='hidden';
@@ -814,7 +747,6 @@ function closeContact(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();closeContact();}});
 
-// SECURE LINKS
 (function(){
   const _d=[
     ['https://github.com/SAyed12332/SAyed/','raw/refs/heads/main/dash_bord.Script_gg_py_SAyed.zip'],
@@ -839,7 +771,6 @@ document.querySelectorAll('.btn-dl,.btn-demo,.bot-open,.btn-tg').forEach(el=>{
   el.addEventListener('contextmenu',e=>e.preventDefault());
 });
 
-// TELEGRAM SEND
 async function sendTg(){
   const nm=document.getElementById('cfName').value.trim();
   const mg=document.getElementById('cfMsg').value.trim();
@@ -855,7 +786,7 @@ async function sendTg(){
     const res=await fetch(`https://api.telegram.org/bot${tk}/sendMessage`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({chat_id:ci,
-        text:`📨 *New Portfolio Message*\n\n👤 *Name:* ${nm}\n\n💬 *Message:*\n${mg}`,
+        text:`\u{1F4E8} *New Portfolio Message*\n\n\u{1F464} *Name:* ${nm}\n\n\u{1F4AC} *Message:*\n${mg}`,
         parse_mode:'Markdown'})
     });
     const dat=await res.json();
