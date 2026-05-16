@@ -29,6 +29,7 @@
     .hex{position:absolute;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);animation:hexRise linear infinite;}
     @keyframes hexRise{0%{transform:translateY(110vh) rotate(0);opacity:0}5%{opacity:1}90%{opacity:.5}100%{transform:translateY(-15vh) rotate(270deg);opacity:0}}
 
+    /* ─── NAV ─── */
     nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.2rem 3rem;display:flex;
       justify-content:space-between;align-items:center;background:rgba(2,2,8,.92);
       backdrop-filter:blur(26px);border-bottom:1px solid rgba(90,0,180,.18);}
@@ -37,12 +38,49 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
       filter:drop-shadow(0 0 14px rgba(90,0,180,.7));white-space:nowrap;}
     .nav-links{display:flex;gap:2.5rem;list-style:none;}
-    .nav-links a{color:rgba(221,224,245,.6);text-decoration:none;font-size:.78rem;letter-spacing:2.5px;
-      text-transform:uppercase;font-weight:600;transition:color .3s,text-shadow .3s;position:relative;}
-    .nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:1px;
+    .nav-links>li{position:relative;}
+    .nav-links>li>a{color:rgba(221,224,245,.6);text-decoration:none;font-size:.78rem;letter-spacing:2.5px;
+      text-transform:uppercase;font-weight:600;transition:color .3s,text-shadow .3s;position:relative;display:block;padding-bottom:4px;}
+    .nav-links>li>a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:1px;
       background:var(--cyan);box-shadow:0 0 8px var(--cyan);transition:width .3s;}
-    .nav-links a:hover{color:var(--cyan);text-shadow:0 0 14px var(--cyan);}
-    .nav-links a:hover::after{width:100%;}
+    .nav-links>li:hover>a{color:var(--cyan);text-shadow:0 0 14px var(--cyan);}
+    .nav-links>li:hover>a::after{width:100%;}
+
+    /* ── NAV DROPDOWN ── */
+    .nav-dd{
+      position:absolute;top:calc(100% + 18px);left:50%;
+      transform:translateX(-50%) translateY(-6px) perspective(400px) rotateX(-6deg);
+      transform-origin:top center;
+      min-width:200px;opacity:0;pointer-events:none;
+      background:rgba(4,2,16,.97);border:1px solid rgba(90,0,180,.35);
+      backdrop-filter:blur(24px);
+      box-shadow:0 12px 48px rgba(90,0,180,.22),0 0 0 1px rgba(0,245,255,.06),inset 0 1px 0 rgba(255,255,255,.04);
+      transition:opacity .22s ease,transform .22s ease;z-index:300;}
+    .nav-dd::before{
+      content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+      border-left:7px solid transparent;border-right:7px solid transparent;
+      border-bottom:7px solid rgba(90,0,180,.4);}
+    .nav-dd::after{
+      content:'';position:absolute;top:0;left:0;right:0;height:1px;
+      background:linear-gradient(to right,transparent,var(--cyan),transparent);
+      box-shadow:0 0 8px var(--cyan);}
+    .nav-links>li:hover .nav-dd{
+      opacity:1;pointer-events:all;
+      transform:translateX(-50%) translateY(0) perspective(400px) rotateX(0deg);}
+    .nav-dd-label{
+      padding:.55rem 1.1rem;font-family:'Orbitron',sans-serif;font-size:.55rem;
+      letter-spacing:3px;text-transform:uppercase;color:rgba(221,224,245,.22);
+      border-bottom:1px solid rgba(90,0,180,.15);}
+    .nav-dd a{
+      display:flex;align-items:center;gap:.55rem;padding:.62rem 1.1rem;
+      font-size:.7rem;letter-spacing:1.8px;text-transform:uppercase;
+      color:rgba(221,224,245,.55);text-decoration:none;
+      border-bottom:1px solid rgba(90,0,180,.08);transition:all .2s;white-space:nowrap;}
+    .nav-dd a:last-child{border-bottom:none;}
+    .nav-dd a:hover{color:var(--cyan);background:rgba(0,245,255,.05);text-shadow:0 0 10px var(--cyan);padding-left:1.4rem;}
+    .nav-dd a .dd-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 5px var(--cyan);flex-shrink:0;opacity:.6;}
+    .nav-dd a:hover .dd-dot{opacity:1;}
+
     .ham-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:201;}
     .ham-btn span{display:block;width:26px;height:2px;background:var(--dp2);
       box-shadow:0 0 8px rgba(153,51,255,.7);border-radius:2px;transition:all .35s ease;}
@@ -70,7 +108,7 @@
     .fade-in{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease;}
     .fade-in.visible{opacity:1;transform:translateY(0);}
 
-    /* HERO */
+    /* ─── HERO ─── [FIX 2: more spacious] */
     #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
       text-align:center;padding:2rem;overflow:hidden;}
     .neon-grid{position:absolute;bottom:0;left:0;right:0;height:50%;
@@ -85,17 +123,16 @@
     .orb-2{width:280px;height:280px;background:radial-gradient(circle,rgba(255,0,128,.16),transparent);top:14%;right:3%;animation-delay:-4s;}
     .orb-3{width:220px;height:220px;background:radial-gradient(circle,rgba(0,245,255,.14),transparent);bottom:28%;left:18%;animation-delay:-8s;}
     @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}33%{transform:translateY(-40px) scale(1.07)}66%{transform:translateY(25px) scale(.94)}}
-    .hero-content{position:relative;z-index:2;}
+    .hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
 
-    .hero-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:1.5px;
-      color:var(--magenta);text-shadow:0 0 18px var(--magenta);margin-bottom:1.1rem;
+    .hero-tag{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:1.5px;
+      color:var(--magenta);text-shadow:0 0 18px var(--magenta);margin-bottom:2.2rem;/* FIX 2 */
       animation:fadeInDown 1s ease both;white-space:nowrap;}
     .hero-tag::after{content:'█';animation:blink .9s step-end infinite;font-size:.8em;vertical-align:middle;margin-left:3px;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-    /* NAME — Rajdhani (plain) + shimmer left→right + professional glitch */
     .hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(2.4rem,9vw,5.8rem);
-      font-weight:600;line-height:1.05;margin-bottom:1.1rem;white-space:nowrap;
+      font-weight:600;line-height:1.05;margin-bottom:2rem;/* FIX 2 */white-space:nowrap;
       animation:fadeInUp .9s ease .1s both;}
     .glitch{position:relative;display:inline-block;
       background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);
@@ -103,9 +140,7 @@
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
       filter:drop-shadow(0 0 18px rgba(100,0,200,.7)) drop-shadow(0 0 45px rgba(100,0,200,.3));
       animation:nameShimmer 4.5s linear infinite;}
-    /* shimmer: left to right */
     @keyframes nameShimmer{0%{background-position:250% center}100%{background-position:0% center}}
-    /* professional glitch: no colored bands, only positional shifts */
     .glitch::before,.glitch::after{
       content:attr(data-text);position:absolute;top:0;left:0;width:100%;
       background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);
@@ -127,11 +162,26 @@
       85.5%{opacity:0}
     }
 
-    .hero-subtitle{font-size:clamp(.75rem,1.7vw,.95rem);font-weight:500;letter-spacing:2px;
-      color:rgba(221,224,245,.55);margin-bottom:2.8rem;animation:fadeInUp 1s ease .3s both;}
+    /* FIX 2: hero divider */
+    .hero-divider{width:180px;height:1px;margin:0 auto .4rem;
+      background:linear-gradient(to right,transparent,rgba(0,245,255,.4),transparent);
+      box-shadow:0 0 10px rgba(0,245,255,.25);}
+
+    .hero-subtitle{font-size:clamp(.78rem,1.7vw,.98rem);font-weight:500;letter-spacing:2.5px;
+      color:rgba(221,224,245,.55);margin-bottom:4rem;/* FIX 2 */animation:fadeInUp 1s ease .3s both;}
     .hero-subtitle span{color:var(--cyan);text-shadow:0 0 10px var(--cyan);}
+
+    /* FIX 2: stat row */
+    .hero-stats{display:flex;gap:3rem;justify-content:center;margin-bottom:3.8rem;
+      animation:fadeInUp 1s ease .42s both;flex-wrap:wrap;}
+    .hero-stat{text-align:center;}
+    .hero-stat-num{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;
+      color:var(--cyan);text-shadow:0 0 18px var(--cyan);line-height:1;}
+    .hero-stat-lbl{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(221,224,245,.3);margin-top:.3rem;}
+
     .hero-buttons{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;
-      animation:fadeInUp 1s ease .5s both;}
+      animation:fadeInUp 1s ease .55s both;}
     .btn-hex{display:inline-flex;align-items:center;gap:.55rem;padding:.88rem 2.2rem;
       font-family:'Orbitron',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:2.5px;
       text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;
@@ -146,7 +196,16 @@
       box-shadow:0 0 16px rgba(255,0,128,.2);}
     .btn-secondary:hover{background:rgba(255,0,128,.09);box-shadow:0 0 42px rgba(255,0,128,.5);transform:translateY(-2px);}
 
-    /* ABOUT — single column, less top gap */
+    /* FIX 2: scroll indicator */
+    .hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fadeInUp 1.2s ease .8s both;}
+    .hero-scroll-line{width:1px;height:38px;background:linear-gradient(to bottom,var(--cyan),transparent);
+      animation:scrollPulse 1.8s ease-in-out infinite;}
+    .hero-scroll-txt{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:2px;
+      color:rgba(221,224,245,.25);text-transform:uppercase;}
+    @keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
+
+    /* ─── ABOUT ─── */
     #about{padding:4rem 2rem 9rem;max-width:1200px;margin:0 auto;}
     .about-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:start;}
     .about-text{font-size:1.05rem;line-height:1.95;color:rgba(221,224,245,.78);font-weight:300;}
@@ -156,7 +215,7 @@
       text-shadow:0 0 8px var(--green);background:rgba(57,255,20,.07);
       border:1px solid rgba(57,255,20,.2);padding:.15rem .5rem;margin:0 .15rem;border-radius:2px;}
 
-    /* PROJECTS */
+    /* ─── PROJECTS ─── */
     #projects{padding:9rem 2rem;
       background:linear-gradient(to bottom,transparent,rgba(90,0,180,.025),transparent);
       position:relative;overflow:hidden;}
@@ -192,8 +251,10 @@
     @keyframes scanT{0%{left:-60%}100%{left:160%}}
     .card-top-line{position:absolute;top:0;left:0;right:0;height:2px;
       background:linear-gradient(to right,var(--magenta),var(--cyan));box-shadow:0 0 8px var(--cyan);z-index:2;}
-    /* card-body: relative + extra bottom padding for clipped buttons */
-    .card-body{padding:1.5rem 1.8rem 2.8rem;position:relative;z-index:1;}
+
+    /* FIX 1: enough bottom padding so buttons don't get clipped */
+    .card-body{padding:1.5rem 1.8rem 6rem;position:relative;z-index:1;}
+
     .proj-cat{font-size:.64rem;letter-spacing:3px;text-transform:uppercase;color:var(--magenta);
       text-shadow:0 0 10px var(--magenta);margin-bottom:.7rem;}
     .proj-title{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:.75rem;}
@@ -220,7 +281,6 @@
     .bot-badge.p .bot-open{color:var(--purple);border-color:rgba(191,0,255,.25);}
     .bot-badge.p .bot-open:hover{background:rgba(191,0,255,.1);border-color:var(--purple);}
 
-    /* TECH BADGES */
     .proj-tech{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.9rem;
       border-top:1px solid rgba(0,245,255,.07);}
     .pt-badge{display:flex;align-items:center;gap:.38rem;padding:.35rem .7rem;
@@ -234,11 +294,11 @@
     .pt-tts:hover{border-color:rgba(191,0,255,.45);}
     .pt-dot{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;flex-shrink:0;}
 
-    /* ACTION BUTTONS: absolute at card bottom, clipped by overflow:hidden */
-    .proj-actions{position:absolute;bottom:-0.85rem;left:1.8rem;right:1.8rem;
+    /* FIX 1: buttons fully inside card, no negative bottom */
+    .proj-actions{position:absolute;bottom:1.4rem;left:1.8rem;right:1.8rem;
       display:flex;gap:.6rem;z-index:5;}
     .btn-dl,.btn-demo{display:flex;align-items:center;justify-content:center;gap:.4rem;flex:1;
-      padding:.52rem .75rem;font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:1.2px;
+      padding:.62rem .75rem;font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:1.2px;
       cursor:pointer;transition:all .3s;border:none;background:transparent;
       user-select:none;-webkit-user-select:none;}
     .btn-dl{border:1px solid var(--cyan);color:var(--cyan);text-shadow:0 0 7px var(--cyan);}
@@ -249,7 +309,10 @@
     .btn-demo.p:hover{background:rgba(191,0,255,.09);box-shadow:0 0 26px rgba(191,0,255,.38);}
     .btn-dl svg,.btn-demo svg{width:11px;height:11px;flex-shrink:0;}
 
-    /* CONTACT */
+    /* download loading state */
+    .btn-dl.loading{opacity:.65;cursor:not-allowed;}
+
+    /* ─── CONTACT ─── */
     #contact{padding:9rem 2rem;max-width:680px;margin:0 auto;text-align:center;}
     .contact-intro{font-size:1rem;line-height:1.9;color:rgba(221,224,245,.6);font-weight:300;max-width:480px;margin:.8rem auto 0;}
     .contact-wrap{margin-top:3rem;display:flex;flex-direction:column;align-items:center;gap:1rem;}
@@ -264,7 +327,7 @@
     .btn-tg:hover{background:rgba(0,245,255,.08);box-shadow:0 0 40px rgba(0,245,255,.35);transform:translateY(-2px);}
     .btn-tg svg{width:15px;height:15px;flex-shrink:0;}
 
-    /* CONTACT MODAL */
+    /* ─── CONTACT MODAL ─── */
     .cm{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;
       padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .35s;}
     .cm.open{opacity:1;pointer-events:all;}
@@ -331,9 +394,38 @@
 <nav>
   <div class="nav-logo">ELSAyed AshRaf</div>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
+
+    <!-- About with dropdown -->
+    <li>
+      <a href="#about">About</a>
+      <div class="nav-dd">
+        <div class="nav-dd-label">Who Am I</div>
+        <a href="#about"><span class="dd-dot"></span>Bot Engineer</a>
+        <a href="#about"><span class="dd-dot"></span>Automation Expert</a>
+        <a href="#about"><span class="dd-dot"></span>Script Developer</a>
+      </div>
+    </li>
+
+    <!-- Projects with card titles -->
+    <li>
+      <a href="#projects">Projects</a>
+      <div class="nav-dd">
+        <div class="nav-dd-label">Latest Work</div>
+        <a href="#projects" onclick="scrollToCard(0)"><span class="dd-dot"></span>Dashboard Script Bot</a>
+        <a href="#projects" onclick="scrollToCard(1)"><span class="dd-dot"></span>Text To Speech Bot</a>
+      </div>
+    </li>
+
+    <!-- Contact with dropdown -->
+    <li>
+      <a href="#contact">Contact</a>
+      <div class="nav-dd">
+        <div class="nav-dd-label">Get In Touch</div>
+        <a href="#contact" onclick="openContact()"><span class="dd-dot"></span>Send Message</a>
+        <a href="https://t.me/elsayedashraf" target="_blank" rel="noopener noreferrer"><span class="dd-dot"></span>Telegram Direct</a>
+      </div>
+    </li>
+
   </ul>
   <button class="ham-btn" id="hamBtn" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -354,7 +446,25 @@
     <h1 class="hero-title">
       <span class="glitch" data-text="ELSAyed AshRaf">ELSAyed AshRaf</span>
     </h1>
+    <div class="hero-divider"></div>
     <p class="hero-subtitle">Bot Engineer &nbsp;&middot;&nbsp; <span>Script Developer</span> &nbsp;&middot;&nbsp; Automation Expert</p>
+
+    <!-- FIX 2: stat bar -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">2+</div>
+        <div class="hero-stat-lbl">Projects</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--magenta);text-shadow:0 0 18px var(--magenta);">99.9%</div>
+        <div class="hero-stat-lbl">Uptime</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" style="color:var(--green);text-shadow:0 0 18px var(--green);">∞</div>
+        <div class="hero-stat-lbl">Automation</div>
+      </div>
+    </div>
+
     <div class="hero-buttons">
       <a href="#projects" class="btn-hex btn-primary">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -371,6 +481,11 @@
         CONTACT ME
       </button>
     </div>
+  </div>
+  <!-- FIX 2: scroll indicator -->
+  <div class="hero-scroll">
+    <div class="hero-scroll-txt">Scroll</div>
+    <div class="hero-scroll-line"></div>
   </div>
 </section>
 
@@ -390,7 +505,7 @@
 <section id="projects">
   <div class="projects-wrap">
     <div class="section-header fade-in">
-      <h2 class="section-title">&#x623;&#x62D;&#x62F;&#x62B; &#x627;&#x644;&#x645;&#x634;&#x627;&#x631;&#x64A;&#x639;</h2>
+      <h2 class="section-title">أحدث المشاريع</h2>
     </div>
     <div class="projects-grid">
 
@@ -421,7 +536,7 @@
             <polyline points="16,85 42,62 68,72 94,44 120,68 146,58" fill="none" stroke="rgba(0,245,255,.6)" stroke-width="1.5"/>
             <circle cx="94" cy="44" r="3" fill="#00f5ff" filter="url(#glow1)"/>
             <rect x="158" y="18" width="66" height="16" rx="8" fill="rgba(57,255,20,.12)" stroke="rgba(57,255,20,.4)" stroke-width=".7"/>
-            <text x="191" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#39ff14">&#x25CF; ONLINE</text>
+            <text x="191" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#39ff14">● ONLINE</text>
             <rect x="232" y="18" width="58" height="16" rx="8" fill="rgba(0,245,255,.09)" stroke="rgba(0,245,255,.35)" stroke-width=".7"/>
             <text x="261" y="30" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#00f5ff">ADMIN</text>
             <text x="158" y="58" font-family="monospace" font-size="8.5" fill="rgba(0,245,255,.65)">&gt; system.initialize()</text>
@@ -463,8 +578,9 @@
             <div class="pt-badge pt-py"><div class="pt-dot"></div>Python</div>
             <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
           </div>
+          <!-- FIX 1: buttons fully inside card -->
           <div class="proj-actions">
-            <button class="btn-dl" onclick="secureDownload(0)">
+            <button class="btn-dl" onclick="secureDownload(this,0)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 3v12"/><path d="M8 11l4 4 4-4"/>
                 <path d="M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/>
@@ -520,7 +636,7 @@
             <path d="M321 56 Q338 74 321 92" fill="none" stroke="rgba(191,0,255,.55)" stroke-width="1.3" stroke-linecap="round"/>
             <path d="M326 50 Q348 74 326 98" fill="none" stroke="rgba(191,0,255,.25)" stroke-width="1.1" stroke-linecap="round"/>
             <rect x="230" y="118" width="94" height="16" rx="8" fill="rgba(191,0,255,.1)" stroke="rgba(191,0,255,.38)" stroke-width=".7"/>
-            <text x="277" y="130" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#bf00ff">&#x25CF; TTS ACTIVE</text>
+            <text x="277" y="130" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#bf00ff">● TTS ACTIVE</text>
             <line x1="0" y1="1.5" x2="380" y2="1.5" stroke="rgba(191,0,255,.5)" stroke-width="1.5"/>
           </svg>
         </div>
@@ -552,8 +668,9 @@
             <div class="pt-badge pt-tts"><div class="pt-dot"></div>TTS Engine</div>
             <div class="pt-badge pt-tg"><div class="pt-dot"></div>Telegram API</div>
           </div>
+          <!-- FIX 1: buttons fully inside card -->
           <div class="proj-actions">
-            <button class="btn-dl" onclick="secureDownload(1)">
+            <button class="btn-dl" onclick="secureDownload(this,1)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 3v12"/><path d="M8 11l4 4 4-4"/>
                 <path d="M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/>
@@ -589,7 +706,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
         </svg>
-        &#x62A;&#x648;&#x627;&#x635;&#x644; &#x639;&#x628;&#x631; &#x627;&#x644;&#x62A;&#x64A;&#x644;&#x64A;&#x62C;&#x631;&#x627;&#x645;
+        تواصل عبر التيليجرام
       </button>
     </div>
     <p class="contact-hint">// Telegram &middot; Fast Response</p>
@@ -646,6 +763,7 @@
 </footer>
 
 <script>
+/* ── Security ── */
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('dragstart',e=>e.preventDefault());
 document.addEventListener('selectstart',e=>e.preventDefault());
@@ -657,6 +775,7 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
 
+/* ── Canvas network ── */
 const cvs=document.getElementById('netCanvas'),ctx=cvs.getContext('2d');
 let pts=[],mouse={x:null,y:null};
 function resize(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;}
@@ -705,6 +824,7 @@ document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;})
 resize();mkPts();drawNet();
 window.addEventListener('resize',()=>{resize();mkPts();});
 
+/* ── Hexagons ── */
 const hf=document.getElementById('hexField');
 const hc=['rgba(90,0,180,.05)','rgba(255,0,128,.04)','rgba(0,245,255,.04)','rgba(57,255,20,.03)'];
 for(let i=0;i<14;i++){
@@ -713,6 +833,7 @@ for(let i=0;i<14;i++){
   hf.appendChild(h);
 }
 
+/* ── Card tilt ── */
 document.querySelectorAll('.proj-card').forEach(card=>{
   card.addEventListener('mousemove',e=>{
     const r=card.getBoundingClientRect();
@@ -723,6 +844,7 @@ document.querySelectorAll('.proj-card').forEach(card=>{
   card.addEventListener('mouseleave',()=>{card.style.transform='perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)';});
 });
 
+/* ── Mobile menu ── */
 function toggleMenu(){
   const btn=document.getElementById('hamBtn'),menu=document.getElementById('mobileMenu');
   const open=menu.classList.toggle('open');btn.classList.toggle('open',open);
@@ -732,10 +854,18 @@ function closeMenu(){
   document.getElementById('mobileMenu').classList.remove('open');
 }
 
+/* ── Fade-in observer ── */
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
+/* ── Scroll to specific card ── */
+function scrollToCard(idx){
+  const cards=document.querySelectorAll('.proj-card');
+  if(cards[idx])cards[idx].scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ── Contact modal ── */
 function openContact(){
   document.getElementById('cm').classList.add('open');
   document.body.style.overflow='hidden';
@@ -747,30 +877,63 @@ function closeContact(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();closeContact();}});
 
+/* ── Bot / Telegram links ── */
 (function(){
-  const _d=[
-    ['https://github.com/SAyed12332/SAyed/','raw/refs/heads/main/dash_bord.Script_gg_py_SAyed.zip'],
-    ['https://github.com/SAyed12332/SAyed/','raw/refs/heads/main/Text_To_6tions_Speech_by_SAyed.zip']
+  /* FIX 4: ?start=start appended to bot URLs */
+  const _b=[
+    'https://t.me/dashbordScbot?start=start',
+    'https://t.me/PBTSpeechBot?start=start'
   ];
-  const _b=[['https://t.me/','dashbordScbot'],['https://t.me/','PBTSpeechBot']];
-  const _tg=['https://t.me/','elsayedashraf'];
-  window.secureDownload=function(i){
-    try{const u=_d[i][0]+_d[i][1];const a=document.createElement('a');
-      a.href=u;a.download='';a.rel='noopener noreferrer';a.style.display='none';
-      document.body.appendChild(a);a.click();setTimeout(()=>document.body.removeChild(a),300);
-    }catch(e){console.warn('unavailable');}
-  };
+  const _tg='https://t.me/elsayedashraf';
+
   window.openBot=function(i){
-    try{window.open(_b[i][0]+_b[i][1],'_blank','noopener,noreferrer,nofollow');}catch(e){}
+    try{window.open(_b[i],'_blank','noopener,noreferrer,nofollow');}catch(e){}
   };
   window.openTelegram=function(){
-    try{window.open(_tg[0]+_tg[1],'_blank','noopener,noreferrer,nofollow');}catch(e){}
+    try{window.open(_tg,'_blank','noopener,noreferrer,nofollow');}catch(e){}
   };
 })();
+
+/* ── FIX 3: Download via fetch → blob (no redirect to GitHub) ── */
+const _dlUrls=[
+  'https://github.com/SAyed12332/SAyed/raw/refs/heads/main/dash_bord.Script_gg_py_SAyed.zip',
+  'https://github.com/SAyed12332/SAyed/raw/refs/heads/main/Text_To_6tions_Speech_by_SAyed.zip'
+];
+const _dlNames=[
+  'dash_bord.Script_gg_py_SAyed.zip',
+  'Text_To_6tions_Speech_by_SAyed.zip'
+];
+
+window.secureDownload=async function(btn,i){
+  if(btn.classList.contains('loading'))return;
+  const orig=btn.innerHTML;
+  btn.classList.add('loading');
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ...';
+  try{
+    const res=await fetch(_dlUrls[i]);
+    if(!res.ok)throw new Error('fetch failed');
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=_dlNames[i];
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  }catch(e){
+    /* fallback: open raw URL in same window triggers browser download */
+    const a=document.createElement('a');
+    a.href=_dlUrls[i];a.download=_dlNames[i];a.rel='noopener noreferrer';
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>document.body.removeChild(a),300);
+  }finally{
+    setTimeout(()=>{btn.classList.remove('loading');btn.innerHTML=orig;},1200);
+  }
+};
+
 document.querySelectorAll('.btn-dl,.btn-demo,.bot-open,.btn-tg').forEach(el=>{
   el.addEventListener('contextmenu',e=>e.preventDefault());
 });
 
+/* ── Contact send ── */
 async function sendTg(){
   const nm=document.getElementById('cfName').value.trim();
   const mg=document.getElementById('cfMsg').value.trim();
@@ -786,7 +949,7 @@ async function sendTg(){
     const res=await fetch(`https://api.telegram.org/bot${tk}/sendMessage`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({chat_id:ci,
-        text:`\u{1F4E8} *New Portfolio Message*\n\n\u{1F464} *Name:* ${nm}\n\n\u{1F4AC} *Message:*\n${mg}`,
+        text:`📨 *New Portfolio Message*\n\n👤 *Name:* ${nm}\n\n💬 *Message:*\n${mg}`,
         parse_mode:'Markdown'})
     });
     const dat=await res.json();
