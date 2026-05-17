@@ -338,15 +338,11 @@
     <!-- ════ TERMINAL ════ -->
     <div class="term-box">
       <div class="t-bar">
-        <div class="t-dots">
-          <span class="td td-r"></span>
-          <span class="td td-y"></span>
-          <span class="td td-g"></span>
-        </div>
-        <div class="t-bar-name">terminal — bash</div>
+        <div class="t-bar-name">bash</div>
       </div>
       <div class="t-body" id="termBody"></div>
     </div>
+
     <!-- ════ END TERMINAL ════ -->
 
     <div class="hero-buttons">
@@ -500,62 +496,41 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
 })();
 
 /* ══════════════════════════════
-   TERMINAL — wave typing, 3 roles
+   TERMINAL — wave typing, 1 line
    ══════════════════════════════ */
 (function(){
   const body = document.getElementById('termBody');
   if(!body) return;
 
-  /* roles: text · color · glow */
-  const roles = [
-    { text:'Bot_Engineer',     color:'#ff0080', glow:'rgba(255,0,128,.6)' },
-    { text:'Script_Developer', color:'#00f5ff', glow:'rgba(0,245,255,.6)' },
-    { text:'Automation_Expert',color:'#39ff14', glow:'rgba(57,255,20,.6)'  },
+  const segments = [
+    { text: 'Bot_Engineer ',     color: 'rgba(255,255,255,0.3)', glow: 'none' },
+    { text: 'Script_Developer ', color: '#00f5ff',               glow: 'rgba(0,245,255,.6)' },
+    { text: 'Automation_Expert', color: 'rgba(255,255,255,0.3)', glow: 'none' }
   ];
 
-  /* create a line row and return the word-wrap span */
-  function createLine(role){
+  function createSingleLine(){
     const row = document.createElement('div');
     row.className = 't-line';
-
+    row.style.flexWrap = 'wrap'; 
+    
     const sym = document.createElement('span');
     sym.className = 't-prompt-sym';
     sym.textContent = '>';
     row.appendChild(sym);
 
-    const wrap = document.createElement('span');
-    wrap.className = 't-word-wrap';
-    wrap.style.color = role.color;
-    wrap.style.textShadow = `0 0 16px ${role.glow}`;
-    row.appendChild(wrap);
-
     body.appendChild(row);
-    return wrap;
+    return row;
   }
 
-  /* append one wave-animated char span */
-  function addChar(wrap, ch){
+  function addChar(container, ch, color, glow){
     const s = document.createElement('span');
     s.className = 'wc';
-    s.textContent = ch;
-    wrap.appendChild(s);
+    s.textContent = ch === ' ' ? '\u00A0' : ch; 
+    s.style.color = color;
+    if(glow !== 'none') s.style.textShadow = `0 0 16px ${glow}`;
+    container.appendChild(s);
   }
 
-  /* type a role character by character, call done when finished */
-  function typeRole(idx, done){
-    const role = roles[idx];
-    const wrap = createLine(role);
-    const chars = [...role.text];
-    let i = 0;
-    const SPEED = 72; /* ms between chars */
-    (function next(){
-      if(i >= chars.length){ setTimeout(done, 260); return; }
-      addChar(wrap, chars[i++]);
-      setTimeout(next, SPEED + Math.random()*30);
-    })();
-  }
-
-  /* show $ blinking cursor line */
   function showDollar(){
     const dl = document.createElement('div');
     dl.className = 't-dollar-line';
@@ -564,15 +539,31 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
     requestAnimationFrame(()=> setTimeout(()=> dl.classList.add('vis'), 40));
   }
 
-  /* chain: role 0 → role 1 → role 2 → $ */
   setTimeout(()=>{
-    typeRole(0, ()=>{
-      typeRole(1, ()=>{
-        typeRole(2, ()=>{
-          showDollar();
-        });
-      });
-    });
+    const lineEl = createSingleLine();
+    let segIdx = 0;
+    let charIdx = 0;
+
+    function typeNext(){
+      if(segIdx >= segments.length){
+        setTimeout(showDollar, 260);
+        return;
+      }
+
+      const seg = segments[segIdx];
+      if(charIdx >= seg.text.length){
+        segIdx++;
+        charIdx = 0;
+        typeNext();
+        return;
+      }
+
+      addChar(lineEl, seg.text[charIdx], seg.color, seg.glow);
+      charIdx++;
+      setTimeout(typeNext, 60 + Math.random()*30);
+    }
+
+    typeNext();
   }, 1500);
 })();
 
