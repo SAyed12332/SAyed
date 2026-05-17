@@ -76,75 +76,86 @@
     @keyframes g2{0%,83%,100%{transform:none;opacity:0}84%{transform:translate(3px,0) skewX(2deg);opacity:.5}85.5%{opacity:0}}
     .hero-divider{width:130px;height:1px;margin:0 auto 1.8rem;background:linear-gradient(to right,transparent,rgba(0,245,255,.4),transparent);}
 
-    /* ═══════════════════════════════════════
-       TERMINAL ROLE BOX
-       ═══════════════════════════════════════ */
+    /* ═══════════════════════════════
+       TERMINAL — CLEAN & DARK
+       ═══════════════════════════════ */
     .term-box{
-      width:100%;max-width:440px;margin:0 auto 5.5rem;
-      background:rgba(2,4,14,.98);
-      border:1px solid rgba(0,245,255,.14);
-      box-shadow:0 0 0 1px rgba(0,245,255,.03),0 0 32px rgba(0,245,255,.07),0 0 70px rgba(90,0,180,.05),inset 0 0 22px rgba(0,245,255,.01);
+      width:100%;max-width:390px;
+      margin:0 auto 3.5rem;
+      background:#06060e;
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:7px;
+      overflow:hidden;
+      box-shadow:0 0 50px rgba(0,0,0,.7),
+                 0 0 0 1px rgba(0,245,255,.025),
+                 inset 0 1px 0 rgba(255,255,255,.03);
       animation:fadeInUp 1s ease .35s both;
-      position:relative;overflow:hidden;
     }
-    /* rainbow top line */
-    .term-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--purple) 20%,var(--cyan) 50%,var(--magenta) 80%,transparent 100%);box-shadow:0 0 14px rgba(0,245,255,.5);z-index:2;}
-    /* shimmer sweep */
-    .term-box::after{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,245,255,.018),transparent);animation:tShimmer 6s linear infinite;pointer-events:none;z-index:1;}
-    @keyframes tShimmer{0%{left:-80%}100%{left:140%}}
-    /* corner brackets */
-    .tc{position:absolute;width:12px;height:12px;border-color:rgba(0,245,255,.35);border-style:solid;z-index:3;}
-    .tc.tl{top:0;left:0;border-width:1.5px 0 0 1.5px;}
-    .tc.tr{top:0;right:0;border-width:1.5px 1.5px 0 0;}
-    .tc.bl{bottom:0;left:0;border-width:0 0 1.5px 1.5px;}
-    .tc.br{bottom:0;right:0;border-width:0 1.5px 1.5px 0;}
     /* title bar */
-    .t-bar{display:flex;align-items:center;padding:.52rem .82rem;gap:.6rem;background:rgba(0,245,255,.022);border-bottom:1px solid rgba(0,245,255,.07);position:relative;z-index:2;}
-    .t-dots{display:flex;gap:.3rem;}
+    .t-bar{
+      display:flex;align-items:center;gap:.55rem;
+      padding:.52rem .82rem;
+      background:#0b0b1c;
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .t-dots{display:flex;gap:.32rem;}
     .td{width:9px;height:9px;border-radius:50%;display:block;}
-    .td-r{background:#ff5f57;box-shadow:0 0 6px rgba(255,95,87,.6);}
-    .td-y{background:#febc2e;box-shadow:0 0 6px rgba(254,188,46,.6);}
-    .td-g{background:#28c840;box-shadow:0 0 6px rgba(40,200,64,.6);}
-    .t-bar-name{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:2px;color:rgba(221,224,245,.2);}
-    .t-live{font-family:'JetBrains Mono',monospace;font-size:.46rem;letter-spacing:1px;color:var(--green);animation:livePls 2s ease-in-out infinite;}
-    @keyframes livePls{0%,100%{opacity:.5;text-shadow:none}50%{opacity:1;text-shadow:0 0 8px var(--green)}}
+    .td-r{background:#ff5f57;}
+    .td-y{background:#febc2e;}
+    .td-g{background:#28c840;}
+    .t-bar-name{
+      flex:1;text-align:center;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.47rem;letter-spacing:2.5px;
+      color:rgba(255,255,255,.13);
+      text-transform:uppercase;
+    }
     /* body */
-    .t-body{padding:.85rem .95rem 1.05rem;position:relative;z-index:2;}
-    /* prompt */
-    .t-prompt{display:flex;align-items:center;flex-wrap:wrap;gap:.18rem;font-family:'JetBrains Mono',monospace;font-size:.61rem;margin-bottom:.65rem;}
-    .tp-u{color:var(--cyan);}
-    .tp-a{color:rgba(221,224,245,.2);font-size:.52rem;}
-    .tp-h{color:var(--purple);}
-    .tp-s{color:rgba(221,224,245,.18);}
-    .tp-p{color:rgba(0,245,255,.5);}
-    .tp-d{color:var(--green);margin-left:.1rem;}
-    .tp-c{color:rgba(221,224,245,.88);margin-left:.12rem;}
-    .tp-cr{color:var(--cyan);animation:blink .9s step-end infinite;font-size:.85rem;line-height:1;}
-    /* output */
-    .t-out{padding-left:.58rem;border-left:1.5px solid rgba(0,245,255,.1);margin-left:.2rem;min-height:78px;}
-    /* role rows */
-    .t-role{display:flex;align-items:center;gap:.46rem;margin-bottom:.28rem;font-family:'JetBrains Mono',monospace;font-size:.67rem;opacity:0;transform:translateX(-10px);transition:opacity .4s cubic-bezier(.22,.68,0,1.2),transform .4s cubic-bezier(.22,.68,0,1.2);}
-    .t-role.vis{opacity:1;transform:none;}
-    /* animated dot with ping ring */
-    .tr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;position:relative;}
-    .tr-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid currentColor;opacity:.25;animation:dotPing 2.5s ease-in-out infinite;}
-    @keyframes dotPing{0%,100%{transform:scale(1);opacity:.25}50%{transform:scale(1.6);opacity:0}}
-    .t-r1 .tr-dot{background:var(--cyan);color:var(--cyan);box-shadow:0 0 9px rgba(0,245,255,.75);}
-    .t-r2 .tr-dot{background:var(--magenta);color:var(--magenta);box-shadow:0 0 9px rgba(255,0,128,.75);animation-delay:-.8s;}
-    .t-r3 .tr-dot{background:var(--green);color:var(--green);box-shadow:0 0 9px rgba(57,255,20,.75);animation-delay:-1.6s;}
-    .tr-lbl{font-weight:600;letter-spacing:.5px;}
-    .t-r1 .tr-lbl{color:var(--cyan);text-shadow:0 0 18px rgba(0,245,255,.55);}
-    .t-r2 .tr-lbl{color:var(--magenta);text-shadow:0 0 18px rgba(255,0,128,.55);}
-    .t-r3 .tr-lbl{color:var(--green);text-shadow:0 0 18px rgba(57,255,20,.55);}
-    .tr-cmt{color:rgba(221,224,245,.17);font-size:.5rem;font-style:italic;margin-left:.05rem;}
-    /* status bar */
-    .t-status{display:flex;align-items:center;justify-content:space-between;padding-top:.5rem;margin-top:.46rem;border-top:1px solid rgba(0,245,255,.06);opacity:0;transition:opacity .55s;}
-    .t-status.vis{opacity:1;}
-    .t-st-l{font-family:'JetBrains Mono',monospace;font-size:.44rem;color:rgba(221,224,245,.16);letter-spacing:.7px;}
-    .t-st-r{display:flex;gap:.3rem;}
-    .t-badge{font-family:'JetBrains Mono',monospace;font-size:.43rem;letter-spacing:.7px;padding:.1rem .32rem;border:1px solid;display:flex;align-items:center;gap:.18rem;}
-    .tb-ok{color:var(--green);border-color:rgba(57,255,20,.2);background:rgba(57,255,20,.04);}
-    .tb-v{color:rgba(221,224,245,.2);border-color:rgba(221,224,245,.07);}
+    .t-body{
+      padding:1.15rem 1.15rem 1.4rem;
+      min-height:100px;
+      display:flex;flex-direction:column;gap:.46rem;
+    }
+    /* role line */
+    .t-line{
+      display:flex;align-items:center;gap:.42rem;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.75rem;line-height:1.3;
+    }
+    .t-prompt-sym{
+      color:rgba(255,255,255,.2);
+      flex-shrink:0;font-size:.7rem;
+    }
+    .t-word-wrap{display:inline-flex;align-items:center;}
+
+    /* ── wave character animation ── */
+    @keyframes waveChar{
+      0%  {opacity:0;transform:translateY(10px) scale(.88);}
+      55% {opacity:1;transform:translateY(-2.5px) scale(1.06);}
+      100%{opacity:1;transform:translateY(0px) scale(1);}
+    }
+    .wc{
+      display:inline-block;
+      opacity:0;
+      animation:waveChar .42s cubic-bezier(.22,.68,0,1.3) forwards;
+    }
+
+    /* $ cursor at end */
+    .t-dollar-line{
+      display:flex;align-items:center;gap:.35rem;
+      font-family:'JetBrains Mono',monospace;
+      font-size:.78rem;margin-top:.12rem;
+      opacity:0;transition:opacity .35s ease;
+    }
+    .t-dollar-line.vis{opacity:1;}
+    .t-dollar-sym{color:rgba(255,255,255,.28);}
+    .t-cursor-block{
+      display:inline-block;
+      width:.48rem;height:.85em;vertical-align:middle;
+      background:var(--cyan);
+      box-shadow:0 0 10px var(--cyan),0 0 22px rgba(0,245,255,.4);
+      animation:blink .9s step-end infinite;
+    }
 
     /* ── HERO BUTTONS ── */
     .hero-buttons{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;animation:fadeInUp 1s ease .5s both;}
@@ -239,8 +250,6 @@
     .btn-tg{display:inline-flex;align-items:center;gap:.46rem;padding:.8rem 1.6rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(0,245,255,.3);color:var(--cyan);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;}
     .btn-tg:hover{background:rgba(0,245,255,.06);box-shadow:0 0 28px rgba(0,245,255,.22);transform:translateY(-2px);}
     .btn-tg svg{width:13px;height:13px;flex-shrink:0;}
-
-    /* ─── CONTACT MODAL ─── */
     .cm{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .26s;}
     .cm.open{opacity:1;pointer-events:all;}
     .cm-bg{position:absolute;inset:0;background:rgba(2,2,8,.97);cursor:pointer;}
@@ -326,30 +335,19 @@
     <h1 class="hero-title"><span class="glitch" data-text="ELSAyed AshRaf">ELSAyed AshRaf</span></h1>
     <div class="hero-divider"></div>
 
-    <!-- ════════════ TERMINAL ROLE BOX ════════════ -->
+    <!-- ════ TERMINAL ════ -->
     <div class="term-box">
-      <div class="tc tl"></div><div class="tc tr"></div>
-      <div class="tc bl"></div><div class="tc br"></div>
       <div class="t-bar">
-        <div class="t-dots"><span class="td td-r"></span><span class="td td-y"></span><span class="td td-g"></span></div>
-        <div class="t-bar-name">portfolio.sh &mdash; bash &mdash; 80&times;24</div>
-        <div class="t-live">&#9679; LIVE</div>
-      </div>
-      <div class="t-body">
-        <div class="t-prompt">
-          <span class="tp-u">elsayed</span><span class="tp-a">@</span><span class="tp-h">portfolio</span><span class="tp-s">:</span><span class="tp-p">~/roles</span><span class="tp-d">$</span><span class="tp-c" id="tpCmd"></span><span class="tp-cr" id="tpCur">&#9608;</span>
+        <div class="t-dots">
+          <span class="td td-r"></span>
+          <span class="td td-y"></span>
+          <span class="td td-g"></span>
         </div>
-        <div class="t-out" id="termOut"></div>
-        <div class="t-status" id="termSts">
-          <div class="t-st-l">exit 0 &nbsp;&middot;&nbsp; 0.04s</div>
-          <div class="t-st-r">
-            <div class="t-badge tb-ok">&#10003; READY</div>
-            <div class="t-badge tb-v">v2.5.0</div>
-          </div>
-        </div>
+        <div class="t-bar-name">terminal — bash</div>
       </div>
+      <div class="t-body" id="termBody"></div>
     </div>
-    <!-- ════════════ END TERMINAL ════════════ -->
+    <!-- ════ END TERMINAL ════ -->
 
     <div class="hero-buttons">
       <a href="#projects" class="btn-hex btn-primary">
@@ -501,51 +499,81 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
   setTimeout(t,700);
 })();
 
-/* ══════════════════════════════════
-   TERMINAL BOX — typing + role reveal
-   ══════════════════════════════════ */
+/* ══════════════════════════════
+   TERMINAL — wave typing, 3 roles
+   ══════════════════════════════ */
 (function(){
-  const cmd=document.getElementById('tpCmd');
-  const cur=document.getElementById('tpCur');
-  const out=document.getElementById('termOut');
-  const sts=document.getElementById('termSts');
-  if(!cmd||!out)return;
+  const body = document.getElementById('termBody');
+  if(!body) return;
 
-  const command='cat roles.txt';
-  const roles=[
-    {cls:'t-r1',lbl:'Bot_Engineer',     cmt:'# telegram · automation'},
-    {cls:'t-r2',lbl:'Script_Developer', cmt:'# lua · python · php · c#'},
-    {cls:'t-r3',lbl:'Automation_Expert',cmt:'# build · deploy · repeat'},
+  /* roles: text · color · glow */
+  const roles = [
+    { text:'Bot_Engineer',     color:'#ff0080', glow:'rgba(255,0,128,.6)' },
+    { text:'Script_Developer', color:'#00f5ff', glow:'rgba(0,245,255,.6)' },
+    { text:'Automation_Expert',color:'#39ff14', glow:'rgba(57,255,20,.6)'  },
   ];
 
-  let i=0;
-  function typeCmd(){
-    if(i<command.length){
-      cmd.textContent+=command[i++];
-      setTimeout(typeCmd,46+Math.random()*34);
-    }else{
-      setTimeout(()=>{cur.style.display='none';},160);
-      setTimeout(revealRoles,480);
-    }
+  /* create a line row and return the word-wrap span */
+  function createLine(role){
+    const row = document.createElement('div');
+    row.className = 't-line';
+
+    const sym = document.createElement('span');
+    sym.className = 't-prompt-sym';
+    sym.textContent = '>';
+    row.appendChild(sym);
+
+    const wrap = document.createElement('span');
+    wrap.className = 't-word-wrap';
+    wrap.style.color = role.color;
+    wrap.style.textShadow = `0 0 16px ${role.glow}`;
+    row.appendChild(wrap);
+
+    body.appendChild(row);
+    return wrap;
   }
 
-  function revealRoles(){
-    roles.forEach((r,idx)=>{
-      setTimeout(()=>{
-        const el=document.createElement('div');
-        el.className='t-role '+r.cls;
-        el.innerHTML=
-          '<span class="tr-dot"></span>'+
-          '<span class="tr-lbl">'+r.lbl+'</span>'+
-          '<span class="tr-cmt">&nbsp;&nbsp;'+r.cmt+'</span>';
-        out.appendChild(el);
-        requestAnimationFrame(()=>setTimeout(()=>el.classList.add('vis'),18));
-        if(idx===roles.length-1)setTimeout(()=>sts.classList.add('vis'),440);
-      },idx*340);
+  /* append one wave-animated char span */
+  function addChar(wrap, ch){
+    const s = document.createElement('span');
+    s.className = 'wc';
+    s.textContent = ch;
+    wrap.appendChild(s);
+  }
+
+  /* type a role character by character, call done when finished */
+  function typeRole(idx, done){
+    const role = roles[idx];
+    const wrap = createLine(role);
+    const chars = [...role.text];
+    let i = 0;
+    const SPEED = 72; /* ms between chars */
+    (function next(){
+      if(i >= chars.length){ setTimeout(done, 260); return; }
+      addChar(wrap, chars[i++]);
+      setTimeout(next, SPEED + Math.random()*30);
+    })();
+  }
+
+  /* show $ blinking cursor line */
+  function showDollar(){
+    const dl = document.createElement('div');
+    dl.className = 't-dollar-line';
+    dl.innerHTML = '<span class="t-dollar-sym">$</span><span class="t-cursor-block"></span>';
+    body.appendChild(dl);
+    requestAnimationFrame(()=> setTimeout(()=> dl.classList.add('vis'), 40));
+  }
+
+  /* chain: role 0 → role 1 → role 2 → $ */
+  setTimeout(()=>{
+    typeRole(0, ()=>{
+      typeRole(1, ()=>{
+        typeRole(2, ()=>{
+          showDollar();
+        });
+      });
     });
-  }
-
-  setTimeout(typeCmd,1650);
+  }, 1500);
 })();
 
 /* ── Network canvas ── */
@@ -581,10 +609,9 @@ document.addEventListener('click',e=>{const menu=document.getElementById('mobile
 document.addEventListener('touchend',e=>{const menu=document.getElementById('mobileMenu'),btn=document.getElementById('hamBtn');if(menu.classList.contains('open')&&!menu.contains(e.target)&&!btn.contains(e.target))closeMenu();},{passive:true});
 window.addEventListener('scroll',()=>{if(document.getElementById('mobileMenu').classList.contains('open'))closeMenu();},{passive:true});
 
-/* ── Fade-in ── */
+/* ── Fade-in observer ── */
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.06});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-
 function scrollToCard(idx){const cards=document.querySelectorAll('.proj-card');if(cards[idx])cards[idx].scrollIntoView({behavior:'smooth',block:'center'});}
 
 /* ── Contact modal ── */
