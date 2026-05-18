@@ -66,7 +66,18 @@
     .hero-tag{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:1.6px;color:var(--magenta);text-shadow:0 0 14px var(--magenta);margin-bottom:1.6rem;animation:fadeInDown .8s ease both;min-height:1.1em;}
     .hero-tag::after{content:'█';animation:blink .9s step-end infinite;font-size:.75em;vertical-align:middle;margin-left:2px;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    .hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(2.2rem,10vw,5.4rem);font-weight:600;line-height:1.05;margin-bottom:1.7rem;animation:fadeInUp .9s ease .1s both;}
+
+    
+    .hero-title{
+  font-family: 'Rajdhani', sans-serif;
+  /* قمنا بزيادة القيمة هنا ليصبح الخط أكبر بكثير على الشاشات الكبيرة */
+  font-size: clamp(2.8rem, 10vw, 6.6rem); 
+  font-weight: 1000; /* جعل الخط أعرض وأكثر سمكاً */
+  line-height: 0.95;
+  margin-bottom: 2rem;
+  animation: fadeInUp .9s ease .1s both;
+  letter-spacing: 1px; /* إضافة مسافة بسيطة بين الحروف ليعطي فخامة للاسم */
+}
     .glitch{position:relative;display:inline-block;background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(100,0,200,.7));animation:nameShimmer 4.5s linear infinite;}
     @keyframes nameShimmer{0%{background-position:250% center}100%{background-position:0% center}}
     .glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;background:linear-gradient(100deg,#4400a8,#7b00ff,#c44dff,#9922ff,#4400a8,#7b00ff);background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
@@ -534,7 +545,8 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
   function showDollar(){
     const dl = document.createElement('div');
     dl.className = 't-dollar-line';
-    dl.innerHTML = '<span class="t-dollar-sym">$</span><span class="t-cursor-block"></span>';
+    dl.innerHTML = '<span class="t-dollar-sym">~ $</span>';
+
     body.appendChild(dl);
     requestAnimationFrame(()=> setTimeout(()=> dl.classList.add('vis'), 40));
   }
