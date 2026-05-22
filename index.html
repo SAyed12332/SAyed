@@ -1,10 +1,10 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- FIX 1: Removed broken data-URI manifest (blocked by browsers).
-       These two meta tags are the correct & reliable way to set theme color. -->
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#020208">
   <title>ELSAyed AshRaf — Portfolio</title>
@@ -42,54 +42,21 @@
     .nav-dd a .dd-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);flex-shrink:0;opacity:.55;}
     .nav-dd a:hover .dd-dot{opacity:1;}
 
-    /* ── FIX 6: Modern mobile menu with icons ── */
     .ham-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;z-index:201;}
     .ham-btn span{display:block;width:24px;height:2px;background:var(--dp2);border-radius:2px;transition:all .32s ease;}
     .ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
     .ham-btn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
     .ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
-    .mobile-menu{
-      display:flex;position:fixed;
-      top:58px;right:.9rem;
-      width:220px;
-      flex-direction:column;align-items:stretch;
-      gap:0;z-index:190;list-style:none;
-      background:rgba(4,2,16,.98);
-      border:1px solid rgba(90,0,180,.35);
-      border-radius:12px;
-      overflow:hidden;
-      opacity:0;transform:translateY(-8px) scale(.95);
-      transform-origin:top right;
-      transition:opacity .22s ease,transform .25s cubic-bezier(.34,1.4,.64,1);
-      pointer-events:none;
-      box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(90,0,180,.1),inset 0 1px 0 rgba(255,255,255,.04);
-    }
+    .mobile-menu{display:flex;position:fixed;top:58px;right:.9rem;width:220px;flex-direction:column;align-items:stretch;gap:0;z-index:190;list-style:none;background:rgba(4,2,16,.98);border:1px solid rgba(90,0,180,.35);border-radius:12px;overflow:hidden;opacity:0;transform:translateY(-8px) scale(.95);transform-origin:top right;transition:opacity .22s ease,transform .25s cubic-bezier(.34,1.4,.64,1);pointer-events:none;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(90,0,180,.1),inset 0 1px 0 rgba(255,255,255,.04);}
     .mobile-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all;}
     .mobile-menu li{width:100%;border-bottom:1px solid rgba(90,0,180,.12);}
     .mobile-menu li:last-child{border-bottom:none;}
-    .mobile-menu a{
-      display:flex;align-items:center;gap:.75rem;
-      width:100%;padding:.85rem 1.1rem;
-      font-family:'Orbitron',sans-serif;font-size:.6rem;
-      letter-spacing:2px;color:rgba(221,224,245,.75);
-      text-decoration:none;
-      transition:all .18s ease;
-      position:relative;overflow:hidden;
-    }
-    .mobile-menu a::before{
-      content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-      background:var(--cyan);transform:scaleY(0);transition:transform .2s ease;
-    }
+    .mobile-menu a{display:flex;align-items:center;gap:.75rem;width:100%;padding:.85rem 1.1rem;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;color:rgba(221,224,245,.75);text-decoration:none;transition:all .18s ease;position:relative;overflow:hidden;}
+    .mobile-menu a::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cyan);transform:scaleY(0);transition:transform .2s ease;}
     .mobile-menu a:hover{color:#fff;background:rgba(0,245,255,.04);padding-left:1.35rem;}
     .mobile-menu a:hover::before{transform:scaleY(1);}
-    .mm-icon{
-      width:30px;height:30px;border-radius:8px;
-      display:flex;align-items:center;justify-content:center;
-      flex-shrink:0;border:1px solid rgba(0,245,255,.15);
-      background:rgba(0,245,255,.05);
-      transition:all .18s ease;
-    }
+    .mm-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(0,245,255,.15);background:rgba(0,245,255,.05);transition:all .18s ease;}
     .mobile-menu a:hover .mm-icon{background:rgba(0,245,255,.12);border-color:rgba(0,245,255,.35);}
     .mm-icon svg{width:13px;height:13px;stroke:var(--cyan);}
     .mm-icon.mag svg{stroke:var(--magenta);}
@@ -98,9 +65,7 @@
     .mm-icon.pur svg{stroke:var(--purple);}
     .mm-icon.pur{border-color:rgba(191,0,255,.15);background:rgba(191,0,255,.05);}
     .mobile-menu a:hover .mm-icon.pur{background:rgba(191,0,255,.12);border-color:rgba(191,0,255,.4);}
-    .mm-text{display:flex;flex-direction:column;gap:.12rem;}
     .mm-label{font-size:.6rem;letter-spacing:2px;}
-    .mm-sub{font-family:'JetBrains Mono',monospace;font-size:.42rem;color:rgba(221,224,245,.28);letter-spacing:.5px;}
     .mm-arrow{margin-left:auto;color:rgba(221,224,245,.2);font-size:.65rem;transition:transform .18s ease,color .18s ease;}
     .mobile-menu a:hover .mm-arrow{transform:translateX(3px);color:var(--cyan);}
 
@@ -133,28 +98,27 @@
     @keyframes g2{0%,83%,100%{transform:none;opacity:0}84%{transform:translate(3px,0) skewX(2deg);opacity:.5}85.5%{opacity:0}}
     .hero-divider{width:130px;height:1px;margin:0 auto 1.8rem;background:linear-gradient(to right,transparent,rgba(0,245,255,.4),transparent);}
 
-    /* ── Terminal box ── */
+    /* ── Terminal ── */
     .term-box{width:100%;max-width:390px;margin:0 auto 3.5rem;background:#06060e;border:1px solid rgba(255,255,255,.07);border-radius:7px;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,.7),0 0 0 1px rgba(0,245,255,.025),inset 0 1px 0 rgba(255,255,255,.03);animation:fadeInUp 1s ease .35s both;}
-    .t-bar{display:flex;align-items:center;gap:.55rem;padding:.52rem .82rem;background:#0b0b1c;border-bottom:1px solid rgba(255,255,255,.04);}
-    .t-dots{display:flex;gap:.32rem;}
-    .td{width:9px;height:9px;border-radius:50%;display:block;}
-    .td-r{background:#ff5f57;}.td-y{background:#febc2e;}.td-g{background:#28c840;}
-    .t-bar-name{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.47rem;letter-spacing:2.5px;color:rgba(255,255,255,.13);text-transform:uppercase;}
+    /* EDIT 1 – t-bar: no dots, centered */
+    .t-bar{display:flex;align-items:center;justify-content:center;padding:.52rem .82rem;background:#0b0b1c;border-bottom:1px solid rgba(255,255,255,.04);}
+    .t-bar-name{text-align:center;font-family:'JetBrains Mono',monospace;font-size:.47rem;letter-spacing:2.5px;color:rgba(255,255,255,.13);text-transform:uppercase;}
     .t-body{padding:1.15rem 1.15rem 1.4rem;min-height:100px;display:flex;flex-direction:column;gap:.46rem;}
     .t-line{display:flex;align-items:center;gap:.42rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.3;}
     .t-prompt-sym{color:rgba(255,255,255,.2);flex-shrink:0;font-size:.7rem;}
 
-    /* FIX 2: Natural terminal characters – smooth fade-in typing, no bounce */
-    @keyframes fadeChar{
-      0%  {opacity:0;transform:translateY(4px);}
-      100%{opacity:1;transform:translateY(0);}
+    /* EDIT 1 – wave animation for terminal characters */
+    @keyframes waveChar{
+      0%  {opacity:0;transform:translateY(14px) scale(.82);}
+      55% {opacity:1;transform:translateY(-6px) scale(1.07);}
+      78% {transform:translateY(3px) scale(.97);}
+      100%{opacity:1;transform:translateY(0) scale(1);}
     }
-    .wc{display:inline-block;opacity:0;animation:fadeChar .28s ease forwards;}
+    .wc{display:inline-block;opacity:0;animation:waveChar .48s cubic-bezier(.34,1.56,.64,1) forwards;font-family:'JetBrains Mono',monospace;font-size:1rem;}
 
     .t-dollar-line{display:flex;align-items:center;gap:.35rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-top:.12rem;opacity:0;transition:opacity .35s ease;}
     .t-dollar-line.vis{opacity:1;}
     .t-dollar-sym{color:rgba(255,255,255,.28);}
-    .t-cursor-block{display:inline-block;width:.48rem;height:.85em;vertical-align:middle;background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 22px rgba(0,245,255,.4);animation:blink .9s step-end infinite;}
 
     .hero-buttons{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;animation:fadeInUp 1s ease .5s both;}
     .btn-hex{display:inline-flex;align-items:center;gap:.5rem;font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all .3s;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);user-select:none;-webkit-user-select:none;}
@@ -166,20 +130,10 @@
     .btn-secondary svg{width:13px;height:13px;}
     .btn-secondary:hover{background:rgba(255,0,128,.08);box-shadow:0 0 35px rgba(255,0,128,.4);transform:translateY(-2px);}
 
-    /* FIX 3: Scroll indicator – slimmer + disappears on scroll */
-    .hero-scroll{
-      position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
-      display:flex;flex-direction:column;align-items:center;z-index:10;
-      animation:fadeInUp 1.2s ease .85s both;
-      transition:opacity .5s ease;
-    }
+    /* EDIT 2 – scroll indicator */
+    .hero-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:10;animation:fadeInUp 1.2s ease .85s both;transition:opacity .5s ease;}
     .hero-scroll.hidden{opacity:0;pointer-events:none;}
-    .hero-scroll-line{
-      width:1px;height:40px;
-      background:linear-gradient(to bottom,var(--cyan),transparent);
-      box-shadow:0 0 6px rgba(0,245,255,.3);
-      animation:scrollLineBounce 1.7s ease-in-out infinite;
-    }
+    .hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--cyan),transparent);box-shadow:0 0 6px rgba(0,245,255,.3);animation:scrollLineBounce 1.7s ease-in-out infinite;}
     @keyframes scrollLineBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(8px);opacity:1}}
 
     /* ── About ── */
@@ -191,7 +145,7 @@
     .about-text em{color:rgba(221,224,245,.9);font-style:normal;}
     .code-badge{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--green);background:rgba(57,255,20,.06);border:1px solid rgba(57,255,20,.2);padding:.1rem .4rem;margin:0 .1rem;border-radius:2px;}
 
-    /* ── FIX 4 + 5: Projects – full-width cards ── */
+    /* ── Projects – EDIT 4: gap + spacing ── */
     #projects{padding:5rem 0;position:relative;overflow:hidden;background:linear-gradient(to bottom,transparent,rgba(90,0,180,.018),transparent);}
     #projects::before,#projects::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--dp),transparent);}
     #projects::before{top:0;}#projects::after{bottom:0;}
@@ -200,21 +154,18 @@
     .proj-neon-stat{text-align:center;margin-bottom:.8rem;padding:.5rem 0;}
     .proj-neon-text{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,5vw,2.3rem);font-weight:700;letter-spacing:7px;color:#fff;text-shadow:0 0 6px var(--cyan),0 0 15px var(--cyan),0 0 32px rgba(0,245,255,.65),0 0 65px rgba(0,245,255,.28);animation:neonFlicker 3.5s ease-in-out infinite;display:inline-block;}
     @keyframes neonFlicker{0%,86%,100%{text-shadow:0 0 6px var(--cyan),0 0 15px var(--cyan),0 0 32px rgba(0,245,255,.65),0 0 65px rgba(0,245,255,.28);}88%{text-shadow:0 0 3px var(--cyan),0 0 7px var(--cyan);}92%{text-shadow:0 0 10px var(--cyan),0 0 24px var(--cyan),0 0 52px rgba(0,245,255,.88),0 0 100px rgba(0,245,255,.42);}}
-    /* Full-width grid with thin gap */
-    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;width:100%;}
-    .proj-card{background:rgba(3,4,16,.96);border:none;border-top:1px solid rgba(0,245,255,.08);border-bottom:1px solid rgba(0,245,255,.08);position:relative;transition:transform .35s,box-shadow .35s;overflow:hidden;}
+    /* EDIT 4: visible gap & padding between cards */
+    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;padding:0 18px;}
+    .proj-card{background:rgba(3,4,16,.96);border:1px solid rgba(0,245,255,.1);border-radius:5px;position:relative;transition:transform .35s,box-shadow .35s;overflow:hidden;}
     .proj-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,245,255,.04),transparent);opacity:0;transition:opacity .35s;z-index:0;}
-    .proj-card:hover{box-shadow:inset 0 0 40px rgba(0,245,255,.05);}
+    .proj-card:hover{box-shadow:0 6px 36px rgba(0,245,255,.09),inset 0 0 40px rgba(0,245,255,.04);}
     .proj-card:hover::before{opacity:1;}
     .proj-card.vc{background:rgba(5,2,18,.96);}
-    .proj-card.vc:hover{box-shadow:inset 0 0 40px rgba(191,0,255,.05);}
+    .proj-card.vc:hover{box-shadow:0 6px 36px rgba(191,0,255,.09),inset 0 0 40px rgba(191,0,255,.04);}
     .proj-card.vc::before{background:linear-gradient(135deg,rgba(191,0,255,.04),transparent);}
-    /* Left card gets left border, right card gets right border */
-    .proj-card:first-child{border-left:2px solid rgba(0,245,255,.25);}
-    .proj-card:last-child{border-right:2px solid rgba(191,0,255,.25);}
 
-    /* FIX 5: Taller, full-width thumbnails redesigned */
-    .card-thumb{position:relative;width:100%;height:120px;overflow:hidden;z-index:1;}
+    /* EDIT 4: compact thumbnail height */
+    .card-thumb{position:relative;width:100%;height:90px;overflow:hidden;z-index:1;}
     .card-thumb svg{width:100%;height:100%;display:block;}
     .card-scan{position:absolute;top:0;left:0;right:0;height:2px;overflow:hidden;z-index:3;}
     .card-scan::after{content:'';position:absolute;top:0;left:-60%;width:60%;height:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scanT 2.6s linear infinite;}
@@ -312,7 +263,7 @@
       .btn-dl,.btn-demo{font-size:.52rem;min-height:40px;padding:.65rem .5rem;}
     }
     @media(max-width:360px){
-      .projects-grid{gap:2px;}
+      .projects-grid{gap:8px;padding:0 8px;}
       .card-body{padding:.6rem .55rem .7rem;}
       .proj-title{font-size:.62rem;}
       .bot-nm{display:none;}
@@ -354,41 +305,32 @@
   </button>
 </nav>
 
-<!-- FIX 6: Modern mobile menu with icons + description -->
+<!-- EDIT 3: mobile menu – no mm-sub, projects icon changed to code brackets, contact goes to section -->
 <ul class="mobile-menu" id="mobileMenu">
   <li>
     <a href="#about" onclick="closeMenu()">
       <span class="mm-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </span>
-      <span class="mm-text">
-        <span class="mm-label">ABOUT</span>
-        <span class="mm-sub">Who am I</span>
-      </span>
+      <span class="mm-label">ABOUT</span>
       <span class="mm-arrow">›</span>
     </a>
   </li>
   <li>
     <a href="#projects" onclick="closeMenu()">
       <span class="mm-icon mag">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
       </span>
-      <span class="mm-text">
-        <span class="mm-label">PROJECTS</span>
-        <span class="mm-sub">Latest work</span>
-      </span>
+      <span class="mm-label">PROJECTS</span>
       <span class="mm-arrow">›</span>
     </a>
   </li>
   <li>
-    <a href="#contact" onclick="closeMenu(); openContact()">
+    <a href="#contact" onclick="closeMenu()">
       <span class="mm-icon pur">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       </span>
-      <span class="mm-text">
-        <span class="mm-label">CONTACT</span>
-        <span class="mm-sub">Get in touch</span>
-      </span>
+      <span class="mm-label">CONTACT</span>
       <span class="mm-arrow">›</span>
     </a>
   </li>
@@ -402,9 +344,9 @@
     <h1 class="hero-title"><span class="glitch" data-text="ELSAyed AshRaf">ELSAyed AshRaf</span></h1>
     <div class="hero-divider"></div>
 
+    <!-- EDIT 1: terminal – dots removed -->
     <div class="term-box">
       <div class="t-bar">
-        <div class="t-dots"><span class="td td-r"></span><span class="td td-y"></span><span class="td td-g"></span></div>
         <div class="t-bar-name">bash</div>
       </div>
       <div class="t-body" id="termBody"></div>
@@ -419,7 +361,6 @@
       </button>
     </div>
   </div>
-  <!-- FIX 3: Scroll indicator with id for JS hide-on-scroll -->
   <div class="hero-scroll" id="heroScroll">
     <div class="hero-scroll-line"></div>
   </div>
@@ -442,63 +383,49 @@
     <div class="proj-neon-stat fade-in"><span class="proj-neon-text">2+ PROJECTS</span></div>
     <div class="projects-grid">
 
-      <!-- Card 1: Dashboard Bot -->
+      <!-- Card 1: Dashboard Bot – EDIT 4: redesigned compact thumbnail -->
       <div class="proj-card fade-in">
         <div class="card-scan"></div>
-        <!-- FIX 5: Redesigned full-width dashboard thumbnail -->
         <div class="card-thumb">
-          <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <svg viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <defs>
               <linearGradient id="bgG1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#020410" stop-opacity="1"/>
-                <stop offset="100%" stop-color="#00080a" stop-opacity="1"/>
+                <stop offset="0%" stop-color="#020410"/><stop offset="100%" stop-color="#00080a"/>
               </linearGradient>
               <linearGradient id="barG" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#00f5ff" stop-opacity=".85"/>
-                <stop offset="100%" stop-color="#00f5ff" stop-opacity=".15"/>
+                <stop offset="0%" stop-color="#00f5ff" stop-opacity=".9"/><stop offset="100%" stop-color="#00f5ff" stop-opacity=".18"/>
               </linearGradient>
-              <filter id="glow1"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow1"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
-            <rect width="500" height="120" fill="url(#bgG1)"/>
-            <!-- grid lines -->
-            <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
-            <line x1="0" y1="60" x2="500" y2="60" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
-            <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
-            <!-- bars left section -->
-            <rect x="12" y="75" width="16" height="35" rx="1" fill="url(#barG)" opacity=".45"/>
-            <rect x="32" y="58" width="16" height="52" rx="1" fill="url(#barG)" opacity=".6"/>
-            <rect x="52" y="45" width="16" height="65" rx="1" fill="url(#barG)" opacity=".75"/>
-            <rect x="72" y="32" width="16" height="78" rx="1" fill="url(#barG)" filter="url(#glow1)" opacity=".95"/>
-            <rect x="92" y="50" width="16" height="60" rx="1" fill="url(#barG)" opacity=".7"/>
-            <rect x="112" y="62" width="16" height="48" rx="1" fill="url(#barG)" opacity=".55"/>
-            <rect x="132" y="55" width="16" height="55" rx="1" fill="url(#barG)" opacity=".62"/>
-            <!-- trend line -->
-            <polyline points="20,75 40,58 60,45 80,32 100,50 120,62 140,55" fill="none" stroke="rgba(0,245,255,.7)" stroke-width="1.5"/>
-            <circle cx="80" cy="32" r="3" fill="#00f5ff" filter="url(#glow1)"/>
-            <!-- status badges -->
-            <rect x="175" y="12" width="52" height="14" rx="7" fill="rgba(57,255,20,.1)" stroke="rgba(57,255,20,.4)" stroke-width=".7"/>
-            <text x="201" y="22.5" text-anchor="middle" font-family="monospace" font-size="6.5" fill="#39ff14">● ONLINE</text>
-            <rect x="235" y="12" width="44" height="14" rx="7" fill="rgba(0,245,255,.08)" stroke="rgba(0,245,255,.3)" stroke-width=".7"/>
-            <text x="257" y="22.5" text-anchor="middle" font-family="monospace" font-size="6.5" fill="#00f5ff">ADMIN</text>
-            <!-- terminal lines center -->
-            <text x="175" y="47" font-family="monospace" font-size="7" fill="rgba(0,245,255,.65)">&gt; system.initialize()</text>
-            <text x="175" y="62" font-family="monospace" font-size="7" fill="rgba(57,255,20,.55)">&gt; users_active: 1,247</text>
-            <text x="175" y="77" font-family="monospace" font-size="7" fill="rgba(0,245,255,.45)">&gt; uptime: 99.9%</text>
-            <text x="175" y="92" font-family="monospace" font-size="7" fill="rgba(255,0,128,.5)">&gt; alerts: 0</text>
-            <!-- right mini stat cards -->
-            <rect x="340" y="15" width="70" height="38" rx="3" fill="rgba(0,245,255,.04)" stroke="rgba(0,245,255,.14)" stroke-width=".7"/>
-            <text x="375" y="29" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(0,245,255,.4)">REQUESTS / MIN</text>
-            <text x="375" y="44" text-anchor="middle" font-family="'Orbitron',monospace" font-size="11" fill="rgba(0,245,255,.8)" font-weight="700">847</text>
-            <rect x="420" y="15" width="70" height="38" rx="3" fill="rgba(57,255,20,.03)" stroke="rgba(57,255,20,.14)" stroke-width=".7"/>
-            <text x="455" y="29" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(57,255,20,.4)">USERS ONLINE</text>
-            <text x="455" y="44" text-anchor="middle" font-family="'Orbitron',monospace" font-size="11" fill="rgba(57,255,20,.8)" font-weight="700">1.2k</text>
-            <!-- bottom scan effect -->
-            <rect x="340" y="65" width="150" height="1" fill="rgba(0,245,255,.15)"/>
-            <rect x="340" y="72" width="120" height="1" fill="rgba(0,245,255,.1)"/>
-            <rect x="340" y="79" width="140" height="1" fill="rgba(0,245,255,.07)"/>
-            <rect x="340" y="86" width="100" height="1" fill="rgba(0,245,255,.05)"/>
-            <!-- top border glow -->
-            <line x1="0" y1="1.5" x2="500" y2="1.5" stroke="rgba(0,245,255,.5)" stroke-width="2"/>
+            <rect width="500" height="90" fill="url(#bgG1)"/>
+            <line x1="0" y1="22" x2="500" y2="22" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="45" x2="500" y2="45" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="68" x2="500" y2="68" stroke="rgba(0,245,255,.04)" stroke-width="1"/>
+            <!-- Bar chart -->
+            <rect x="18" y="68" width="10" height="14" rx="1" fill="url(#barG)" opacity=".45"/>
+            <rect x="31" y="55" width="10" height="27" rx="1" fill="url(#barG)" opacity=".58"/>
+            <rect x="44" y="42" width="10" height="40" rx="1" fill="url(#barG)" opacity=".72"/>
+            <rect x="57" y="26" width="10" height="56" rx="1" fill="url(#barG)" filter="url(#glow1)" opacity=".95"/>
+            <rect x="70" y="40" width="10" height="42" rx="1" fill="url(#barG)" opacity=".66"/>
+            <rect x="83" y="54" width="10" height="28" rx="1" fill="url(#barG)" opacity=".52"/>
+            <rect x="96" y="47" width="10" height="35" rx="1" fill="url(#barG)" opacity=".60"/>
+            <polyline points="23,68 36,55 49,42 62,26 75,40 88,54 101,47" fill="none" stroke="rgba(0,245,255,.75)" stroke-width="1.5"/>
+            <circle cx="62" cy="26" r="3" fill="#00f5ff" filter="url(#glow1)"/>
+            <!-- Terminal lines -->
+            <text x="132" y="28" font-family="monospace" font-size="8" fill="rgba(57,255,20,.72)">&gt; status: ONLINE</text>
+            <text x="132" y="48" font-family="monospace" font-size="8" fill="rgba(0,245,255,.65)">&gt; users: 1,247</text>
+            <text x="132" y="68" font-family="monospace" font-size="8" fill="rgba(0,245,255,.45)">&gt; uptime: 99.9%</text>
+            <!-- Stat boxes -->
+            <rect x="334" y="10" width="70" height="32" rx="3" fill="rgba(0,245,255,.04)" stroke="rgba(0,245,255,.16)" stroke-width=".7"/>
+            <text x="369" y="22" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(0,245,255,.42)">REQ / MIN</text>
+            <text x="369" y="36" text-anchor="middle" font-family="monospace" font-size="13" fill="rgba(0,245,255,.9)" font-weight="700">847</text>
+            <rect x="416" y="10" width="70" height="32" rx="3" fill="rgba(57,255,20,.03)" stroke="rgba(57,255,20,.16)" stroke-width=".7"/>
+            <text x="451" y="22" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(57,255,20,.42)">USERS</text>
+            <text x="451" y="36" text-anchor="middle" font-family="monospace" font-size="13" fill="rgba(57,255,20,.9)" font-weight="700">1.2k</text>
+            <rect x="334" y="55" width="152" height="1" fill="rgba(0,245,255,.12)"/>
+            <rect x="334" y="64" width="118" height="1" fill="rgba(0,245,255,.07)"/>
+            <rect x="334" y="73" width="136" height="1" fill="rgba(0,245,255,.05)"/>
+            <line x1="0" y1="1.5" x2="500" y2="1.5" stroke="rgba(0,245,255,.55)" stroke-width="2"/>
           </svg>
         </div>
         <div class="card-top-line"></div>
@@ -520,62 +447,49 @@
         </div>
       </div>
 
-      <!-- Card 2: TTS Bot -->
+      <!-- Card 2: TTS Bot – EDIT 4: redesigned compact thumbnail -->
       <div class="proj-card vc fade-in" style="animation-delay:.1s">
         <div class="card-scan ps"></div>
-        <!-- FIX 5: Redesigned full-width TTS thumbnail -->
         <div class="card-thumb">
-          <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <svg viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <defs>
               <linearGradient id="bgG2" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#040012" stop-opacity="1"/>
-                <stop offset="100%" stop-color="#020208" stop-opacity="1"/>
+                <stop offset="0%" stop-color="#040012"/><stop offset="100%" stop-color="#020208"/>
               </linearGradient>
               <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#bf00ff" stop-opacity=".9"/>
-                <stop offset="100%" stop-color="#bf00ff" stop-opacity=".25"/>
+                <stop offset="0%" stop-color="#bf00ff" stop-opacity=".95"/><stop offset="100%" stop-color="#bf00ff" stop-opacity=".2"/>
               </linearGradient>
               <filter id="glow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
-            <rect width="500" height="120" fill="url(#bgG2)"/>
-            <!-- waveform bars – wide spread across left/center -->
-            <rect x="10" y="58" width="5" height="10" rx="2.5" fill="url(#waveGrad)" opacity=".4"/>
-            <rect x="18" y="50" width="5" height="26" rx="2.5" fill="url(#waveGrad)" opacity=".5"/>
-            <rect x="26" y="42" width="5" height="42" rx="2.5" fill="url(#waveGrad)" opacity=".62"/>
-            <rect x="34" y="32" width="5" height="62" rx="2.5" fill="url(#waveGrad)" opacity=".75"/>
-            <rect x="42" y="22" width="5" height="82" rx="2.5" fill="url(#waveGrad)" opacity=".85"/>
-            <rect x="50" y="15" width="7" height="96" rx="3.5" fill="#bf00ff" filter="url(#glow2)" opacity=".9"/>
-            <rect x="60" y="22" width="5" height="82" rx="2.5" fill="url(#waveGrad)" opacity=".85"/>
-            <rect x="68" y="32" width="5" height="62" rx="2.5" fill="url(#waveGrad)" opacity=".75"/>
-            <rect x="76" y="42" width="5" height="42" rx="2.5" fill="url(#waveGrad)" opacity=".62"/>
-            <rect x="84" y="50" width="5" height="26" rx="2.5" fill="url(#waveGrad)" opacity=".5"/>
-            <rect x="92" y="58" width="5" height="10" rx="2.5" fill="url(#waveGrad)" opacity=".4"/>
-            <!-- second cluster -->
-            <rect x="105" y="55" width="5" height="16" rx="2.5" fill="url(#waveGrad)" opacity=".38"/>
-            <rect x="113" y="46" width="5" height="34" rx="2.5" fill="url(#waveGrad)" opacity=".52"/>
-            <rect x="121" y="36" width="5" height="54" rx="2.5" fill="url(#waveGrad)" opacity=".68"/>
-            <rect x="129" y="44" width="5" height="38" rx="2.5" fill="url(#waveGrad)" opacity=".56"/>
-            <rect x="137" y="54" width="5" height="18" rx="2.5" fill="url(#waveGrad)" opacity=".4"/>
-            <!-- third cluster -->
-            <rect x="150" y="52" width="5" height="22" rx="2.5" fill="url(#waveGrad)" opacity=".35"/>
-            <rect x="158" y="40" width="5" height="46" rx="2.5" fill="url(#waveGrad)" opacity=".55"/>
-            <rect x="166" y="48" width="5" height="30" rx="2.5" fill="url(#waveGrad)" opacity=".45"/>
-            <rect x="174" y="56" width="5" height="14" rx="2.5" fill="url(#waveGrad)" opacity=".35"/>
-            <!-- speaker icon right side -->
-            <circle cx="330" cy="60" r="42" fill="rgba(191,0,255,.03)" stroke="rgba(191,0,255,.1)" stroke-width="1"/>
-            <path d="M308 46 L308 74 L318 74 L334 86 L334 34 L318 46 Z" fill="rgba(191,0,255,.15)" stroke="#bf00ff" stroke-width="1.4"/>
-            <path d="M340 48 Q354 60 340 72" fill="none" stroke="#bf00ff" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M347 41 Q366 60 347 79" fill="none" stroke="rgba(191,0,255,.5)" stroke-width="1.3" stroke-linecap="round"/>
-            <path d="M354 34 Q378 60 354 86" fill="none" stroke="rgba(191,0,255,.22)" stroke-width="1.1" stroke-linecap="round"/>
-            <!-- Status badge right -->
-            <rect x="390" y="47" width="96" height="16" rx="8" fill="rgba(191,0,255,.1)" stroke="rgba(191,0,255,.35)" stroke-width=".7"/>
-            <text x="438" y="58.5" text-anchor="middle" font-family="monospace" font-size="6.5" fill="#bf00ff">● TTS ACTIVE</text>
-            <!-- language indicators -->
-            <rect x="390" y="73" width="44" height="12" rx="6" fill="rgba(191,0,255,.06)" stroke="rgba(191,0,255,.2)" stroke-width=".6"/>
-            <text x="412" y="81.5" text-anchor="middle" font-family="monospace" font-size="5.5" fill="rgba(191,0,255,.7)">AR / EN</text>
-            <rect x="442" y="73" width="44" height="12" rx="6" fill="rgba(191,0,255,.06)" stroke="rgba(191,0,255,.2)" stroke-width=".6"/>
-            <text x="464" y="81.5" text-anchor="middle" font-family="monospace" font-size="5.5" fill="rgba(191,0,255,.7)">6 VOICES</text>
-            <!-- top border glow -->
+            <rect width="500" height="90" fill="url(#bgG2)"/>
+            <!-- Symmetric waveform (centered) -->
+            <rect x="116" y="43" width="6" height="6" rx="3" fill="url(#waveGrad)" opacity=".35"/>
+            <rect x="125" y="37" width="6" height="18" rx="3" fill="url(#waveGrad)" opacity=".48"/>
+            <rect x="134" y="28" width="6" height="36" rx="3" fill="url(#waveGrad)" opacity=".62"/>
+            <rect x="143" y="18" width="6" height="56" rx="3" fill="url(#waveGrad)" opacity=".78"/>
+            <rect x="153" y="9" width="7" height="74" rx="3.5" fill="#bf00ff" filter="url(#glow2)" opacity=".92"/>
+            <rect x="163" y="3" width="8" height="86" rx="4" fill="#bf00ff" filter="url(#glow2)"/>
+            <rect x="174" y="9" width="7" height="74" rx="3.5" fill="#bf00ff" filter="url(#glow2)" opacity=".92"/>
+            <rect x="184" y="18" width="6" height="56" rx="3" fill="url(#waveGrad)" opacity=".78"/>
+            <rect x="193" y="28" width="6" height="36" rx="3" fill="url(#waveGrad)" opacity=".62"/>
+            <rect x="202" y="37" width="6" height="18" rx="3" fill="url(#waveGrad)" opacity=".48"/>
+            <rect x="211" y="43" width="6" height="6" rx="3" fill="url(#waveGrad)" opacity=".35"/>
+            <!-- Small side clusters -->
+            <rect x="228" y="38" width="5" height="16" rx="2.5" fill="url(#waveGrad)" opacity=".38"/>
+            <rect x="236" y="30" width="5" height="32" rx="2.5" fill="url(#waveGrad)" opacity=".52"/>
+            <rect x="244" y="38" width="5" height="16" rx="2.5" fill="url(#waveGrad)" opacity=".38"/>
+            <!-- Speaker icon -->
+            <path d="M302 32 L302 58 L311 58 L324 68 L324 22 L311 32 Z" fill="rgba(191,0,255,.18)" stroke="#bf00ff" stroke-width="1.3"/>
+            <path d="M330 36 Q341 45 330 54" fill="none" stroke="#bf00ff" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M337 30 Q352 45 337 60" fill="none" stroke="rgba(191,0,255,.5)" stroke-width="1.4" stroke-linecap="round"/>
+            <!-- Status badge -->
+            <rect x="370" y="18" width="114" height="18" rx="9" fill="rgba(191,0,255,.1)" stroke="rgba(191,0,255,.38)" stroke-width=".7"/>
+            <text x="427" y="30" text-anchor="middle" font-family="monospace" font-size="7" fill="#bf00ff">● TTS ACTIVE</text>
+            <!-- Language badges -->
+            <rect x="370" y="50" width="52" height="15" rx="7" fill="rgba(191,0,255,.07)" stroke="rgba(191,0,255,.22)" stroke-width=".7"/>
+            <text x="396" y="60.5" text-anchor="middle" font-family="monospace" font-size="6.5" fill="rgba(191,0,255,.8)">AR / EN</text>
+            <rect x="430" y="50" width="54" height="15" rx="7" fill="rgba(191,0,255,.07)" stroke="rgba(191,0,255,.22)" stroke-width=".7"/>
+            <text x="457" y="60.5" text-anchor="middle" font-family="monospace" font-size="6.5" fill="rgba(191,0,255,.8)">6 VOICES</text>
             <line x1="0" y1="1.5" x2="500" y2="1.5" stroke="rgba(191,0,255,.55)" stroke-width="2"/>
           </svg>
         </div>
@@ -655,77 +569,73 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
   setTimeout(t,700);
 })();
 
-/* ══════════════════════════════
-   FIX 2: TERMINAL – smooth natural typing, no underscores
-   ══════════════════════════════ */
+/* ── EDIT 1: Terminal – wave animation, no spacing between chars, no cursor block ── */
 (function(){
-  const body = document.getElementById('termBody');
-  if(!body) return;
+  const body=document.getElementById('termBody');
+  if(!body)return;
 
-  /* FIX 2: spaces instead of underscores, smooth animation */
-  const segments = [
-    { text: 'Bot Engineer ',      color: 'rgba(255,255,255,0.35)', glow: 'none' },
-    { text: 'Script Developer ',  color: '#00f5ff',                glow: 'rgba(0,245,255,.55)' },
-    { text: 'Automation Expert',  color: 'rgba(255,255,255,0.35)', glow: 'none' }
+  const segments=[
+    {text:'Bot Engineer ',     color:'rgba(255,255,255,.38)',glow:'none'},
+    {text:'Script Developer ', color:'#00f5ff',             glow:'rgba(0,245,255,.6)'},
+    {text:'Automation Expert', color:'rgba(255,255,255,.38)',glow:'none'}
   ];
 
   function createSingleLine(){
-    const row = document.createElement('div');
-    row.className = 't-line';
-    row.style.flexWrap = 'wrap';
-    const sym = document.createElement('span');
-    sym.className = 't-prompt-sym';
-    sym.textContent = '>';
+    const row=document.createElement('div');
+    row.className='t-line';
+    const sym=document.createElement('span');
+    sym.className='t-prompt-sym';
+    sym.textContent='>';
     row.appendChild(sym);
+    /* font-size:0 on wrapper eliminates inline-block gaps between chars */
+    const wrap=document.createElement('span');
+    wrap.style.cssText='font-size:0;letter-spacing:0;line-height:1;';
+    row.appendChild(wrap);
     body.appendChild(row);
-    return row;
+    return wrap;
   }
 
-  function addChar(container, ch, color, glow, delay){
-    const s = document.createElement('span');
-    s.className = 'wc';
-    s.textContent = ch === ' ' ? '\u00A0' : ch;
-    s.style.color = color;
-    s.style.animationDelay = delay + 'ms';
-    if(glow !== 'none') s.style.textShadow = `0 0 14px ${glow}`;
+  function addChar(container,ch,color,glow,delay){
+    const s=document.createElement('span');
+    s.className='wc';
+    s.textContent=(ch===' ')?'\u00A0':ch;
+    s.style.color=color;
+    s.style.animationDelay=delay+'ms';
+    if(glow!=='none')s.style.textShadow=`0 0 14px ${glow}`;
     container.appendChild(s);
   }
 
+  /* EDIT 1: no blinking cursor block */
   function showDollar(){
-    const dl = document.createElement('div');
-    dl.className = 't-dollar-line';
-    dl.innerHTML = '<span class="t-dollar-sym">~ $</span><span class="t-cursor-block"></span>';
+    const dl=document.createElement('div');
+    dl.className='t-dollar-line';
+    dl.innerHTML='<span class="t-dollar-sym">~ $</span>';
     body.appendChild(dl);
-    requestAnimationFrame(()=> setTimeout(()=> dl.classList.add('vis'), 40));
+    requestAnimationFrame(()=>setTimeout(()=>dl.classList.add('vis'),40));
   }
 
   setTimeout(()=>{
-    const lineEl = createSingleLine();
-    let delay = 0;
-    const baseDelay = 65;
-
-    segments.forEach(seg => {
-      for(let i = 0; i < seg.text.length; i++){
-        addChar(lineEl, seg.text[i], seg.color, seg.glow, delay);
-        delay += baseDelay + Math.random() * 25;
+    const lineEl=createSingleLine();
+    let delay=0;
+    const baseDelay=65;
+    segments.forEach(seg=>{
+      for(let i=0;i<seg.text.length;i++){
+        addChar(lineEl,seg.text[i],seg.color,seg.glow,delay);
+        delay+=baseDelay+Math.random()*25;
       }
     });
-
-    setTimeout(showDollar, delay + 260);
-  }, 1500);
+    setTimeout(showDollar,delay+260);
+  },1500);
 })();
 
-/* ── FIX 3: Hide scroll indicator after user scrolls ── */
+/* ── EDIT 2: hide scroll indicator on first scroll pixel ── */
 (function(){
-  const scrollEl = document.getElementById('heroScroll');
-  if(!scrollEl) return;
-  let hidden = false;
-  window.addEventListener('scroll', () => {
-    if(!hidden && window.scrollY > 40){
-      hidden = true;
-      scrollEl.classList.add('hidden');
-    }
-  }, { passive: true });
+  const scrollEl=document.getElementById('heroScroll');
+  if(!scrollEl)return;
+  let hidden=false;
+  window.addEventListener('scroll',()=>{
+    if(!hidden&&window.scrollY>0){hidden=true;scrollEl.classList.add('hidden');}
+  },{passive:true});
 })();
 
 /* ── Network canvas ── */
