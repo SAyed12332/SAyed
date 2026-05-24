@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,9 +92,9 @@
     @keyframes hexRise{0%{transform:translateY(110vh) rotate(0);opacity:0}5%{opacity:1}90%{opacity:.4}100%{transform:translateY(-15vh) rotate(270deg);opacity:0}}
 
     /* ── NAV: glass effect on edges only ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.95rem 1.3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to right,rgba(2,2,8,.97) 0%,rgba(2,2,8,.97) 80%,rgba(255,255,255,.055) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,0,180,.18);}
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.95rem 1.3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to right,rgba(2,2,8,.97) 0%,rgba(2,2,8,.97) 68%,rgba(255,255,255,.06) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,0,180,.18);}
     /* Glass effect on RIGHT side only (nav links area) */
-    nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:14%;background:linear-gradient(to left,rgba(255,255,255,.08),transparent);pointer-events:none;z-index:0;}
+    nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:34%;background:linear-gradient(to left,rgba(255,255,255,.09) 0%,rgba(255,255,255,.03) 60%,transparent 100%);pointer-events:none;z-index:0;}
     .nav-logo{position:relative;z-index:1;font-family:'Orbitron',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:2.5px;background:linear-gradient(110deg,var(--dp),var(--dp2),#c455ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(90,0,180,.65));white-space:nowrap;}
     .nav-links{position:relative;z-index:1;display:flex;gap:2rem;list-style:none;}
     .nav-links>li{position:relative;}
@@ -312,41 +316,25 @@
     @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
     /* ════ PRELOADER ════ */
-    #preloader{position:fixed;inset:0;z-index:9999;background:#020208;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.4rem;transition:opacity .7s ease,visibility .7s ease;}
+    #preloader{position:fixed;inset:0;z-index:9999;background:#020208;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s ease,visibility .6s ease;}
     #preloader.pre-out{opacity:0;visibility:hidden;}
     .pre-svg-wrap{position:relative;width:160px;height:160px;}
     .pre-svg-wrap svg{width:160px;height:160px;overflow:visible;}
 
     /* مسارات الحروف ترسم نفسها */
-    .pre-path{stroke-dasharray:600;stroke-dashoffset:600;animation:drawPath 1.4s cubic-bezier(.4,0,.2,1) forwards;}
-    #preSpath{animation-delay:.1s;}
-    #preApath{animation-delay:.5s;}
+    .pre-path{stroke-dasharray:600;stroke-dashoffset:600;animation:drawPath .7s cubic-bezier(.4,0,.2,1) forwards;}
+    #preSpath{animation-delay:0s;}
+    #preApath{animation-delay:.25s;}
     @keyframes drawPath{to{stroke-dashoffset:0;}}
 
-    /* الخط الداخلي في حرف A — يصعد من الأسفل ويختفي بشكل متكرر */
-    .pre-bar-clip{overflow:hidden;}
+    /* الخط الداخلي لحرف A — نفس انميشن الرسم */
     #preBar{
-      transform-origin:center bottom;
-      animation:barRise 1s ease-in-out infinite;
-      animation-delay:1.2s;
+      stroke-dasharray:52;
+      stroke-dashoffset:52;
+      animation:drawPath .5s cubic-bezier(.4,0,.2,1) forwards;
+      animation-delay:.55s;
+      opacity:1;
     }
-    @keyframes barRise{
-      0%  {transform:translateY(18px);opacity:0;}
-      30% {transform:translateY(0);opacity:1;}
-      70% {transform:translateY(0);opacity:1;}
-      100%{transform:translateY(-18px);opacity:0;}
-    }
-
-    /* نص التحميل */
-    .pre-label{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:4px;color:rgba(0,245,255,.4);animation:labelPulse 1.4s ease-in-out infinite;}
-    @keyframes labelPulse{0%,100%{opacity:.3;}50%{opacity:.9;}}
-
-    /* نقاط التحميل */
-    .pre-dots{display:flex;gap:.35rem;}
-    .pre-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);animation:dotBounce .9s ease-in-out infinite;}
-    .pre-dot:nth-child(2){animation-delay:.15s;}
-    .pre-dot:nth-child(3){animation-delay:.3s;}
-    @keyframes dotBounce{0%,100%{transform:translateY(0);opacity:.3;}50%{transform:translateY(-6px);opacity:1;}}
 
     @media(max-width:520px){
       .nav-links{display:none;}
@@ -380,31 +368,24 @@
           <feGaussianBlur stdDeviation="6" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
-        <!-- clipPath للخط الداخلي — يحصره داخل حرف A -->
-        <clipPath id="barClip">
-          <rect x="205" y="250" width="110" height="40"/>
-        </clipPath>
       </defs>
 
-      <!-- حرف S — المسار الأيسر -->
+      <!-- حرف S -->
       <path id="preSpath" class="pre-path"
         d="M160 340 C160 260,350 260,350 180 C350 110,180 110,180 180"
         fill="none" stroke="url(#preGrad)" stroke-width="14"
         stroke-linecap="round" filter="url(#preGlow)"/>
 
-      <!-- حرف A — الإطار الرئيسي (ساقا الحرف) -->
+      <!-- حرف A — الساقان -->
       <path id="preApath" class="pre-path"
         d="M220 340 L260 180 L300 340"
         fill="none" stroke="url(#preGrad)" stroke-width="14"
         stroke-linecap="round" stroke-linejoin="round" filter="url(#preGlow)"/>
 
-      <!-- الخط الداخلي لحرف A — مع الحركة المتكررة من الأسفل -->
-      <g clip-path="url(#barClip)">
-        <line id="preBar" x1="237" y1="275" x2="283" y2="275"
-          stroke="url(#preGrad)" stroke-width="13"
-          stroke-linecap="round" filter="url(#preGlow)"
-          opacity="0"/>
-      </g>
+      <!-- الخط الداخلي لحرف A — يرسم نفسه مع الانميشن -->
+      <line id="preBar" x1="237" y1="275" x2="283" y2="275"
+        stroke="url(#preGrad)" stroke-width="13"
+        stroke-linecap="round" filter="url(#preGlow)"/>
 
       <!-- اسم SAyed -->
       <text x="256" y="440" text-anchor="middle"
@@ -412,13 +393,9 @@
         fill="url(#preGrad)" filter="url(#preGlow)" opacity=".85">SAyed</text>
     </svg>
   </div>
-  <div class="pre-label">LOADING</div>
-  <div class="pre-dots">
-    <div class="pre-dot"></div>
-    <div class="pre-dot"></div>
-    <div class="pre-dot"></div>
-  </div>
 </div>
+
+<div class="scanlines"></div>
 <div class="hex-field" id="hexField"></div>
 <canvas id="netCanvas"></canvas>
 
@@ -692,20 +669,21 @@
 <footer><p>Designed &amp; built by <em>ELSAyed AshRaf</em> &nbsp;&middot;&nbsp; All rights reserved &nbsp;&middot;&nbsp; 2025</p></footer>
 
 <script>
-/* ════ PRELOADER DISMISS ════ */
+/* ════ PRELOADER — يختفي بعد ~750ms ويطلق حدث siteReady ════ */
 (function(){
   function dismissPreloader(){
     const pre=document.getElementById('preloader');
     if(!pre)return;
     pre.classList.add('pre-out');
-    setTimeout(()=>pre.remove(),750);
+    setTimeout(()=>{
+      pre.remove();
+      document.dispatchEvent(new Event('siteReady'));
+    },620);
   }
-  // يختفي بعد 2.8 ثانية أو عند اكتمال تحميل الصفحة (أيهما أبكر)
-  if(document.readyState==='complete'){
-    setTimeout(dismissPreloader,1800);
-  } else {
-    window.addEventListener('load',()=>setTimeout(dismissPreloader,1800));
-    setTimeout(dismissPreloader,4000); // حد أقصى 4 ثواني
+  if(document.readyState==='complete'){setTimeout(dismissPreloader,750);}
+  else{
+    window.addEventListener('load',()=>setTimeout(dismissPreloader,750));
+    setTimeout(dismissPreloader,2200);
   }
 })();
 
@@ -720,14 +698,16 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
 
-(function(){
+/* ── Hero tag typing — يبدأ بعد انتهاء الـ preloader ── */
+document.addEventListener('siteReady',function(){
   const tag=document.getElementById('heroTag');if(!tag)return;
   const txt='< bot_engineer & developer />';let i=0;tag.textContent='';
   function t(){if(i<txt.length){tag.textContent=txt.slice(0,++i);setTimeout(t,50+Math.random()*35);}}
-  setTimeout(t,700);
-})();
+  setTimeout(t,120);
+});
 
-(function(){
+/* ── Terminal typing — يبدأ بعد انتهاء الـ preloader ── */
+document.addEventListener('siteReady',function(){
   const body=document.getElementById('termBody');
   if(!body)return;
   const segments=[
@@ -775,8 +755,8 @@ document.addEventListener('touchstart',e=>{if(e.touches.length>1)e.preventDefaul
       setTimeout(typeNext,60+Math.random()*30);
     }
     typeNext();
-  },1500);
-})();
+  },300);
+});
 
 /* ── SCROLL ARROW: hide immediately on first scroll ── */
 (function(){
