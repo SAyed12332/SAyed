@@ -5,6 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#020208">
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SEO & OPEN GRAPH META TAGS — دليل التعديل الشامل
+       ════════════════════════════════════════════════════════════════
+
+  ── 1. عنوان الصفحة (يظهر في نتائج جوجل وتبويب المتصفح) ──
+       غيّر النص بين الوسوم <title> أدناه بعنوانك الحقيقي
+  ── 2. content="..." ── غيّر النص داخل علامات الاقتباس فقط
+  ── 3. og:image ── ارفع صورة thumbnail بحجم 1200×630 بكسل
+         على GitHub أو Cloudinary وضع رابطها المباشر هنا
+  ════════════════════════════════════════════════════════════════ -->
+
+  <!-- ─── الوصف العام (يظهر تحت العنوان في جوجل) ─── -->
+  <!-- غيّر النص الإنجليزي ليناسب تخصصك -->
+  <meta name="description" content="ELSAyed AshRaf — Bot Engineer & Script Developer. Building powerful Telegram bots, automation tools, and Lua scripts. Python • Telegram API • GameGuardian."/>
+
+  <!-- ─── الكلمات المفتاحية (لمحركات البحث) ─── -->
+  <!-- أضف كلماتك المفتاحية مفصولة بفواصل -->
+  <meta name="keywords" content="ELSAyed AshRaf, Bot Engineer, Telegram Bot, Python Bot, Script Developer, Automation, GameGuardian, Lua Script, Dashboard Bot, TTS Bot"/>
+
+  <!-- ─── اسم المؤلف ─── -->
+  <meta name="author" content="ELSAyed AshRaf"/>
+
+  <!-- ─── منع الفهرسة المكررة (اختياري) ─── -->
+  <meta name="robots" content="index, follow"/>
+
+  <!-- ════ OPEN GRAPH ════ يتحكم في كيفية ظهور الرابط عند مشاركته -->
+  <!-- على تيليجرام وفيسبوك وتويتر وواتساب -->
+
+  <!-- ─── عنوان البطاقة عند المشاركة ─── -->
+  <!-- هذا هو العنوان الكبير الذي يظهر في معاينة الرابط -->
+  <meta property="og:title" content="ELSAyed AshRaf — Bot Engineer & Developer"/>
+
+  <!-- ─── وصف البطاقة ─── -->
+  <meta property="og:description" content="Building powerful Telegram bots & automation tools. Dashboard bots, TTS bots, and Lua scripts."/>
+
+  <!-- ─── رابط صورة المعاينة (مهم جداً) ─── -->
+  <!-- ⚠️ غيّر هذا الرابط بالرابط المباشر لصورتك (1200×630 px) -->
+  <!-- مثال GitHub Raw: https://raw.githubusercontent.com/SAyed12332/SAyed/main/preview.png -->
+  <meta property="og:image" content="https://raw.githubusercontent.com/SAyed12332/SAyed/main/preview.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="ELSAyed AshRaf Portfolio Preview"/>
+
+  <!-- ─── نوع الصفحة ─── -->
+  <meta property="og:type" content="website"/>
+
+  <!-- ─── رابط الموقع الكامل ─── -->
+  <!-- ⚠️ غيّر هذا برابط موقعك الحقيقي -->
+  <meta property="og:url" content="https://sayed12332.github.io/SAyed/"/>
+
+  <!-- ─── اسم الموقع ─── -->
+  <meta property="og:site_name" content="ELSAyed AshRaf Portfolio"/>
+
+  <!-- ════ TWITTER CARD ════ لظهور احترافي على تويتر/X -->
+  <!-- summary_large_image = صورة كبيرة | summary = صورة صغيرة -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="ELSAyed AshRaf — Bot Engineer"/>
+  <meta name="twitter:description" content="Telegram bots, automation scripts, and Lua tools."/>
+  <!-- ⚠️ نفس رابط الصورة أعلاه -->
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/SAyed12332/SAyed/main/preview.png"/>
+
+  <!-- ════ CANONICAL ════ يمنع مشاكل المحتوى المكرر في جوجل -->
+  <!-- ⚠️ غيّر برابط موقعك الحقيقي -->
+  <link rel="canonical" href="https://sayed12332.github.io/SAyed/"/>
+
   <title>ELSAyed AshRaf — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
@@ -22,10 +88,9 @@
     @keyframes hexRise{0%{transform:translateY(110vh) rotate(0);opacity:0}5%{opacity:1}90%{opacity:.4}100%{transform:translateY(-15vh) rotate(270deg);opacity:0}}
 
     /* ── NAV: glass effect on edges only ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.95rem 1.3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to right,rgba(255,255,255,.055) 0%,rgba(2,2,8,.97) 18%,rgba(2,2,8,.97) 82%,rgba(255,255,255,.055) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,0,180,.18);}
-    /* Subtle frosted-white border glow on nav sides */
-    nav::before{content:'';position:absolute;top:0;left:0;bottom:0;width:14%;background:linear-gradient(to right,rgba(255,255,255,.07),transparent);pointer-events:none;z-index:0;}
-    nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:14%;background:linear-gradient(to left,rgba(255,255,255,.07),transparent);pointer-events:none;z-index:0;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:.95rem 1.3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to right,rgba(2,2,8,.97) 0%,rgba(2,2,8,.97) 80%,rgba(255,255,255,.055) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,0,180,.18);}
+    /* Glass effect on RIGHT side only (nav links area) */
+    nav::after{content:'';position:absolute;top:0;right:0;bottom:0;width:14%;background:linear-gradient(to left,rgba(255,255,255,.08),transparent);pointer-events:none;z-index:0;}
     .nav-logo{position:relative;z-index:1;font-family:'Orbitron',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:2.5px;background:linear-gradient(110deg,var(--dp),var(--dp2),#c455ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(90,0,180,.65));white-space:nowrap;}
     .nav-links{position:relative;z-index:1;display:flex;gap:2rem;list-style:none;}
     .nav-links>li{position:relative;}
@@ -246,6 +311,43 @@
     @keyframes fadeInDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
+    /* ════ PRELOADER ════ */
+    #preloader{position:fixed;inset:0;z-index:9999;background:#020208;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.4rem;transition:opacity .7s ease,visibility .7s ease;}
+    #preloader.pre-out{opacity:0;visibility:hidden;}
+    .pre-svg-wrap{position:relative;width:160px;height:160px;}
+    .pre-svg-wrap svg{width:160px;height:160px;overflow:visible;}
+
+    /* مسارات الحروف ترسم نفسها */
+    .pre-path{stroke-dasharray:600;stroke-dashoffset:600;animation:drawPath 1.4s cubic-bezier(.4,0,.2,1) forwards;}
+    #preSpath{animation-delay:.1s;}
+    #preApath{animation-delay:.5s;}
+    @keyframes drawPath{to{stroke-dashoffset:0;}}
+
+    /* الخط الداخلي في حرف A — يصعد من الأسفل ويختفي بشكل متكرر */
+    .pre-bar-clip{overflow:hidden;}
+    #preBar{
+      transform-origin:center bottom;
+      animation:barRise 1s ease-in-out infinite;
+      animation-delay:1.2s;
+    }
+    @keyframes barRise{
+      0%  {transform:translateY(18px);opacity:0;}
+      30% {transform:translateY(0);opacity:1;}
+      70% {transform:translateY(0);opacity:1;}
+      100%{transform:translateY(-18px);opacity:0;}
+    }
+
+    /* نص التحميل */
+    .pre-label{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:4px;color:rgba(0,245,255,.4);animation:labelPulse 1.4s ease-in-out infinite;}
+    @keyframes labelPulse{0%,100%{opacity:.3;}50%{opacity:.9;}}
+
+    /* نقاط التحميل */
+    .pre-dots{display:flex;gap:.35rem;}
+    .pre-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);animation:dotBounce .9s ease-in-out infinite;}
+    .pre-dot:nth-child(2){animation-delay:.15s;}
+    .pre-dot:nth-child(3){animation-delay:.3s;}
+    @keyframes dotBounce{0%,100%{transform:translateY(0);opacity:.3;}50%{transform:translateY(-6px);opacity:1;}}
+
     @media(max-width:520px){
       .nav-links{display:none;}
       .ham-btn{display:flex;}
@@ -265,7 +367,58 @@
 </head>
 <body>
 
-<div class="scanlines"></div>
+<!-- ════ PRELOADER — شاشة التحميل ════ -->
+<div id="preloader">
+  <div class="pre-svg-wrap">
+    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="preGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#9933ff"/>
+          <stop offset="100%" stop-color="#00f5ff"/>
+        </linearGradient>
+        <filter id="preGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- clipPath للخط الداخلي — يحصره داخل حرف A -->
+        <clipPath id="barClip">
+          <rect x="205" y="250" width="110" height="40"/>
+        </clipPath>
+      </defs>
+
+      <!-- حرف S — المسار الأيسر -->
+      <path id="preSpath" class="pre-path"
+        d="M160 340 C160 260,350 260,350 180 C350 110,180 110,180 180"
+        fill="none" stroke="url(#preGrad)" stroke-width="14"
+        stroke-linecap="round" filter="url(#preGlow)"/>
+
+      <!-- حرف A — الإطار الرئيسي (ساقا الحرف) -->
+      <path id="preApath" class="pre-path"
+        d="M220 340 L260 180 L300 340"
+        fill="none" stroke="url(#preGrad)" stroke-width="14"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#preGlow)"/>
+
+      <!-- الخط الداخلي لحرف A — مع الحركة المتكررة من الأسفل -->
+      <g clip-path="url(#barClip)">
+        <line id="preBar" x1="237" y1="275" x2="283" y2="275"
+          stroke="url(#preGrad)" stroke-width="13"
+          stroke-linecap="round" filter="url(#preGlow)"
+          opacity="0"/>
+      </g>
+
+      <!-- اسم SAyed -->
+      <text x="256" y="440" text-anchor="middle"
+        font-family="Orbitron,monospace" font-size="48" font-weight="700"
+        fill="url(#preGrad)" filter="url(#preGlow)" opacity=".85">SAyed</text>
+    </svg>
+  </div>
+  <div class="pre-label">LOADING</div>
+  <div class="pre-dots">
+    <div class="pre-dot"></div>
+    <div class="pre-dot"></div>
+    <div class="pre-dot"></div>
+  </div>
+</div>
 <div class="hex-field" id="hexField"></div>
 <canvas id="netCanvas"></canvas>
 
@@ -539,6 +692,23 @@
 <footer><p>Designed &amp; built by <em>ELSAyed AshRaf</em> &nbsp;&middot;&nbsp; All rights reserved &nbsp;&middot;&nbsp; 2025</p></footer>
 
 <script>
+/* ════ PRELOADER DISMISS ════ */
+(function(){
+  function dismissPreloader(){
+    const pre=document.getElementById('preloader');
+    if(!pre)return;
+    pre.classList.add('pre-out');
+    setTimeout(()=>pre.remove(),750);
+  }
+  // يختفي بعد 2.8 ثانية أو عند اكتمال تحميل الصفحة (أيهما أبكر)
+  if(document.readyState==='complete'){
+    setTimeout(dismissPreloader,1800);
+  } else {
+    window.addEventListener('load',()=>setTimeout(dismissPreloader,1800));
+    setTimeout(dismissPreloader,4000); // حد أقصى 4 ثواني
+  }
+})();
+
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('dragstart',e=>e.preventDefault());
 document.addEventListener('selectstart',e=>e.preventDefault());
