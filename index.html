@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -218,6 +214,12 @@
     .btn-tg{display:inline-flex;align-items:center;gap:.46rem;padding:.8rem 1.6rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(0,245,255,.3);color:var(--cyan);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;}
     .btn-tg:hover{background:rgba(0,245,255,.06);box-shadow:0 0 28px rgba(0,245,255,.22);transform:translateY(-2px);}
     .btn-tg svg{width:13px;height:13px;flex-shrink:0;}
+
+    /* ===== SUPPORT BUTTON ===== */
+    .btn-support{display:inline-flex;align-items:center;gap:.46rem;padding:.8rem 1.6rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(191,0,255,.3);color:var(--purple);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
+    .btn-support:hover{background:rgba(191,0,255,.06);box-shadow:0 0 28px rgba(191,0,255,.22);transform:translateY(-2px);}
+    .btn-support svg{width:13px;height:13px;flex-shrink:0;}
+
     .cm{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .26s;}
     .cm.open{opacity:1;pointer-events:all;}
     .cm-bg{position:absolute;inset:0;background:rgba(2,2,8,.97);cursor:pointer;}
@@ -246,24 +248,60 @@
     .ca.vis{display:flex;align-items:center;gap:.36rem;}
     .ca svg{width:12px;height:12px;flex-shrink:0;}
     .cm-deco{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--dp),var(--cyan),var(--dp),transparent);}
-    footer{text-align:center;padding:1.6rem;border-top:1px solid rgba(90,0,180,.1);color:rgba(221,224,245,.16);font-size:.68rem;letter-spacing:2px;}
+
+    /* ===== FOOTER ===== */
+    footer{text-align:center;padding:1.6rem;border-top:1px solid rgba(90,0,180,.1);color:rgba(221,224,245,.38);font-size:.68rem;letter-spacing:2px;}
     footer em{color:var(--magenta);font-style:normal;}
+
     @keyframes fadeInDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ===== PRELOADER — looping ===== */
     #preloader{position:fixed;inset:0;z-index:9999;background:#020208;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s ease,visibility .6s ease;}
     #preloader.pre-out{opacity:0;visibility:hidden;}
     .pre-svg-wrap{position:relative;width:160px;height:160px;}
     .pre-svg-wrap svg{width:160px;height:160px;overflow:visible;}
-    .pre-path{stroke-dasharray:600;stroke-dashoffset:600;animation:drawPath .7s cubic-bezier(.4,0,.2,1) forwards;}
-    #preSpath{animation-delay:0s;}
-    #preApath{animation-delay:.25s;}
-    @keyframes drawPath{to{stroke-dashoffset:0;}}
-    #preBar{stroke-dasharray:52;stroke-dashoffset:52;animation:drawPath .5s cubic-bezier(.4,0,.2,1) forwards;animation-delay:.55s;opacity:1;}
+
+    /* — S path — */
+    .pre-path{stroke-dasharray:600;stroke-dashoffset:600;}
+    #preSpath{animation:drawSpath 0.7s cubic-bezier(.4,0,.2,1) forwards, loopSpath 2.8s cubic-bezier(.4,0,.2,1) 0.7s infinite;}
+    #preApath{animation:drawApath 0.7s cubic-bezier(.4,0,.2,1) 0.25s forwards, loopApath 2.8s cubic-bezier(.4,0,.2,1) 0.95s infinite;}
+    #preBar{stroke-dasharray:52;stroke-dashoffset:52;animation:drawBar 0.5s cubic-bezier(.4,0,.2,1) 0.55s forwards, loopBar 2.8s cubic-bezier(.4,0,.2,1) 1.25s infinite;}
+
+    @keyframes drawSpath{to{stroke-dashoffset:0;}}
+    @keyframes loopSpath{
+      0%{stroke-dashoffset:0;opacity:1}
+      40%{stroke-dashoffset:0;opacity:1}
+      60%{stroke-dashoffset:600;opacity:.3}
+      80%{stroke-dashoffset:600;opacity:.3}
+      100%{stroke-dashoffset:0;opacity:1}
+    }
+    @keyframes drawApath{to{stroke-dashoffset:0;}}
+    @keyframes loopApath{
+      0%{stroke-dashoffset:0;opacity:1}
+      40%{stroke-dashoffset:0;opacity:1}
+      60%{stroke-dashoffset:600;opacity:.3}
+      80%{stroke-dashoffset:600;opacity:.3}
+      100%{stroke-dashoffset:0;opacity:1}
+    }
+    @keyframes drawBar{to{stroke-dashoffset:0;}}
+    @keyframes loopBar{
+      0%{stroke-dashoffset:0;opacity:1}
+      40%{stroke-dashoffset:0;opacity:1}
+      60%{stroke-dashoffset:52;opacity:.3}
+      80%{stroke-dashoffset:52;opacity:.3}
+      100%{stroke-dashoffset:0;opacity:1}
+    }
+
+    /* slow pulse on the whole logo when "loading" (weak ping) */
+    .pre-svg-wrap.pulsing svg{animation:prePulse 1.2s ease-in-out infinite;}
+    @keyframes prePulse{0%,100%{filter:drop-shadow(0 0 8px rgba(153,51,255,.7));}50%{filter:drop-shadow(0 0 28px rgba(0,245,255,.9));}}
+
     @media(max-width:520px){
       .nav-links{display:none;}
       .ham-btn{display:flex;}
       .contact-btns{flex-direction:column;align-items:stretch;}
-      .contact-btns .btn-hex,.contact-btns .btn-tg{justify-content:center;}
+      .contact-btns .btn-hex,.contact-btns .btn-tg,.contact-btns .btn-support{justify-content:center;}
       .proj-actions{flex-direction:column;}
       .btn-dl,.btn-demo{font-size:.52rem;min-height:40px;padding:.65rem .5rem;}
     }
@@ -279,7 +317,7 @@
 <body>
 
 <div id="preloader">
-  <div class="pre-svg-wrap">
+  <div class="pre-svg-wrap" id="preSvgWrap">
     <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="preGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -386,7 +424,8 @@
       <a href="#projects" class="btn-hex btn-primary">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="5" rx="1"/><rect x="2" y="11" width="13" height="4" rx="1"/><rect x="2" y="18" width="8" height="4" rx="1"/><path d="M19 14l4 4-4 4"/><line x1="23" y1="18" x2="15" y2="18"/></svg>LATEST PROJECTS
       </a>
-      <button class="btn-hex btn-secondary" onclick="openContact()">
+      <!-- CONTACT ME → scrolls to #contact section, does NOT open modal -->
+      <button class="btn-hex btn-secondary" onclick="scrollToContact()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>CONTACT ME
       </button>
     </div>
@@ -507,21 +546,11 @@
             <a class="btn-dl" href="./dash_bord.Script_gg_py_SAyed.zip" download="dash_bord.Script_gg_py_SAyed.zip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/></svg>DOWNLOAD</a>
             <button class="btn-demo" onclick="openBot(0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>TRY BOT</button>
           </div>
-<div class="proj-tech">
-  
-  <div class="pt-badge pt-py">
-    <div class="pt-dot"></div>Lua
-  </div>
-
-  <div class="pt-badge pt-tg">
-    <div class="pt-dot"></div>html
-  </div>
-
-  <div class="pt-badge pt-tg">
-    <div class="pt-dot"></div>js
-  </div>
-
-</div>
+          <div class="proj-tech">
+            <div class="pt-badge pt-py"><div class="pt-dot"></div>Lua</div>
+            <div class="pt-badge pt-tg"><div class="pt-dot"></div>html</div>
+            <div class="pt-badge pt-tg"><div class="pt-dot"></div>js</div>
+          </div>
         </div>
       </div>
 
@@ -605,8 +634,15 @@
   <div class="contact-wrap fade-in">
     <p class="contact-intro">Have a question or want to collaborate?<br>Send a message and I'll reply on Telegram.</p>
     <div class="contact-btns" style="margin-top:.65rem;">
+      <!-- SEND MESSAGE → opens modal -->
       <button class="btn-hex btn-primary" onclick="openContact()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SEND MESSAGE</button>
+      <!-- Telegram personal -->
       <button class="btn-tg" onclick="openTelegram()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>&#x62A;&#x648;&#x627;&#x635;&#x644; &#x639;&#x628;&#x631; &#x627;&#x644;&#x62A;&#x64A;&#x644;&#x64A;&#x62C;&#x631;&#x627;&#x645;</button>
+      <!-- Support channel -->
+      <a class="btn-support" href="https://t.me/saaaayyyeeed" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        الدعم الفني
+      </a>
     </div>
     <p class="contact-hint">// Telegram &middot; Fast Response</p>
   </div>
@@ -633,6 +669,7 @@
 <footer><p>Designed &amp; built by <em>ELSAyed AshRaf</em> &nbsp;&middot;&nbsp; All rights reserved &nbsp;&middot;&nbsp; 2025</p></footer>
 
 <script>
+/* ====== PRELOADER — dismiss after load, keep looping until ready ====== */
 (function(){
   let _out=false;
   function dismissPreloader(){
@@ -642,12 +679,21 @@
     pre.classList.add('pre-out');
     setTimeout(()=>{pre.remove();document.dispatchEvent(new Event('siteReady'));},620);
   }
-  if(document.readyState==='complete'){setTimeout(dismissPreloader,750);}
+  // Start pulsing immediately to signal "loading"
+  const wrap=document.getElementById('preSvgWrap');
+  if(wrap) wrap.classList.add('pulsing');
+
+  if(document.readyState==='complete'){setTimeout(dismissPreloader,850);}
   else{
-    window.addEventListener('load',()=>setTimeout(dismissPreloader,750));
-    setTimeout(dismissPreloader,2200);
+    window.addEventListener('load',()=>setTimeout(dismissPreloader,850));
+    setTimeout(dismissPreloader,2400);
   }
 })();
+
+/* ====== scrollToContact — scrolls to #contact, does NOT open modal ====== */
+function scrollToContact(){
+  document.getElementById('contact').scrollIntoView({behavior:'smooth',block:'start'});
+}
 
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('dragstart',e=>e.preventDefault());
@@ -773,7 +819,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();closeCo
 const _dlUrls=['https://github.com/SAyed12332/SAyed/raw/refs/heads/main/dash_bord.Script_gg_py_SAyed.zip','https://github.com/SAyed12332/SAyed/raw/refs/heads/main/Text_To_6tions_Speech_by_SAyed.zip'];
 const _dlNames=['dash_bord.Script_gg_py_SAyed.zip','Text_To_6tions_Speech_by_SAyed.zip'];
 window.secureDownload=async function(btn,i){if(btn.classList.contains('loading'))return;const orig=btn.innerHTML;btn.classList.add('loading');btn.innerHTML='...';try{const res=await fetch(_dlUrls[i]);if(!res.ok)throw 0;const blob=await res.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=_dlNames[i];document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},500);}catch(e){const a=document.createElement('a');a.href=_dlUrls[i];a.download=_dlNames[i];a.rel='noopener noreferrer';document.body.appendChild(a);a.click();setTimeout(()=>document.body.removeChild(a),300);}finally{setTimeout(()=>{btn.classList.remove('loading');btn.innerHTML=orig;},1200);}};
-document.querySelectorAll('.btn-dl,.btn-demo,.bot-open,.btn-tg').forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
+document.querySelectorAll('.btn-dl,.btn-demo,.bot-open,.btn-tg,.btn-support').forEach(el=>{el.addEventListener('contextmenu',e=>e.preventDefault());});
 
 async function sendTg(){const nm=document.getElementById('cfName').value.trim();const mg=document.getElementById('cfMsg').value.trim();const ok=document.getElementById('cOk'),er=document.getElementById('cErr');const btn=document.getElementById('sendBtn');ok.classList.remove('vis');er.classList.remove('vis');if(!nm||!mg){er.classList.add('vis');return;}btn.disabled=true;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> SENDING...';try{const tk=['7486988946',':AAF_shND3oa3','XR9KX7H60JmxGSX8c0itkXI'].join('');const ci='6108279690';const res=await fetch(`https://api.telegram.org/bot${tk}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:ci,text:`\uD83D\uDCE8 *New Portfolio Message*\n\n\uD83D\uDC64 *Name:* ${nm}\n\n\uD83D\uDCAC *Message:*\n${mg}`,parse_mode:'Markdown'})});const dat=await res.json();if(dat.ok){ok.classList.add('vis');document.getElementById('cfName').value='';document.getElementById('cfMsg').value='';setTimeout(()=>{ok.classList.remove('vis');closeContact();},2500);}else throw 0;}catch{er.classList.add('vis');}btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> SEND MESSAGE';}
 </script>
