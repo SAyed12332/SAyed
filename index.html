@@ -216,9 +216,13 @@
     .btn-tg svg{width:13px;height:13px;flex-shrink:0;}
 
     /* ===== SUPPORT BUTTON ===== */
-    .btn-support{display:inline-flex;align-items:center;gap:.46rem;padding:.8rem 1.6rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(191,0,255,.3);color:var(--purple);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
-    .btn-support:hover{background:rgba(191,0,255,.06);box-shadow:0 0 28px rgba(191,0,255,.22);transform:translateY(-2px);}
-    .btn-support svg{width:13px;height:13px;flex-shrink:0;}
+    .btn-support{display:inline-flex;align-items:center;gap:.46rem;padding:.8rem 1.6rem;font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(191,0,255,.35);color:var(--purple);clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
+    .btn-support:hover{background:rgba(191,0,255,.08);box-shadow:0 0 28px rgba(191,0,255,.28);transform:translateY(-2px);}
+    .btn-support svg{width:14px;height:14px;flex-shrink:0;stroke:var(--purple);}
+
+    /* ===== CONTACT LAYOUT ===== */
+    .contact-btns{display:flex;flex-direction:column;align-items:center;gap:.75rem;}
+    .contact-row2{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;}
 
     .cm{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .26s;}
     .cm.open{opacity:1;pointer-events:all;}
@@ -302,6 +306,8 @@
       .ham-btn{display:flex;}
       .contact-btns{flex-direction:column;align-items:stretch;}
       .contact-btns .btn-hex,.contact-btns .btn-tg,.contact-btns .btn-support{justify-content:center;}
+      .contact-row2{flex-direction:row;gap:.5rem;}
+      .contact-row2 .btn-tg,.contact-row2 .btn-support{flex:1;justify-content:center;padding:.8rem .6rem;font-size:.55rem;}
       .proj-actions{flex-direction:column;}
       .btn-dl,.btn-demo{font-size:.52rem;min-height:40px;padding:.65rem .5rem;}
     }
@@ -634,15 +640,23 @@
   <div class="contact-wrap fade-in">
     <p class="contact-intro">Have a question or want to collaborate?<br>Send a message and I'll reply on Telegram.</p>
     <div class="contact-btns" style="margin-top:.65rem;">
-      <!-- SEND MESSAGE → opens modal -->
+      <!-- SEND MESSAGE → opens modal (alone on top) -->
       <button class="btn-hex btn-primary" onclick="openContact()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>SEND MESSAGE</button>
-      <!-- Telegram personal -->
-      <button class="btn-tg" onclick="openTelegram()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>&#x62A;&#x648;&#x627;&#x635;&#x644; &#x639;&#x628;&#x631; &#x627;&#x644;&#x62A;&#x64A;&#x644;&#x64A;&#x62C;&#x631;&#x627;&#x645;</button>
-      <!-- Support channel -->
-      <a class="btn-support" href="https://t.me/saaaayyyeeed" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        الدعم الفني
-      </a>
+      <!-- Telegram personal + Support side by side -->
+      <div class="contact-row2">
+        <button class="btn-tg" onclick="openTelegram()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+          &#x62A;&#x648;&#x627;&#x635;&#x644; &#x639;&#x628;&#x631; &#x627;&#x644;&#x62A;&#x64A;&#x644;&#x64A;&#x62C;&#x631;&#x627;&#x645;
+        </button>
+        <a class="btn-support" href="https://t.me/saaaayyyeeed" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            <line x1="9" y1="10" x2="15" y2="10"/>
+            <line x1="9" y1="14" x2="13" y2="14"/>
+          </svg>
+          الدعم الفني
+        </a>
+      </div>
     </div>
     <p class="contact-hint">// Telegram &middot; Fast Response</p>
   </div>
