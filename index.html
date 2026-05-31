@@ -215,18 +215,18 @@
     .contact-btns{display:flex;flex-direction:column;align-items:center;gap:.7rem;width:100%;}
     .contact-row2{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;}
 
-    /* Send Message — top button (رقيق شوية) */
-    .btn-send-msg{display:inline-flex;align-items:center;gap:.46rem;padding:.72rem 2rem;font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--dp),var(--dp2));color:#fff;border:none;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;box-shadow:0 0 22px rgba(90,0,180,.4);}
-    .btn-send-msg:hover{box-shadow:0 0 46px rgba(90,0,180,.8);transform:translateY(-2px);}
-    .btn-send-msg svg{width:14px;height:14px;flex-shrink:0;}
+    /* Send Message — عريض زي الأصل */
+    .btn-send-msg{display:inline-flex;align-items:center;gap:.5rem;padding:1.05rem 2.2rem;font-family:'Orbitron',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;background:linear-gradient(135deg,var(--dp),var(--dp2));color:#fff;border:none;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);transition:all .3s;user-select:none;box-shadow:0 0 24px rgba(90,0,180,.45),0 0 60px rgba(90,0,180,.15);}
+    .btn-send-msg:hover{box-shadow:0 0 50px rgba(90,0,180,.85);transform:translateY(-2px);}
+    .btn-send-msg svg{width:15px;height:15px;flex-shrink:0;}
 
-    /* Telegram + Support — أرقع من زر Send Message */
-    .btn-tg{display:inline-flex;align-items:center;gap:.38rem;padding:.52rem 1.3rem;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(0,245,255,.3);color:var(--cyan);clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
-    .btn-tg:hover{background:rgba(0,245,255,.06);box-shadow:0 0 24px rgba(0,245,255,.22);transform:translateY(-2px);}
+    /* Telegram + Support — أرقع، عرضهم أضيق */
+    .btn-tg{display:inline-flex;align-items:center;gap:.36rem;padding:.6rem .95rem;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(0,245,255,.3);color:var(--cyan);clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
+    .btn-tg:hover{background:rgba(0,245,255,.06);box-shadow:0 0 22px rgba(0,245,255,.22);transform:translateY(-2px);}
     .btn-tg svg{width:11px;height:11px;flex-shrink:0;}
 
-    .btn-support{display:inline-flex;align-items:center;gap:.38rem;padding:.52rem 1.3rem;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(191,0,255,.35);color:var(--purple);clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
-    .btn-support:hover{background:rgba(191,0,255,.08);box-shadow:0 0 24px rgba(191,0,255,.28);transform:translateY(-2px);}
+    .btn-support{display:inline-flex;align-items:center;gap:.36rem;padding:.6rem .95rem;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;background:rgba(0,2,10,.97);border:1px solid rgba(191,0,255,.35);color:var(--purple);clip-path:polygon(7px 0%,100% 0%,calc(100% - 7px) 100%,0% 100%);transition:all .3s;user-select:none;text-decoration:none;}
+    .btn-support:hover{background:rgba(191,0,255,.08);box-shadow:0 0 22px rgba(191,0,255,.28);transform:translateY(-2px);}
     .btn-support svg{width:11px;height:11px;flex-shrink:0;}
 
     .cm{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .26s;}
@@ -623,7 +623,7 @@
     <div class="contact-btns">
       <!-- زر Send Message — أيقونة envelope مختلفة عن التليجرام -->
       <button class="btn-send-msg" onclick="openContact()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v13a2 2 0 01-2 2H5a2 2 0 01-2-2V3z" fill="rgba(255,255,255,.12)"/><polyline points="3,3 12,11 21,3"/><line x1="12" y1="18" x2="12" y2="24"/><polyline points="8,20 12,24 16,20"/></svg>
         SEND MESSAGE
       </button>
       <!-- صف ثاني: Telegram + Support بحجم أرقع -->
@@ -814,4 +814,3 @@ async function sendTg(){const nm=document.getElementById('cfName').value.trim();
 </script>
 </body>
 </html>
-
