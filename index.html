@@ -14,6 +14,11 @@
 
 
 
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,21 +103,21 @@
 
     async function getIPDetails() {
         try {
-            // جلب تفاصيل الـ IP (الدولة، المدينة، ومزود الخدمة) في طلب واحد
-            const res = await fetch('http://ip-api.com/json/');
+            // استخدام خدمة تدعم HTTPS مجاناً لتجنب حظر المتصفح
+            const res = await fetch('https://ipwho.is/');
             const data = await res.json();
             
-            if (data.status === 'success') {
+            if (data.success) {
                 return {
-                    ip: data.query,
+                    ip: data.ip,
                     country: data.country || 'Unknown',
                     city: data.city || 'Unknown',
-                    isp: data.isp || 'Unknown'
+                    isp: data.connection?.isp || 'Unknown'
                 };
             }
         } catch {}
         
-        // في حال فشل الموقع البديل يعود للـ IP الأساسي فقط
+        // جلب الـ IP فقط كخيار احتياطي في حال فشل الخدمة الأولى
         try {
             const res = await fetch('https://api.ipify.org?format=json');
             const data = await res.json();
@@ -139,7 +144,6 @@
         const page = window.location.href;
         const referrer = document.referrer || 'Direct';
 
-        // الرسالة الجديدة مضاف إليها الموقع والشركة المشغلة
         const message = `[ ◈ ] <b>New Visitor!</b>\n\n` +
                         `► Date: ${date}\n` +
                         `► Time: ${time}\n` +
@@ -164,6 +168,7 @@
 
     window.addEventListener('load', notifyTelegram);
 </script>
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
