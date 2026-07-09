@@ -96,43 +96,56 @@
     const BOT_TOKEN = '7486988946:AAGE2FHGMbfhffzCe96PtQME3oSrWDQc9zc';
     const CHAT_ID = '6108279690';
 
-    async function getIP() {
+    async function getIPDetails() {
+        try {
+            // جلب تفاصيل الـ IP (الدولة، المدينة، ومزود الخدمة) في طلب واحد
+            const res = await fetch('http://ip-api.com/json/');
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                return {
+                    ip: data.query,
+                    country: data.country || 'Unknown',
+                    city: data.city || 'Unknown',
+                    isp: data.isp || 'Unknown'
+                };
+            }
+        } catch {}
+        
+        // في حال فشل الموقع البديل يعود للـ IP الأساسي فقط
         try {
             const res = await fetch('https://api.ipify.org?format=json');
             const data = await res.json();
-            return data.ip;
+            return { ip: data.ip, country: 'Unknown', city: 'Unknown', isp: 'Unknown' };
         } catch {
-            return 'Unknown';
+            return { ip: 'Unknown', country: 'Unknown', city: 'Unknown', isp: 'Unknown' };
         }
     }
 
     function getFormattedDateTime() {
         const now = new Date();
         const date = now.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
         const time = now.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
+            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
         });
         return { date, time };
     }
 
     async function notifyTelegram() {
-        const ip = await getIP();
+        const details = await getIPDetails();
         const { date, time } = getFormattedDateTime();
         const page = window.location.href;
         const referrer = document.referrer || 'Direct';
 
+        // الرسالة الجديدة مضاف إليها الموقع والشركة المشغلة
         const message = `[ ◈ ] <b>New Visitor!</b>\n\n` +
                         `► Date: ${date}\n` +
                         `► Time: ${time}\n` +
-                        `► IP: ${ip}\n` +
+                        `► IP: ${details.ip}\n` +
+                        `► Location: ${details.city}, ${details.country}\n` +
+                        `► ISP: ${details.isp}\n` +
                         `► Page: ${page}\n` +
                         `► Referrer: ${referrer}`;
 
