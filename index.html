@@ -14,7 +14,7 @@
       font-family: Roboto, Arial, sans-serif;
       background: #fff;
       color: #202124;
-      min-height: 100vh;
+      min-height: 100dvh; /* تم التعديل هنا إلى 100dvh */
       display: flex;
       flex-direction: column;
     }
@@ -167,6 +167,29 @@
       text-decoration: none;
     }
     footer a:hover { text-decoration: underline; }
+
+    /* --- التعديلات الخاصة برفع الشريط السفلي في الموبايل --- */
+    @media (max-width: 600px) {
+      .dino-img {
+        width: 140px; 
+        margin-bottom: 16px;
+      }
+      .error-code {
+        font-size: 70px; 
+      }
+      .error-container {
+        padding: 24px 16px 12px;
+      }
+      .tg-section {
+        margin-bottom: 16px; 
+      }
+      footer {
+        padding: 0 12px;
+      }
+      .footer-left, .footer-right {
+        gap: 12px; 
+      }
+    }
   </style>
 </head>
 <body>
