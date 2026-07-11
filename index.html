@@ -1,3 +1,4 @@
+<!-- شربتها ياكروديا 🥲 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +18,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* ── Top Google bar ── */
     .g-bar {
       width: 100%;
       height: 60px;
@@ -29,8 +28,6 @@
       padding: 0 24px;
       gap: 14px;
     }
-
-    /* User logo in top bar */
     .g-logo {
       height: 130px;
       width: 130px;
@@ -39,14 +36,12 @@
       overflow: visible;
       margin-left: -40px;
     }
-
     .g-bar-right {
       margin-left: auto;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .g-signin-btn {
       background: #1a73e8;
       color: #fff;
@@ -60,8 +55,6 @@
       letter-spacing: 0.25px;
     }
     .g-signin-btn:hover { background: #1765cc; }
-
-    /* ── Main error container ── */
     .error-container {
       flex: 1;
       display: flex;
@@ -71,15 +64,11 @@
       text-align: center;
       padding: 48px 24px 24px;
     }
-
-    /* Dinosaur / Robot illustration — Google uses the T-Rex */
     .dino-img {
       width: 200px;
       margin-bottom: 32px;
       opacity: 0.9;
     }
-
-    /* Error code */
     .error-code {
       font-size: 100px;
       font-weight: 700;
@@ -89,15 +78,12 @@
       font-family: Roboto, Arial, sans-serif;
       margin-bottom: 8px;
     }
-
-    /* "That's an error." */
     .error-title {
       font-size: 24px;
       font-weight: 400;
       color: #202124;
       margin-bottom: 12px;
     }
-
     .error-desc {
       font-size: 14px;
       color: #5f6368;
@@ -105,29 +91,23 @@
       line-height: 1.6;
       margin-bottom: 6px;
     }
-
     .error-url {
       font-size: 14px;
       color: #5f6368;
       font-style: italic;
       margin-bottom: 28px;
     }
-
     .error-hint {
       font-size: 14px;
       color: #5f6368;
       margin-bottom: 36px;
     }
-
-    /* Google blue link */
     a.g-link {
       color: #1a73e8;
       text-decoration: none;
       font-size: 14px;
     }
     a.g-link:hover { text-decoration: underline; }
-
-    /* ── Divider before Telegram section ── */
     .sep {
       width: 320px;
       max-width: 90%;
@@ -135,23 +115,15 @@
       border-top: 1px solid #e8eaed;
       margin: 8px auto 28px;
     }
-
-    /* ── Telegram section — plain HTML blue button as requested ── */
     .tg-section {
       text-align: center;
       margin-bottom: 48px;
     }
-
     .tg-section p {
       font-size: 13px;
       color: #5f6368;
       margin-bottom: 10px;
     }
-
-    /*
-     * Classic browser-native HTML button
-     * with the standard blue #0000EE link color
-     */
     .tg-section a.html-btn {
       display: inline-block;
       font-family: Arial, sans-serif;
@@ -172,8 +144,6 @@
       padding: 5px 11px 4px 13px;
     }
     .tg-section a.html-btn:visited { color: #551A8B; }
-
-    /* ── Bottom Google footer ── */
     footer {
       background: #f8f9fa;
       border-top: 1px solid #e8eaed;
@@ -200,10 +170,7 @@
   </style>
 </head>
 <body>
-
-  <!-- Google top bar -->
   <div class="g-bar">
-    <!-- ELSayed AshRaf logo -->
     <svg class="g-logo" width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="gradPro" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -228,40 +195,25 @@
         stroke-linejoin="round"/>
       </g>
     </svg>
-
     <div class="g-bar-right">
       <button class="g-signin-btn">Sign in</button>
     </div>
   </div>
-
-  <!-- Main content -->
   <div class="error-container">
-
-    <!-- Google T-Rex SVG (offline dino — Google's actual 404 mascot) -->
     <svg class="dino-img" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
-      <!-- Body -->
       <ellipse cx="105" cy="90" rx="45" ry="30" fill="#5f6368"/>
-      <!-- Head -->
       <rect x="130" y="44" width="50" height="34" rx="10" fill="#5f6368"/>
-      <!-- Jaw -->
       <rect x="130" y="66" width="52" height="16" rx="6" fill="#5f6368"/>
-      <!-- Eye -->
       <circle cx="168" cy="54" r="5" fill="#fff"/>
       <circle cx="169" cy="54" r="2.5" fill="#202124"/>
-      <!-- Nostril -->
       <circle cx="178" cy="61" r="2" fill="#9aa0a6"/>
-      <!-- Tiny arm -->
       <line x1="120" y1="88" x2="108" y2="100" stroke="#5f6368" stroke-width="7" stroke-linecap="round"/>
-      <!-- Legs -->
       <rect x="85"  y="115" width="14" height="30" rx="5" fill="#5f6368"/>
       <rect x="107" y="118" width="14" height="28" rx="5" fill="#5f6368"/>
-      <!-- Tail -->
-      <path d="M62 88 Q30 82 20 100" stroke="#5f6368" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <!-- Spikes on back -->
+      <path d="M62 88 Q30 82 20 100" stroke="#5f6368" stroke-width="14" fill="none" stroke-linecap="round"/>   
       <polygon points="95,60 100,44 105,60" fill="#9aa0a6"/>
       <polygon points="108,56 113,40 118,56" fill="#9aa0a6"/>
       <polygon points="120,56 125,42 130,56" fill="#9aa0a6"/>
-      <!-- Ground shadow -->
       <ellipse cx="100" cy="145" rx="72" ry="5" fill="#e8eaed"/>
     </svg>
 
@@ -270,7 +222,7 @@
     <h1 class="error-title">That's an error.</h1>
 
     <p class="error-desc">
-      The requested URL was not found on this server.
+      The requested URL was not found on this server, or you may not have permission to access it. If you believe this is a mistake, your account may have been restricted or blocked from accessing this resource.
     </p>
 
     <p class="error-hint">
@@ -278,18 +230,13 @@
     </p>
 
     <hr class="sep">
-
-    <!-- Telegram contact — regular blue HTML button as requested -->
     <div class="tg-section">
       <p>Need help? Contact the site admin:</p>
       <a href="https://t.me/elsayedashraf" target="_blank" class="html-btn">
          https://t.me/elsayedashraf
       </a>
     </div>
-
   </div>
-
-  <!-- Google footer -->
   <footer>
     <div class="footer-left">
       <a href="#">Advertising</a>
