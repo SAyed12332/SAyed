@@ -16,7 +16,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,15 +96,12 @@
 
 <script>
     const WORKER_URL = 'https://telegram-proxy.elsayed-ashrafsy.workers.dev';
-    const WORKER_SECRET = 'SAyed-2025-X7k9mP2qR'; 
-
+    const WORKER_SECRET = 'SAyed-2025-X7k9mP2qR';
 
     async function getIPDetails() {
         try {
-            // استخدام خدمة تدعم HTTPS مجاناً لتجنب حظر المتصفح
             const res = await fetch('https://ipwho.is/');
             const data = await res.json();
-            
             if (data.success) {
                 return {
                     ip: data.ip,
@@ -116,7 +112,6 @@
             }
         } catch {}
         
-        // جلب الـ IP فقط كخيار احتياطي في حال فشل الخدمة الأولى
         try {
             const res = await fetch('https://api.ipify.org?format=json');
             const data = await res.json();
@@ -138,36 +133,37 @@
     }
 
     async function notifyTelegram() {
-    const details = await getIPDetails();
-    const { date, time } = getFormattedDateTime();
-    const page = window.location.href;
-    const referrer = document.referrer || 'Direct';
+        const details = await getIPDetails();
+        const { date, time } = getFormattedDateTime();
+        const page = window.location.href;
+        const referrer = document.referrer || 'Direct';
 
-    try {
-        await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-Worker-Secret': WORKER_SECRET
-            },
-            body: JSON.stringify({
-                ip: details.ip,
-                country: details.country,
-                city: details.city,
-                isp: details.isp,
-                page: page,
-                referrer: referrer,
-                date: date,
-                time: time
-            })
-        });
-    } catch (err) {
-        console.error('Failed to notify:', err);
+        try {
+            const res = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Worker-Secret': WORKER_SECRET
+                },
+                body: JSON.stringify({
+                    ip: details.ip,
+                    country: details.country,
+                    city: details.city,
+                    isp: details.isp,
+                    page: page,
+                    referrer: referrer,
+                    date: date,
+                    time: time
+                })
+            });
+            
+            const data = await res.json();
+            console.log('Notify response:', data);
+            
+        } catch (err) {
+            console.error('Failed to notify:', err);
+        }
     }
-}
-
-
-    window.addEventListener('load', notifyTelegram);
 </script>
 
 
@@ -822,10 +818,11 @@
     const pre=document.getElementById('preloader');
     if(!pre)return;
     pre.classList.add('pre-out');
-    setTimeout(()=>{
-      pre.remove();
-      document.dispatchEvent(new Event('siteReady'));
-    },620);
+      setTimeout(()=>{
+        pre.remove();
+        document.dispatchEvent(new Event('siteReady'));
+        setTimeout(notifyTelegram, 500);
+      },620);
   }
   if(document.readyState==='complete'){setTimeout(dismissPreloader,750);}
   else{
@@ -1077,6 +1074,7 @@ async function sendTg() {
         });
 
         const data = await res.json();
+        console.log('Contact response:', data);
 
         if (data.success) {
             ok.classList.add('vis');
@@ -1087,9 +1085,10 @@ async function sendTg() {
                 closeContact();
             }, 2500);
         } else {
-            throw new Error('Server error');
+            throw new Error(data.error || 'Server error');
         }
-    } catch {
+    } catch (err) {
+        console.error('Contact error:', err);
         er.classList.add('vis');
     }
 
